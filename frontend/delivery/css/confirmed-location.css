@@ -1,0 +1,91 @@
+.confirmed-delivery-location {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: center;
+
+    margin: 20px 0;
+    padding: 20px;
+
+    border: 1px solid #cfe5d4;
+    border-radius: 18px;
+
+    background: #f4fbf5;
+}
+
+.confirmed-delivery-location[hidden] {
+    display: none;
+}
+
+.confirmed-location-icon {
+    width: 52px;
+    height: 52px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: #dcefe0;
+    color: #176b2c;
+
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.confirmed-location-content {
+    min-width: 0;
+}
+
+.confirmed-location-eyebrow {
+    margin: 0 0 5px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+
+    color: #6c746d;
+}
+
+.confirmed-location-content h2 {
+    margin: 0 0 8px;
+
+    font-size: 22px;
+    line-height: 1.2;
+}
+
+.confirmed-location-coordinates {
+    margin: 0 0 5px;
+
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #303630;
+}
+
+.confirmed-location-details {
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.5;
+
+    color: #626962;
+}
+
+@media (max-width: 600px) {
+    .confirmed-delivery-location {
+        grid-template-columns: 1fr;
+    }
+
+    .confirmed-location-icon {
+        width: 46px;
+        height: 46px;
+    }
+
+    .confirmed-location-content h2 {
+        font-size: 20px;
+    }
+}

@@ -1,0 +1,84 @@
+.order-payment-selection {
+    width: min(100%, 720px);
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.order-payment-header {
+    margin-bottom: 24px;
+}
+
+.order-payment-eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.order-payment-header h2 {
+    margin: 0 0 10px;
+}
+
+.order-payment-description {
+    margin: 0;
+}
+
+.order-payment-method-list {
+    display: grid;
+    gap: 14px;
+}
+
+.order-payment-method {
+    width: 100%;
+    padding: 18px;
+    text-align: left;
+    border: 1px solid #d8d8d8;
+    border-radius: 12px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.order-payment-method:hover,
+.order-payment-method:focus-visible {
+    border-color: #111111;
+}
+
+.order-payment-method.selected {
+    border: 2px solid #111111;
+}
+
+.order-payment-method-title,
+.order-payment-method-description {
+    display: block;
+}
+
+.order-payment-method-title {
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.order-payment-method-description {
+    font-size: 14px;
+}
+
+.order-payment-message {
+    min-height: 24px;
+    margin: 16px 0;
+}
+
+.order-payment-confirm-button {
+    width: 100%;
+    min-height: 46px;
+    border: 0;
+    border-radius: 8px;
+    background: #111111;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.order-payment-confirm-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

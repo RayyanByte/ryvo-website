@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Home Test</title>
+
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/hero.css">
+    <link rel="stylesheet" href="../css/featured-food.css">
+    <link rel="stylesheet" href="../css/categories.css">
+    <link rel="stylesheet" href="../css/our-story.css">
+    <link rel="stylesheet" href="../css/testimonials.css">
+    <link rel="stylesheet" href="../css/why-choose-us.css">
+    <link rel="stylesheet" href="../css/order-cta.css">
+    <link rel="stylesheet" href="../css/footer.css">
+</head>
+
+<body>
+
+    <div id="navbar-container"></div>
+
+    <div id="hero-container"></div>
+
+    <div id="featured-food-container"></div>
+
+    <div id="categories-container"></div>
+
+    <div id="our-story-container"></div>
+
+    <div id="testimonials-container"></div>
+
+    <div id="why-choose-us-container"></div>
+
+    <div id="order-cta-container"></div>
+
+    <div id="footer-container"></div>
+
+
+    <script>
+        async function loadComponent(
+            containerId,
+            componentPath
+        ) {
+            try {
+                const response = await fetch(
+                    componentPath
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Component load failed: " +
+                        componentPath
+                    );
+                }
+
+                const html =
+                    await response.text();
+
+                document.getElementById(
+                    containerId
+                ).innerHTML = html;
+
+            } catch (error) {
+                console.error(error);
+
+                document.getElementById(
+                    containerId
+                ).innerHTML =
+                    "<p>Component load error.</p>";
+            }
+        }
+
+
+        loadComponent(
+            "navbar-container",
+            "../components/navbar.html"
+        );
+
+        loadComponent(
+            "hero-container",
+            "../components/hero.html"
+        );
+
+        loadComponent(
+            "featured-food-container",
+            "../components/featured-food.html"
+        );
+
+        loadComponent(
+            "categories-container",
+            "../components/categories.html"
+        );
+
+        loadComponent(
+            "our-story-container",
+            "../components/our-story.html"
+        );
+
+        loadComponent(
+            "testimonials-container",
+            "../components/testimonials.html"
+        );
+
+        loadComponent(
+            "why-choose-us-container",
+            "../components/why-choose-us.html"
+        );
+
+        loadComponent(
+            "order-cta-container",
+            "../components/order-cta.html"
+        );
+
+        loadComponent(
+            "footer-container",
+            "../components/footer.html"
+        );
+    </script>
+
+</body>
+</html>

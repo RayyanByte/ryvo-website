@@ -1,0 +1,175 @@
+<section
+    class="address-form-section"
+    aria-labelledby="address-form-title"
+>
+    <div class="address-form-header">
+        <p class="address-form-eyebrow">
+            Delivery
+        </p>
+
+        <h2 id="address-form-title">
+            Add New Address
+        </h2>
+
+        <p class="address-form-description">
+            Add an address for your food delivery.
+        </p>
+    </div>
+
+    <form
+        class="address-form"
+        id="address-form"
+    >
+        <div class="address-form-field">
+            <label for="address-label">
+                Address Type
+            </label>
+
+            <select
+                id="address-label"
+                name="label"
+                required
+            >
+                <option value="home">
+                    Home
+                </option>
+
+                <option value="work">
+                    Work
+                </option>
+
+                <option value="other">
+                    Other
+                </option>
+            </select>
+        </div>
+
+        <div class="address-form-field">
+            <label for="address-full-name">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="address-full-name"
+                name="fullName"
+                minlength="2"
+                maxlength="100"
+                autocomplete="name"
+                required
+            >
+        </div>
+
+        <div class="address-form-field">
+            <label for="address-phone">
+                Phone
+            </label>
+
+            <input
+                type="tel"
+                id="address-phone"
+                name="phone"
+                maxlength="20"
+                autocomplete="tel"
+                required
+            >
+        </div>
+
+        <div class="address-form-field">
+            <label for="address-line">
+                Address
+            </label>
+
+            <textarea
+                id="address-line"
+                name="addressLine"
+                maxlength="300"
+                autocomplete="street-address"
+                required
+            ></textarea>
+        </div>
+
+        <div class="address-form-field">
+            <label for="address-landmark">
+                Landmark
+            </label>
+
+            <input
+                type="text"
+                id="address-landmark"
+                name="landmark"
+                maxlength="150"
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="address-form-field">
+            <label for="address-city">
+                City
+            </label>
+
+            <input
+                type="text"
+                id="address-city"
+                name="city"
+                maxlength="100"
+                autocomplete="address-level2"
+                required
+            >
+        </div>
+
+        <div class="address-form-field">
+            <label for="address-state">
+                State
+            </label>
+
+            <input
+                type="text"
+                id="address-state"
+                name="state"
+                maxlength="100"
+                autocomplete="address-level1"
+                required
+            >
+        </div>
+
+        <div class="address-form-field">
+            <label for="address-pincode">
+                Pincode
+            </label>
+
+            <input
+                type="text"
+                id="address-pincode"
+                name="pincode"
+                maxlength="10"
+                inputmode="numeric"
+                autocomplete="postal-code"
+                required
+            >
+        </div>
+
+        <div class="address-form-actions">
+            <button
+                type="submit"
+                class="address-save-button"
+            >
+                Save Address
+            </button>
+
+            <button
+                type="button"
+                class="address-cancel-button"
+                id="cancel-address-button"
+            >
+                Cancel
+            </button>
+        </div>
+
+        <p
+            class="address-form-message"
+            id="address-form-message"
+            aria-live="polite"
+        ></p>
+    </form>
+</section>

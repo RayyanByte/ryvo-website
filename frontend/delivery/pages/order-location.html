@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Delivery Location | RYVO</title>
+
+    <link
+        rel="stylesheet"
+        href="../vendor/leaflet/leaflet.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/location-picker.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/map-test.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/location-status.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/location-permission.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/address-fallback.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/confirmed-location.css?v=3"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../order/css/address-selection.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../order/css/payment-selection.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../order/css/order-review.css"
+    >
+</head>
+
+
+<body>
+
+    <main>
+
+        <section
+            class="delivery-location-picker"
+            aria-labelledby="delivery-location-title"
+        >
+
+            <div class="delivery-location-header">
+
+                <p class="delivery-location-eyebrow">
+                    Delivery Location
+                </p>
+
+                <h1 id="delivery-location-title">
+                    Choose your delivery location
+                </h1>
+
+                <p class="delivery-location-description">
+                    Confirm the exact location where your order should be delivered.
+                </p>
+
+            </div>
+
+
+            <div id="location-permission-container"></div>
+
+
+            <div class="delivery-map-wrapper">
+
+                <div class="map-search-panel">
+
+                    <form id="map-search-form">
+
+                        <label
+                            for="map-search-input"
+                            class="map-search-label"
+                        >
+                            Search City
+                        </label>
+
+                        <div class="map-search-row">
+
+                            <input
+                                type="search"
+                                id="map-search-input"
+                                placeholder="Enter city name"
+                                autocomplete="off"
+                            >
+
+                            <button
+                                type="submit"
+                                id="map-search-button"
+                            >
+                                Search
+                            </button>
+
+                        </div>
+
+                    </form>
+
+
+                    <div
+                        id="map-search-results"
+                        class="map-search-results"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    id="delivery-map"
+                    class="delivery-map"
+                    aria-label="Delivery location map"
+                ></div>
+
+
+                <div
+                    class="delivery-map-crosshair"
+                    aria-hidden="true"
+                >
+                    <div
+                        class="delivery-map-crosshair-dot"
+                    ></div>
+                </div>
+
+
+                <button
+                    type="button"
+                    id="map-gps-button"
+                    class="map-gps-button"
+                    aria-label="Use my current location"
+                    title="Use my current location"
+                >
+                    📍
+                </button>
+
+            </div>
+
+
+            <div class="delivery-location-info">
+
+                <p
+                    id="delivery-location-message"
+                    class="delivery-location-message"
+                    role="status"
+                ></p>
+
+                <p
+                    id="delivery-map-coordinates"
+                    class="delivery-map-coordinates"
+                ></p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="confirm-map-location-button"
+                class="confirm-location-button"
+            >
+                Confirm Location
+            </button>
+
+
+            <div id="location-status-container"></div>
+
+            <div id="confirmed-location-container"></div>
+
+            <div id="address-fallback-container"></div>
+
+
+            <div
+                id="order-address-selection-container"
+                hidden
+            ></div>
+
+
+            <div
+                id="order-payment-selection-container"
+                hidden
+            ></div>
+
+
+            <div
+                id="order-review-container"
+                hidden
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="../vendor/leaflet/leaflet.js"></script>
+
+    <script src="../js/location.js"></script>
+
+    <script src="../js/map-test.js"></script>
+
+    <script src="../js/address-fallback.js"></script>
+
+    <script src="../js/confirmed-location.js?v=3"></script>
+
+    <script src="../js/confirmed-location-bridge.js?v=3"></script>
+
+    <script src="../../order/js/order-location-bridge.js"></script>
+
+    <script src="../../order/js/order-address-bridge.js"></script>
+
+    <script src="../../order/js/order-review-bridge.js"></script>
+
+    <script src="../js/confirmed-location-ui.js?v=3"></script>
+
+</body>
+</html>

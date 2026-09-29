@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/login.css"
+    >
+</head>
+
+<body>
+    <main class="auth-page">
+        <section
+            class="login-card"
+            aria-labelledby="login-title"
+        >
+            <div class="login-header">
+                <p class="login-eyebrow">
+                    Account
+                </p>
+
+                <h1 id="login-title">
+                    Welcome Back
+                </h1>
+
+                <p class="login-description">
+                    Sign in to continue to your account.
+                </p>
+            </div>
+
+            <form
+                class="login-form"
+                id="login-form"
+            >
+                <div class="form-field">
+                    <label for="login-email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="login-email"
+                        name="email"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="login-password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="login-password"
+                        name="password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Sign In
+                </button>
+
+                <p
+                    class="login-message"
+                    id="login-message"
+                    aria-live="polite"
+                ></p>
+            </form>
+        </section>
+    </main>
+
+    <script
+        src="../js/login.js"
+    ></script>
+</body>
+</html>

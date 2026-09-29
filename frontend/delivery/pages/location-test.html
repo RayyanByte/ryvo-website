@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Location Test | RYVO</title>
+</head>
+
+<body>
+
+    <main>
+        <h1>Delivery Location Test</h1>
+
+        <p id="location-status">
+            Location has not been requested yet.
+        </p>
+
+        <button
+            type="button"
+            id="get-location-button"
+        >
+            Get My Location
+        </button>
+
+        <div id="location-result"></div>
+    </main>
+
+
+    <script src="../js/location.js"></script>
+
+    <script>
+        const button =
+            document.getElementById(
+                "get-location-button"
+            );
+
+        const status =
+            document.getElementById(
+                "location-status"
+            );
+
+        const result =
+            document.getElementById(
+                "location-result"
+            );
+
+
+        button.addEventListener(
+            "click",
+            async () => {
+                button.disabled = true;
+
+                status.textContent =
+                    "Requesting your location...";
+
+                result.textContent = "";
+
+
+                try {
+                    const location =
+                        await getCurrentLocation();
+
+
+                    status.textContent =
+                        "Location received successfully.";
+
+                    result.textContent =
+                        `Latitude: ${location.latitude}
+Longitude: ${location.longitude}
+Accuracy: ${location.accuracy} meters`;
+
+                } catch (error) {
+                    status.textContent =
+                        "Location request failed.";
+
+                    result.textContent =
+                        error.message;
+
+                } finally {
+                    button.disabled = false;
+                }
+            }
+        );
+    </script>
+
+</body>
+</html>

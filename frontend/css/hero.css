@@ -1,0 +1,128 @@
+.hero {
+    width: 100%;
+    min-height: 520px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 80px 24px;
+
+    background: #f7f4ef;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero-content {
+    width: 100%;
+    max-width: 760px;
+    box-sizing: border-box;
+}
+
+.hero-eyebrow {
+    margin: 0 0 16px;
+
+    color: #8a6a3f;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.hero-title {
+    margin: 0;
+
+    color: #171717;
+    font-size: clamp(42px, 7vw, 76px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -2px;
+    overflow-wrap: break-word;
+}
+
+.hero-title span {
+    display: block;
+}
+
+.hero-description {
+    width: 100%;
+    max-width: 620px;
+    margin: 24px auto 0;
+
+    color: #555555;
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-wrap: break-word;
+}
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    margin-top: 34px;
+}
+
+.hero-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 140px;
+    padding: 13px 22px;
+    box-sizing: border-box;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.hero-button:hover {
+    transform: translateY(-2px);
+}
+
+.hero-button-primary {
+    background: #171717;
+    color: #ffffff;
+}
+
+.hero-button-secondary {
+    background: transparent;
+    color: #171717;
+    border: 1px solid #171717;
+}
+
+@media (max-width: 600px) {
+    .hero {
+        min-height: 480px;
+        padding: 60px 18px;
+    }
+
+    .hero-title {
+        font-size: clamp(36px, 11vw, 52px);
+        letter-spacing: -1px;
+    }
+
+    .hero-description {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-button {
+        width: 100%;
+        max-width: 280px;
+    }
+}
