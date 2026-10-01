@@ -234,3 +234,42 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+.order-card {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.order-status {
+    line-height: 1;
+}
+
+.order-details[hidden] {
+    display: none;
+}
+
+.order-detail-grid strong {
+    text-transform: capitalize;
+}
+
+.order-location-coordinates {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+    .order-actions {
+        width: 100%;
+    }
+
+    .order-details-button,
+    .order-cancel-button {
+        flex: 1;
+    }
+}
