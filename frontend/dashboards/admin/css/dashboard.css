@@ -1,0 +1,163 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #f7f5f0;
+    color: #1f1f1f;
+    font-family: Arial, sans-serif;
+}
+
+.admin-dashboard {
+    width: min(1100px, 92%);
+    margin: 0 auto;
+    padding: 48px 0 60px;
+}
+
+.admin-header {
+    margin-bottom: 32px;
+}
+
+.admin-eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #777;
+}
+
+.admin-header h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+.admin-subtitle {
+    margin: 12px 0 0;
+    color: #666;
+    line-height: 1.6;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.admin-card {
+    padding: 26px;
+    background: #fff;
+    border: 1px solid #e8e3da;
+    border-radius: 16px;
+}
+
+.admin-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.admin-card-eyebrow {
+    margin: 0 0 6px;
+    color: #777;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.admin-card h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.shop-status-badge {
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: #eee;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.admin-message {
+    min-height: 22px;
+    margin-bottom: 14px;
+    color: #666;
+    font-size: 14px;
+}
+
+.admin-field {
+    display: grid;
+    gap: 7px;
+    margin-bottom: 16px;
+}
+
+.admin-field span {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-field input,
+.admin-field select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #dcd6cc;
+    border-radius: 9px;
+    background: #fff;
+    color: #1f1f1f;
+    font: inherit;
+}
+
+.admin-location-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.admin-primary-button {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 4px;
+    border: 0;
+    border-radius: 10px;
+    background: #1f1f1f;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.admin-primary-button:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 760px) {
+    .admin-dashboard {
+        width: 94%;
+        padding-top: 28px;
+    }
+
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .admin-card {
+        padding: 20px;
+    }
+
+    .admin-location-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-card-header {
+        flex-direction: column;
+    }
+}

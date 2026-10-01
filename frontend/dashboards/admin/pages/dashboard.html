@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/dashboard.css"
+    >
+</head>
+
+<body>
+    <main class="admin-dashboard">
+
+        <header class="admin-header">
+            <p class="admin-eyebrow">
+                Administration
+            </p>
+
+            <h1>
+                Admin Dashboard
+            </h1>
+
+            <p class="admin-subtitle">
+                Manage shop settings and delivery staff.
+            </p>
+        </header>
+
+        <section
+            class="admin-grid"
+            aria-label="Admin controls"
+        >
+
+            <article class="admin-card">
+                <div class="admin-card-header">
+                    <div>
+                        <p class="admin-card-eyebrow">
+                            Shop
+                        </p>
+
+                        <h2>
+                            Shop Settings
+                        </h2>
+                    </div>
+
+                    <span
+                        id="shop-status-badge"
+                        class="shop-status-badge"
+                    >
+                        Loading
+                    </span>
+                </div>
+
+                <div
+                    id="shop-message"
+                    class="admin-message"
+                    aria-live="polite"
+                ></div>
+
+                <form id="shop-settings-form">
+
+                    <label class="admin-field">
+                        <span>
+                            Shop Status
+                        </span>
+
+                        <select
+                            id="shop-is-open"
+                            required
+                        >
+                            <option value="true">
+                                Open
+                            </option>
+
+                            <option value="false">
+                                Closed
+                            </option>
+                        </select>
+                    </label>
+
+                    <label class="admin-field">
+                        <span>
+                            Status Message
+                        </span>
+
+                        <input
+                            type="text"
+                            id="shop-status-message"
+                            maxlength="200"
+                            required
+                        >
+                    </label>
+
+                    <div class="admin-location-grid">
+
+                        <label class="admin-field">
+                            <span>
+                                Latitude
+                            </span>
+
+                            <input
+                                type="number"
+                                id="shop-latitude"
+                                step="any"
+                                min="-90"
+                                max="90"
+                                required
+                            >
+                        </label>
+
+                        <label class="admin-field">
+                            <span>
+                                Longitude
+                            </span>
+
+                            <input
+                                type="number"
+                                id="shop-longitude"
+                                step="any"
+                                min="-180"
+                                max="180"
+                                required
+                            >
+                        </label>
+
+                    </div>
+
+                    <label class="admin-field">
+                        <span>
+                            Delivery Radius (km)
+                        </span>
+
+                        <input
+                            type="number"
+                            id="shop-radius"
+                            step="0.1"
+                            min="0.1"
+                            max="100"
+                            required
+                        >
+                    </label>
+
+                    <button
+                        type="submit"
+                        class="admin-primary-button"
+                    >
+                        Save Shop Settings
+                    </button>
+
+                </form>
+            </article>
+
+
+            <article class="admin-card">
+                <div class="admin-card-header">
+                    <div>
+                        <p class="admin-card-eyebrow">
+                            Staff
+                        </p>
+
+                        <h2>
+                            Create Delivery Boy
+                        </h2>
+                    </div>
+                </div>
+
+                <div
+                    id="delivery-boy-message"
+                    class="admin-message"
+                    aria-live="polite"
+                ></div>
+
+                <form id="delivery-boy-form">
+
+                    <label class="admin-field">
+                        <span>
+                            Name
+                        </span>
+
+                        <input
+                            type="text"
+                            name="name"
+                            minlength="2"
+                            maxlength="50"
+                            required
+                        >
+                    </label>
+
+                    <label class="admin-field">
+                        <span>
+                            Email
+                        </span>
+
+                        <input
+                            type="email"
+                            name="email"
+                            required
+                        >
+                    </label>
+
+                    <label class="admin-field">
+                        <span>
+                            Phone
+                        </span>
+
+                        <input
+                            type="tel"
+                            name="phone"
+                        >
+                    </label>
+
+                    <label class="admin-field">
+                        <span>
+                            Password
+                        </span>
+
+                        <input
+                            type="password"
+                            name="password"
+                            minlength="6"
+                            required
+                        >
+                    </label>
+
+                    <button
+                        type="submit"
+                        class="admin-primary-button"
+                    >
+                        Create Delivery Account
+                    </button>
+
+                </form>
+            </article>
+
+        </section>
+
+    </main>
+
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>
