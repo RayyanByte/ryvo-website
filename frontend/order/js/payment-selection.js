@@ -8,7 +8,9 @@ const SUPPORTED_PAYMENT_METHODS = [
     "upi"
 ];
 
-const savePaymentMethod = (paymentMethod) => {
+const savePaymentMethod = (
+    paymentMethod
+) => {
     try {
         sessionStorage.setItem(
             ORDER_PAYMENT_STORAGE_KEY,
@@ -61,7 +63,9 @@ const renderPaymentMessage = (
         return;
     }
 
-    element.textContent = message;
+    element.textContent =
+        message;
+
     element.className =
         `order-payment-message ${type}`.trim();
 };
@@ -83,7 +87,9 @@ const updatePaymentButtons = () => {
 
             button.setAttribute(
                 "aria-pressed",
-                selected ? "true" : "false"
+                selected
+                    ? "true"
+                    : "false"
             );
         });
 
@@ -208,7 +214,9 @@ window.getSelectedPaymentMethod = () => {
 
 window.clearSelectedPaymentMethod = () => {
     selectedPaymentMethod = null;
-    window.orderPaymentMethod = null;
+
+    window.orderPaymentMethod =
+        null;
 
     try {
         sessionStorage.removeItem(
@@ -223,6 +231,9 @@ window.clearSelectedPaymentMethod = () => {
 
     updatePaymentButtons();
 };
+
+window.initializePaymentSelection =
+    initializePaymentSelection;
 
 if (
     document.readyState ===
