@@ -1,0 +1,179 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f7f5f0;
+    color: #1f1f1f;
+    font-family: Arial, sans-serif;
+}
+
+.delivery-dashboard {
+    width: min(1100px, 92%);
+    margin: 0 auto;
+    padding: 32px 0 50px;
+}
+
+.delivery-header {
+    margin-bottom: 24px;
+}
+
+.delivery-eyebrow {
+    margin: 0 0 6px;
+    color: #777;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.delivery-header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.delivery-subtitle {
+    margin: 8px 0 0;
+    color: #666;
+}
+
+.delivery-content {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.delivery-orders {
+    display: grid;
+    gap: 16px;
+}
+
+.delivery-message {
+    margin: 0;
+    color: #666;
+}
+
+.delivery-order-card {
+    border: 1px solid #e5e1d8;
+    border-radius: 14px;
+    padding: 18px;
+    background: #fff;
+}
+
+.delivery-order-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.delivery-order-id {
+    margin: 0;
+    font-weight: 700;
+}
+
+.delivery-order-date {
+    margin: 5px 0 0;
+    color: #777;
+    font-size: 13px;
+}
+
+.delivery-order-status {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f1eee7;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.delivery-section {
+    padding: 14px 0;
+    border-top: 1px solid #eeeae2;
+}
+
+.delivery-section:first-child {
+    border-top: 0;
+}
+
+.delivery-section h2 {
+    margin: 0 0 8px;
+    font-size: 16px;
+}
+
+.delivery-section p {
+    margin: 4px 0;
+    color: #555;
+}
+
+.delivery-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.delivery-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 6px 0;
+}
+
+.delivery-item-name {
+    font-weight: 600;
+}
+
+.delivery-item-total {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.delivery-order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    border-top: 1px solid #eeeae2;
+    padding-top: 16px;
+    margin-top: 4px;
+}
+
+.delivery-total {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.delivery-distance {
+    margin: 4px 0 0;
+    color: #666;
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+    .delivery-dashboard {
+        width: 94%;
+        padding-top: 20px;
+    }
+
+    .delivery-header h1 {
+        font-size: 26px;
+    }
+
+    .delivery-content {
+        padding: 16px;
+    }
+
+    .delivery-order-header,
+    .delivery-order-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .delivery-item {
+        align-items: flex-start;
+    }
+}
