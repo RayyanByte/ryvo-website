@@ -12,30 +12,70 @@ const getReviewElement = (id) => {
 };
 
 
+const escapeHtml = (value) => {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+};
+
+
 const showReviewMessage = (
     message,
     type = ""
 ) => {
-
-    const messageElement =
+    const element =
         getReviewElement(
             "order-review-message"
         );
 
-    if (!messageElement) {
+    if (!element) {
         return;
     }
 
-    messageElement.textContent =
-        message;
-
-    messageElement.className =
+    element.textContent = message;
+    element.className =
         `order-review-message ${type}`.trim();
 };
 
 
-const renderOrderReview = () => {
+const getOrderData = () => {
+    const orderItem =
+        typeof window.getSelectedOrderItem ===
+        "function"
+            ? window.getSelectedOrderItem()
+            : null;
 
+    const deliveryLocation =
+        typeof window.getOrderDeliveryLocation ===
+        "function"
+            ? window.getOrderDeliveryLocation()
+            : null;
+
+    const deliveryAddress =
+        typeof window.getSelectedOrderAddress ===
+        "function"
+            ? window.getSelectedOrderAddress()
+            : null;
+
+    const paymentMethod =
+        typeof window.getSelectedPaymentMethod ===
+        "function"
+            ? window.getSelectedPaymentMethod()
+            : null;
+
+    return {
+        orderItem,
+        deliveryLocation,
+        deliveryAddress,
+        paymentMethod
+    };
+};
+
+
+const renderOrderReview = () => {
     const contentElement =
         getReviewElement(
             "order-review-content"
@@ -46,41 +86,16 @@ const renderOrderReview = () => {
             "place-order-button"
         );
 
-    if (
-        !contentElement ||
-        !placeButton
-    ) {
+    if (!contentElement || !placeButton) {
         return;
     }
 
-
-    const orderItem =
-        typeof window.getSelectedOrderItem ===
-        "function"
-            ? window.getSelectedOrderItem()
-            : null;
-
-
-    const deliveryLocation =
-        typeof window.getOrderDeliveryLocation ===
-        "function"
-            ? window.getOrderDeliveryLocation()
-            : null;
-
-
-    const deliveryAddress =
-        typeof window.getSelectedOrderAddress ===
-        "function"
-            ? window.getSelectedOrderAddress()
-            : null;
-
-
-    const paymentMethod =
-        typeof window.getSelectedPaymentMethod ===
-        "function"
-            ? window.getSelectedPaymentMethod()
-            : null;
-
+    const {
+        orderItem,
+        deliveryLocation,
+        deliveryAddress,
+        paymentMethod
+    } = getOrderData();
 
     if (
         !orderItem ||
@@ -88,7 +103,6 @@ const renderOrderReview = () => {
         !deliveryAddress ||
         !paymentMethod
     ) {
-
         contentElement.innerHTML = `
             <p class="order-review-message">
                 Please complete all order details before placing your order.
@@ -96,57 +110,67 @@ const renderOrderReview = () => {
         `;
 
         placeButton.disabled = true;
-
         return;
     }
 
+    const price =
+        Number(orderItem.price);
 
-    const total =
-        Number(orderItem.price) *
+    const quantity =
         Number(orderItem.quantity);
 
+    const total =
+        price * quantity;
 
     const paymentLabel =
         paymentMethod === "cod"
             ? "Cash on Delivery"
             : "UPI";
 
-
     contentElement.innerHTML = `
         <div class="order-review-row">
             <span>Food</span>
-            <strong>${orderItem.name}</strong>
+            <strong>${escapeHtml(orderItem.name)}</strong>
         </div>
 
         <div class="order-review-row">
             <span>Quantity</span>
-            <strong>${orderItem.quantity}</strong>
+            <strong>${escapeHtml(quantity)}</strong>
         </div>
 
         <div class="order-review-row">
             <span>Price</span>
-            <strong>₹${Number(orderItem.price).toFixed(2)}</strong>
+            <strong>₹${price.toFixed(2)}</strong>
         </div>
 
         <div class="order-review-row">
             <span>Delivery Address</span>
             <strong>
-                ${deliveryAddress.label || "Selected address"}
+                ${escapeHtml(
+                    deliveryAddress.label ||
+                    "Selected address"
+                )}
             </strong>
         </div>
 
         <div class="order-review-row">
             <span>Delivery Location</span>
             <strong>
-                ${Number(deliveryLocation.latitude).toFixed(6)},
-                ${Number(deliveryLocation.longitude).toFixed(6)}
+                ${Number(
+                    deliveryLocation.latitude
+                ).toFixed(6)},
+                ${Number(
+                    deliveryLocation.longitude
+                ).toFixed(6)}
             </strong>
         </div>
 
         <div class="order-review-row">
             <span>Distance</span>
             <strong>
-                ${Number(deliveryLocation.distanceKm).toFixed(2)} km
+                ${Number(
+                    deliveryLocation.distanceKm || 0
+                ).toFixed(2)} km
             </strong>
         </div>
 
@@ -161,7 +185,6 @@ const renderOrderReview = () => {
         </div>
     `;
 
-
     placeButton.disabled = false;
 
     showReviewMessage("");
@@ -169,14 +192,12 @@ const renderOrderReview = () => {
 
 
 const clearCompletedOrderState = () => {
-
     if (
         typeof window.clearSelectedOrderItem ===
         "function"
     ) {
         window.clearSelectedOrderItem();
     }
-
 
     if (
         typeof window.clearOrderDeliveryLocation ===
@@ -185,14 +206,12 @@ const clearCompletedOrderState = () => {
         window.clearOrderDeliveryLocation();
     }
 
-
     if (
         typeof window.clearSelectedOrderAddress ===
         "function"
     ) {
         window.clearSelectedOrderAddress();
     }
-
 
     if (
         typeof window.clearSelectedPaymentMethod ===
@@ -207,7 +226,6 @@ const showOrderSuccess = (
     order,
     payment
 ) => {
-
     const contentElement =
         getReviewElement(
             "order-review-content"
@@ -218,13 +236,9 @@ const showOrderSuccess = (
             "place-order-button"
         );
 
-    if (
-        !contentElement ||
-        !placeButton
-    ) {
+    if (!contentElement || !placeButton) {
         return;
     }
-
 
     const orderId =
         order?._id ||
@@ -232,12 +246,10 @@ const showOrderSuccess = (
         order?.orderId ||
         "Created successfully";
 
-
     const paymentId =
         payment?._id ||
         payment?.id ||
         "Created successfully";
-
 
     contentElement.innerHTML = `
         <div class="order-review-success">
@@ -252,30 +264,28 @@ const showOrderSuccess = (
 
             <div class="order-review-row">
                 <span>Order ID</span>
-                <strong>${orderId}</strong>
+                <strong>${escapeHtml(orderId)}</strong>
             </div>
 
             <div class="order-review-row">
                 <span>Payment Record</span>
-                <strong>${paymentId}</strong>
+                <strong>${escapeHtml(paymentId)}</strong>
             </div>
 
         </div>
     `;
 
-
     placeButton.disabled = true;
     placeButton.hidden = true;
-
 
     showReviewMessage(
         "Your order and payment record have been created successfully.",
         "success"
     );
 
-
     clearCompletedOrderState();
 
+    isOrderSubmitting = false;
 
     window.dispatchEvent(
         new CustomEvent(
@@ -298,7 +308,6 @@ const createPaymentRecord = async (
     paymentMethod,
     token
 ) => {
-
     const response =
         await fetch(
             PAYMENT_API_URL,
@@ -321,29 +330,21 @@ const createPaymentRecord = async (
             }
         );
 
-
     let result = null;
 
-
     try {
-
         result =
             await response.json();
-
-    } catch (jsonError) {
-
+    } catch {
         result = null;
     }
 
-
     if (!response.ok) {
-
         throw new Error(
             result?.message ||
             "Unable to create payment record."
         );
     }
-
 
     return (
         result?.data ||
@@ -354,56 +355,29 @@ const createPaymentRecord = async (
 
 
 const placeOrder = async () => {
-
     if (isOrderSubmitting) {
         return;
     }
-
 
     const token =
         localStorage.getItem(
             "authToken"
         );
 
-
     if (!token) {
-
         showReviewMessage(
             "Please login before placing your order.",
             "error"
         );
-
         return;
     }
 
-
-    const orderItem =
-        typeof window.getSelectedOrderItem ===
-        "function"
-            ? window.getSelectedOrderItem()
-            : null;
-
-
-    const deliveryLocation =
-        typeof window.getOrderDeliveryLocation ===
-        "function"
-            ? window.getOrderDeliveryLocation()
-            : null;
-
-
-    const deliveryAddress =
-        typeof window.getSelectedOrderAddress ===
-        "function"
-            ? window.getSelectedOrderAddress()
-            : null;
-
-
-    const paymentMethod =
-        typeof window.getSelectedPaymentMethod ===
-        "function"
-            ? window.getSelectedPaymentMethod()
-            : null;
-
+    const {
+        orderItem,
+        deliveryLocation,
+        deliveryAddress,
+        paymentMethod
+    } = getOrderData();
 
     if (
         !orderItem ||
@@ -411,46 +385,35 @@ const placeOrder = async () => {
         !deliveryAddress ||
         !paymentMethod
     ) {
-
         showReviewMessage(
             "Please complete all order details first.",
             "error"
         );
-
         return;
     }
-
 
     const placeButton =
         getReviewElement(
             "place-order-button"
         );
 
-
     isOrderSubmitting = true;
 
-
     if (placeButton) {
-
         placeButton.disabled = true;
-
         placeButton.textContent =
             "Placing Order...";
     }
-
 
     showReviewMessage(
         "Placing your order..."
     );
 
-
     const requestBody = {
-
         addressId:
             deliveryAddress._id,
 
         deliveryLocation: {
-
             latitude:
                 Number(
                     deliveryLocation.latitude
@@ -471,7 +434,6 @@ const placeOrder = async () => {
         },
 
         items: [
-
             {
                 foodId:
                     orderItem.foodId,
@@ -481,15 +443,12 @@ const placeOrder = async () => {
                         orderItem.quantity
                     )
             }
-
         ],
 
         paymentMethod
     };
 
-
     try {
-
         const orderResponse =
             await fetch(
                 ORDER_API_URL,
@@ -511,54 +470,41 @@ const placeOrder = async () => {
                 }
             );
 
-
         let orderResult = null;
 
-
         try {
-
             orderResult =
                 await orderResponse.json();
-
-        } catch (jsonError) {
-
+        } catch {
             orderResult = null;
         }
 
-
         if (!orderResponse.ok) {
-
             throw new Error(
                 orderResult?.message ||
                 "Unable to place the order."
             );
         }
 
-
         const order =
             orderResult?.data ||
             orderResult?.order ||
             orderResult;
-
 
         const orderId =
             order?._id ||
             order?.id ||
             order?.orderId;
 
-
         if (!orderId) {
-
             throw new Error(
                 "Order was created but no order ID was returned."
             );
         }
 
-
         showReviewMessage(
             "Order created. Creating payment record..."
         );
-
 
         const payment =
             await createPaymentRecord(
@@ -567,20 +513,16 @@ const placeOrder = async () => {
                 token
             );
 
-
         showOrderSuccess(
             order,
             payment
         );
 
-
     } catch (error) {
-
         console.error(
             "Place order error:",
             error
         );
-
 
         showReviewMessage(
             error.message ||
@@ -588,39 +530,29 @@ const placeOrder = async () => {
             "error"
         );
 
-
         if (placeButton) {
-
-            placeButton.disabled =
-                false;
-
+            placeButton.disabled = false;
             placeButton.textContent =
                 "Place Order";
         }
 
-
-        isOrderSubmitting =
-            false;
+        isOrderSubmitting = false;
     }
 };
 
 
 const initializeOrderReview = () => {
-
     const placeButton =
         getReviewElement(
             "place-order-button"
         );
 
-
     if (placeButton) {
-
         placeButton.addEventListener(
             "click",
             placeOrder
         );
     }
-
 
     renderOrderReview();
 };
@@ -631,12 +563,10 @@ window.addEventListener(
     renderOrderReview
 );
 
-
 window.addEventListener(
     "orderAddressConfirmed",
     renderOrderReview
 );
-
 
 window.addEventListener(
     "deliveryAreaConfirmed",
@@ -648,13 +578,10 @@ if (
     document.readyState ===
     "loading"
 ) {
-
     document.addEventListener(
         "DOMContentLoaded",
         initializeOrderReview
     );
-
 } else {
-
     initializeOrderReview();
 }
