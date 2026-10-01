@@ -245,4 +245,9 @@ const loadAddressForm = async () => {
     }
 };
 
-loadAddressForm();
+window.addEventListener(
+    "customerAddressesComponentLoaded",
+    () => {
+        loadAddressForm();
+    }
+);

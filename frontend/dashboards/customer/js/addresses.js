@@ -16,6 +16,10 @@ async function loadAddresses() {
 
         container.innerHTML = await componentResponse.text();
 
+        window.dispatchEvent(
+            new CustomEvent("customerAddressesComponentLoaded")
+        );
+
         const token = localStorage.getItem("authToken");
         const list = document.getElementById("addresses-list");
 
