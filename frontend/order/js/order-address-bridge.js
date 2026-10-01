@@ -31,6 +31,9 @@ const PAYMENT_POLLING_SCRIPT_URL =
 const PAYMENT_FLOW_SCRIPT_URL =
     "../../order/js/payment-flow.js";
 
+const PAYMENT_RUNTIME_SCRIPT_URL =
+    "../../order/js/payment-runtime.js";
+
 
 let orderAddressComponentLoaded =
     false;
@@ -46,7 +49,6 @@ const loadScript = (
     scriptUrl,
     onLoad
 ) => {
-
     const script =
         document.createElement("script");
 
@@ -54,14 +56,12 @@ const loadScript = (
         scriptUrl;
 
     script.onload = () => {
-
         if (typeof onLoad === "function") {
             onLoad();
         }
     };
 
     script.onerror = () => {
-
         console.error(
             `Order module could not be loaded: ${scriptUrl}`
         );
@@ -76,10 +76,8 @@ const loadScript = (
 const loadScriptAsync = (
     scriptUrl
 ) => {
-
     return new Promise(
         (resolve, reject) => {
-
             const script =
                 document.createElement(
                     "script"
@@ -92,7 +90,6 @@ const loadScriptAsync = (
                 resolve;
 
             script.onerror = () => {
-
                 reject(
                     new Error(
                         `Order module could not be loaded: ${scriptUrl}`
@@ -110,13 +107,11 @@ const loadScriptAsync = (
 
 const loadPaymentRuntime =
     async () => {
-
         if (paymentRuntimeLoaded) {
             return true;
         }
 
         try {
-
             await loadScriptAsync(
                 PAYMENT_API_SCRIPT_URL
             );
@@ -145,13 +140,32 @@ const loadPaymentRuntime =
                 PAYMENT_FLOW_SCRIPT_URL
             );
 
+            await loadScriptAsync(
+                PAYMENT_RUNTIME_SCRIPT_URL
+            );
+
+            if (
+                typeof window.initializePaymentRuntime ===
+                "function"
+            ) {
+                window.initializePaymentRuntime();
+            }
+
+            if (
+                typeof window.isPaymentRuntimeReady !==
+                    "function" ||
+                !window.isPaymentRuntimeReady()
+            ) {
+                throw new Error(
+                    "Payment runtime is not ready."
+                );
+            }
+
             paymentRuntimeLoaded =
                 true;
 
             return true;
-
         } catch (error) {
-
             console.error(
                 "Payment runtime loading error:",
                 error
@@ -164,7 +178,6 @@ const loadPaymentRuntime =
 
 const loadOrderAddressSelection =
     async () => {
-
         const container =
             document.getElementById(
                 "order-address-selection-container"
@@ -175,21 +188,17 @@ const loadOrderAddressSelection =
         }
 
         if (orderAddressComponentLoaded) {
-
             container.hidden = false;
-
             return;
         }
 
         try {
-
             const response =
                 await fetch(
                     ORDER_ADDRESS_COMPONENT_URL
                 );
 
             if (!response.ok) {
-
                 throw new Error(
                     "Could not load order address component."
                 );
@@ -203,14 +212,11 @@ const loadOrderAddressSelection =
             loadScript(
                 ORDER_ADDRESS_SCRIPT_URL,
                 () => {
-
                     orderAddressComponentLoaded =
                         true;
                 }
             );
-
         } catch (error) {
-
             console.error(
                 "Order address component loading error:",
                 error
@@ -230,7 +236,6 @@ const loadOrderAddressSelection =
 
 const loadOrderPaymentSelection =
     async () => {
-
         const container =
             document.getElementById(
                 "order-payment-selection-container"
@@ -241,21 +246,17 @@ const loadOrderPaymentSelection =
         }
 
         if (orderPaymentComponentLoaded) {
-
             container.hidden = false;
-
             return;
         }
 
         try {
-
             const response =
                 await fetch(
                     ORDER_PAYMENT_COMPONENT_URL
                 );
 
             if (!response.ok) {
-
                 throw new Error(
                     "Could not load payment component."
                 );
@@ -270,7 +271,6 @@ const loadOrderPaymentSelection =
                 await loadPaymentRuntime();
 
             if (!runtimeLoaded) {
-
                 throw new Error(
                     "Payment runtime could not be loaded."
                 );
@@ -279,14 +279,11 @@ const loadOrderPaymentSelection =
             loadScript(
                 ORDER_PAYMENT_SCRIPT_URL,
                 () => {
-
                     orderPaymentComponentLoaded =
                         true;
                 }
             );
-
         } catch (error) {
-
             console.error(
                 "Order payment component loading error:",
                 error
@@ -307,9 +304,7 @@ const loadOrderPaymentSelection =
 window.addEventListener(
     "deliveryAreaConfirmed",
     () => {
-
         loadOrderAddressSelection();
-
     }
 );
 
@@ -317,8 +312,6 @@ window.addEventListener(
 window.addEventListener(
     "orderAddressConfirmed",
     () => {
-
         loadOrderPaymentSelection();
-
     }
 );
