@@ -7,11 +7,12 @@ let upiPaymentState = {
     paymentId: null
 };
 
-const SUPPORTED_UPI_STATES = [
+const UPI_PAYMENT_STATUSES = [
     "idle",
     "pending",
     "paid",
-    "failed"
+    "failed",
+    "cancelled"
 ];
 
 const saveUpiPaymentState = () => {
@@ -48,7 +49,7 @@ const loadUpiPaymentState = () => {
 
         if (
             !parsedState ||
-            !SUPPORTED_UPI_STATES.includes(
+            !UPI_PAYMENT_STATUSES.includes(
                 parsedState.status
             )
         ) {
@@ -56,8 +57,7 @@ const loadUpiPaymentState = () => {
         }
 
         upiPaymentState = {
-            status:
-                parsedState.status,
+            status: parsedState.status,
             orderId:
                 parsedState.orderId || null,
             paymentId:
@@ -71,31 +71,13 @@ const loadUpiPaymentState = () => {
     }
 };
 
-const renderUpiPaymentMessage = (
-    message,
-    type = ""
-) => {
-    const element =
-        document.getElementById(
-            "upi-payment-message"
-        );
-
-    if (!element) {
-        return;
-    }
-
-    element.textContent = message;
-    element.className =
-        `upi-payment-message ${type}`.trim();
-};
-
 const setUpiPaymentState = (
     status,
     orderId = null,
     paymentId = null
 ) => {
     if (
-        !SUPPORTED_UPI_STATES.includes(
+        !UPI_PAYMENT_STATUSES.includes(
             status
         )
     ) {
@@ -108,69 +90,16 @@ const setUpiPaymentState = (
         paymentId
     };
 
-    saveUpiPaymentState();
-
-    return true;
+    return saveUpiPaymentState();
 };
 
-const initializeUpiPayment = () => {
-    loadUpiPaymentState();
-};
-
-window.getUpiPaymentState = () => {
+const getUpiPaymentState = () => {
     return {
         ...upiPaymentState
     };
 };
 
-window.setUpiPaymentPending = (
-    orderId,
-    paymentId
-) => {
-    setUpiPaymentState(
-        "pending",
-        orderId,
-        paymentId
-    );
-
-    renderUpiPaymentMessage(
-        "UPI payment is pending."
-    );
-};
-
-window.setUpiPaymentPaid = (
-    orderId,
-    paymentId
-) => {
-    setUpiPaymentState(
-        "paid",
-        orderId,
-        paymentId
-    );
-
-    renderUpiPaymentMessage(
-        "UPI payment confirmed.",
-        "success"
-    );
-};
-
-window.setUpiPaymentFailed = (
-    orderId,
-    paymentId
-) => {
-    setUpiPaymentState(
-        "failed",
-        orderId,
-        paymentId
-    );
-
-    renderUpiPaymentMessage(
-        "UPI payment failed.",
-        "error"
-    );
-};
-
-window.clearUpiPaymentState = () => {
+const clearUpiPaymentState = () => {
     upiPaymentState = {
         status: "idle",
         orderId: null,
@@ -187,18 +116,56 @@ window.clearUpiPaymentState = () => {
             error
         );
     }
-
-    renderUpiPaymentMessage("");
 };
 
-if (
-    document.readyState ===
-    "loading"
-) {
-    document.addEventListener(
-        "DOMContentLoaded",
-        initializeUpiPayment
+window.getUpiPaymentState =
+    getUpiPaymentState;
+
+window.setUpiPaymentPending = (
+    orderId,
+    paymentId
+) => {
+    return setUpiPaymentState(
+        "pending",
+        orderId,
+        paymentId
     );
-} else {
-    initializeUpiPayment();
-}
+};
+
+window.setUpiPaymentPaid = (
+    orderId,
+    paymentId
+) => {
+    return setUpiPaymentState(
+        "paid",
+        orderId,
+        paymentId
+    );
+};
+
+window.setUpiPaymentFailed = (
+    orderId,
+    paymentId
+) => {
+    return setUpiPaymentState(
+        "failed",
+        orderId,
+        paymentId
+    );
+};
+
+window.setUpiPaymentCancelled = (
+    orderId,
+    paymentId
+) => {
+    return setUpiPaymentState(
+        "cancelled",
+        orderId,
+        paymentId
+    );
+};
+
+window.clearUpiPaymentState =
+    clearUpiPaymentState;
+
+loadUpiPaymentState();
