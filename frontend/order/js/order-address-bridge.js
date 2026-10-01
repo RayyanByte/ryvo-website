@@ -10,10 +10,36 @@ const ORDER_PAYMENT_COMPONENT_URL =
 const ORDER_PAYMENT_SCRIPT_URL =
     "../../order/js/payment-selection.js";
 
+const PAYMENT_API_SCRIPT_URL =
+    "../../order/js/payment-api.js";
 
-let orderAddressComponentLoaded = false;
+const PAYMENT_STATUS_SCRIPT_URL =
+    "../../order/js/payment-status.js";
 
-let orderPaymentComponentLoaded = false;
+const UPI_PAYMENT_SCRIPT_URL =
+    "../../order/js/upi-payment.js";
+
+const UPI_PAYMENT_STATUS_SCRIPT_URL =
+    "../../order/js/upi-payment-status.js";
+
+const PAYMENT_RESULT_SCRIPT_URL =
+    "../../order/js/payment-result.js";
+
+const PAYMENT_POLLING_SCRIPT_URL =
+    "../../order/js/payment-polling.js";
+
+const PAYMENT_FLOW_SCRIPT_URL =
+    "../../order/js/payment-flow.js";
+
+
+let orderAddressComponentLoaded =
+    false;
+
+let orderPaymentComponentLoaded =
+    false;
+
+let paymentRuntimeLoaded =
+    false;
 
 
 const loadScript = (
@@ -24,10 +50,8 @@ const loadScript = (
     const script =
         document.createElement("script");
 
-
     script.src =
         scriptUrl;
-
 
     script.onload = () => {
 
@@ -36,7 +60,6 @@ const loadScript = (
         }
     };
 
-
     script.onerror = () => {
 
         console.error(
@@ -44,159 +67,241 @@ const loadScript = (
         );
     };
 
-
     document.body.appendChild(
         script
     );
 };
 
 
-const loadOrderAddressSelection = async () => {
+const loadScriptAsync = (
+    scriptUrl
+) => {
 
-    const container =
-        document.getElementById(
-            "order-address-selection-container"
-        );
+    return new Promise(
+        (resolve, reject) => {
 
+            const script =
+                document.createElement(
+                    "script"
+                );
 
-    if (!container) {
-        return;
-    }
+            script.src =
+                scriptUrl;
 
+            script.onload =
+                resolve;
 
-    if (orderAddressComponentLoaded) {
+            script.onerror = () => {
 
-        container.hidden = false;
+                reject(
+                    new Error(
+                        `Order module could not be loaded: ${scriptUrl}`
+                    )
+                );
+            };
 
-        return;
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                ORDER_ADDRESS_COMPONENT_URL
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Could not load order address component."
+            document.body.appendChild(
+                script
             );
         }
-
-
-        container.innerHTML =
-            await response.text();
-
-
-        container.hidden = false;
-
-
-        loadScript(
-            ORDER_ADDRESS_SCRIPT_URL,
-            () => {
-
-                orderAddressComponentLoaded =
-                    true;
-            }
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Order address component loading error:",
-            error
-        );
-
-
-        container.innerHTML = `
-            <p class="order-address-message">
-                Unable to load your saved addresses.
-                Please try again.
-            </p>
-        `;
-
-
-        container.hidden = false;
-    }
+    );
 };
 
 
-const loadOrderPaymentSelection = async () => {
+const loadPaymentRuntime =
+    async () => {
 
-    const container =
-        document.getElementById(
-            "order-payment-selection-container"
-        );
-
-
-    if (!container) {
-        return;
-    }
-
-
-    if (orderPaymentComponentLoaded) {
-
-        container.hidden = false;
-
-        return;
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                ORDER_PAYMENT_COMPONENT_URL
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Could not load payment component."
-            );
+        if (paymentRuntimeLoaded) {
+            return true;
         }
 
+        try {
 
-        container.innerHTML =
-            await response.text();
+            await loadScriptAsync(
+                PAYMENT_API_SCRIPT_URL
+            );
+
+            await loadScriptAsync(
+                PAYMENT_STATUS_SCRIPT_URL
+            );
+
+            await loadScriptAsync(
+                UPI_PAYMENT_SCRIPT_URL
+            );
+
+            await loadScriptAsync(
+                UPI_PAYMENT_STATUS_SCRIPT_URL
+            );
+
+            await loadScriptAsync(
+                PAYMENT_RESULT_SCRIPT_URL
+            );
+
+            await loadScriptAsync(
+                PAYMENT_POLLING_SCRIPT_URL
+            );
+
+            await loadScriptAsync(
+                PAYMENT_FLOW_SCRIPT_URL
+            );
+
+            paymentRuntimeLoaded =
+                true;
+
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                "Payment runtime loading error:",
+                error
+            );
+
+            return false;
+        }
+    };
 
 
-        container.hidden = false;
+const loadOrderAddressSelection =
+    async () => {
 
+        const container =
+            document.getElementById(
+                "order-address-selection-container"
+            );
 
-        loadScript(
-            ORDER_PAYMENT_SCRIPT_URL,
-            () => {
+        if (!container) {
+            return;
+        }
 
-                orderPaymentComponentLoaded =
-                    true;
+        if (orderAddressComponentLoaded) {
+
+            container.hidden = false;
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    ORDER_ADDRESS_COMPONENT_URL
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Could not load order address component."
+                );
             }
-        );
 
-    } catch (error) {
+            container.innerHTML =
+                await response.text();
 
-        console.error(
-            "Order payment component loading error:",
-            error
-        );
+            container.hidden = false;
+
+            loadScript(
+                ORDER_ADDRESS_SCRIPT_URL,
+                () => {
+
+                    orderAddressComponentLoaded =
+                        true;
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Order address component loading error:",
+                error
+            );
+
+            container.innerHTML = `
+                <p class="order-address-message">
+                    Unable to load your saved addresses.
+                    Please try again.
+                </p>
+            `;
+
+            container.hidden = false;
+        }
+    };
 
 
-        container.innerHTML = `
-            <p class="order-payment-message">
-                Unable to load payment methods.
-                Please try again.
-            </p>
-        `;
+const loadOrderPaymentSelection =
+    async () => {
 
+        const container =
+            document.getElementById(
+                "order-payment-selection-container"
+            );
 
-        container.hidden = false;
-    }
-};
+        if (!container) {
+            return;
+        }
+
+        if (orderPaymentComponentLoaded) {
+
+            container.hidden = false;
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    ORDER_PAYMENT_COMPONENT_URL
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Could not load payment component."
+                );
+            }
+
+            container.innerHTML =
+                await response.text();
+
+            container.hidden = false;
+
+            const runtimeLoaded =
+                await loadPaymentRuntime();
+
+            if (!runtimeLoaded) {
+
+                throw new Error(
+                    "Payment runtime could not be loaded."
+                );
+            }
+
+            loadScript(
+                ORDER_PAYMENT_SCRIPT_URL,
+                () => {
+
+                    orderPaymentComponentLoaded =
+                        true;
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Order payment component loading error:",
+                error
+            );
+
+            container.innerHTML = `
+                <p class="order-payment-message">
+                    Unable to load payment methods.
+                    Please try again.
+                </p>
+            `;
+
+            container.hidden = false;
+        }
+    };
 
 
 window.addEventListener(
