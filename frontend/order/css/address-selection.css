@@ -1,0 +1,101 @@
+.order-address-selection {
+    width: min(100%, 720px);
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.order-address-header {
+    margin-bottom: 24px;
+}
+
+.order-address-eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.order-address-header h2 {
+    margin: 0 0 10px;
+}
+
+.order-address-description {
+    margin: 0;
+}
+
+.order-address-list {
+    display: grid;
+    gap: 14px;
+}
+
+.order-address-card {
+    width: 100%;
+    padding: 18px;
+    text-align: left;
+    border: 1px solid #d8d8d8;
+    border-radius: 12px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.order-address-card:hover,
+.order-address-card:focus-visible {
+    border-color: #111111;
+}
+
+.order-address-card.selected {
+    border: 2px solid #111111;
+}
+
+.order-address-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.order-address-default {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.order-address-name,
+.order-address-text,
+.order-address-phone {
+    display: block;
+    margin-top: 5px;
+}
+
+.order-address-name {
+    font-weight: 600;
+}
+
+.order-address-selection-message {
+    min-height: 24px;
+    margin: 16px 0;
+}
+
+.order-address-confirm-button {
+    width: 100%;
+    min-height: 46px;
+    border: 0;
+    border-radius: 8px;
+    background: #111111;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.order-address-confirm-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.order-address-message {
+    margin: 0;
+    padding: 18px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+}

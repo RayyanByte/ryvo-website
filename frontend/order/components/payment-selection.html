@@ -1,0 +1,77 @@
+<section
+    class="order-payment-selection"
+    aria-labelledby="order-payment-selection-title"
+>
+    <div class="order-payment-header">
+
+        <p class="order-payment-eyebrow">
+            Payment
+        </p>
+
+        <h2 id="order-payment-selection-title">
+            Choose Payment Method
+        </h2>
+
+        <p class="order-payment-description">
+            Select how you want to pay for this order.
+        </p>
+
+    </div>
+
+
+    <div
+        id="order-payment-method-list"
+        class="order-payment-method-list"
+    >
+
+        <button
+            type="button"
+            class="order-payment-method"
+            data-payment-method="cod"
+            aria-pressed="false"
+        >
+            <span class="order-payment-method-title">
+                Cash on Delivery
+            </span>
+
+            <span class="order-payment-method-description">
+                Pay when your order is delivered.
+            </span>
+        </button>
+
+
+        <button
+            type="button"
+            class="order-payment-method"
+            data-payment-method="upi"
+            aria-pressed="false"
+        >
+            <span class="order-payment-method-title">
+                UPI
+            </span>
+
+            <span class="order-payment-method-description">
+                Pay securely using UPI.
+            </span>
+        </button>
+
+    </div>
+
+
+    <p
+        id="order-payment-message"
+        class="order-payment-message"
+        role="status"
+    ></p>
+
+
+    <button
+        type="button"
+        id="confirm-order-payment-button"
+        class="order-payment-confirm-button"
+        disabled
+    >
+        Continue
+    </button>
+
+</section>

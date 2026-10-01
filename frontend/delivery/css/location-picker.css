@@ -1,0 +1,118 @@
+.delivery-location-picker {
+    width: min(100%, 900px);
+    margin: 0 auto;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 18px;
+    box-sizing: border-box;
+}
+
+
+.delivery-location-header {
+    margin-bottom: 18px;
+}
+
+
+.delivery-location-eyebrow {
+    margin: 0 0 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+
+.delivery-location-header h2 {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+
+.delivery-location-description {
+    margin: 8px 0 0;
+    color: #666666;
+    line-height: 1.5;
+}
+
+
+.delivery-map {
+    width: 100%;
+    min-height: 420px;
+    overflow: hidden;
+    background: #f2f2f2;
+    border: 1px solid #dddddd;
+    border-radius: 14px;
+}
+
+
+.delivery-location-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+
+.delivery-location-actions button {
+    min-height: 46px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+}
+
+
+#use-gps-location-button {
+    background: #eeeeee;
+}
+
+
+#confirm-map-location-button {
+    background: #111111;
+    color: #ffffff;
+}
+
+
+.delivery-location-actions button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+
+.delivery-location-message {
+    min-height: 22px;
+    margin: 14px 0 0;
+    color: #555555;
+    line-height: 1.5;
+}
+
+
+@media (max-width: 640px) {
+    .delivery-location-picker {
+        padding: 18px;
+        border-radius: 14px;
+    }
+
+
+    .delivery-location-header h2 {
+        font-size: 23px;
+    }
+
+
+    .delivery-map {
+        min-height: 340px;
+    }
+
+
+    .delivery-location-actions {
+        flex-direction: column;
+    }
+
+
+    .delivery-location-actions button {
+        width: 100%;
+    }
+}

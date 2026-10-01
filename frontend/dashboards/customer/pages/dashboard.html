@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Customer Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/dashboard.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/profile.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/addresses.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/address-form.css"
+    >
+</head>
+
+<body>
+    <main class="customer-dashboard">
+        <header class="dashboard-header">
+            <div>
+                <p class="dashboard-eyebrow">
+                    Customer Area
+                </p>
+
+                <h1>
+                    Customer Dashboard
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    Manage your profile, addresses and orders.
+                </p>
+            </div>
+        </header>
+
+        <section
+            class="dashboard-content"
+            aria-label="Customer dashboard"
+        >
+            <div data-customer-profile></div>
+
+            <div data-customer-addresses></div>
+        </section>
+    </main>
+
+    <script
+        src="../js/profile.js"
+    ></script>
+
+    <script
+        src="../js/addresses.js"
+    ></script>
+
+    <script
+        src="../js/address-form.js"
+    ></script>
+</body>
+</html>

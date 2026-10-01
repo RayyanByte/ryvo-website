@@ -1,0 +1,130 @@
+.address-form-section {
+    margin-top: 24px;
+    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e8e3da;
+    border-radius: 16px;
+}
+
+.address-form-header {
+    margin-bottom: 24px;
+}
+
+.address-form-eyebrow {
+    margin: 0 0 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.address-form-header h2 {
+    margin: 0;
+    font-size: 1.7rem;
+}
+
+.address-form-description {
+    margin: 8px 0 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+.address-form {
+    display: grid;
+    gap: 16px;
+}
+
+.address-form-field {
+    display: grid;
+    gap: 7px;
+}
+
+.address-form-field label {
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.address-form-field input,
+.address-form-field select,
+.address-form-field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font: inherit;
+    color: #1f1f1f;
+    background: #ffffff;
+    border: 1px solid #d9d4ca;
+    border-radius: 9px;
+    outline: none;
+}
+
+.address-form-field input,
+.address-form-field select {
+    min-height: 46px;
+}
+
+.address-form-field textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.address-form-field input:focus,
+.address-form-field select:focus,
+.address-form-field textarea:focus {
+    border-color: #1f1f1f;
+}
+
+.address-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.address-save-button,
+.address-cancel-button {
+    min-height: 46px;
+    padding: 11px 18px;
+    font: inherit;
+    font-weight: 700;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.address-save-button {
+    color: #ffffff;
+    background: #1f1f1f;
+    border: 1px solid #1f1f1f;
+}
+
+.address-cancel-button {
+    color: #1f1f1f;
+    background: #ffffff;
+    border: 1px solid #d9d4ca;
+}
+
+.address-save-button:hover,
+.address-cancel-button:hover {
+    opacity: 0.9;
+}
+
+.address-form-message {
+    min-height: 20px;
+    margin: 0;
+    color: #666;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .address-form-section {
+        padding: 22px;
+    }
+
+    .address-form-actions {
+        flex-direction: column;
+    }
+
+    .address-save-button,
+    .address-cancel-button {
+        width: 100%;
+    }
+}

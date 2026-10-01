@@ -1,0 +1,129 @@
+.our-story {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 90px 24px;
+
+    background: #f7f4ef;
+}
+
+.our-story-container {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 70px;
+}
+
+.our-story-content {
+    width: 100%;
+    max-width: 560px;
+}
+
+.our-story-eyebrow {
+    margin: 0 0 14px;
+
+    color: #8a6a3f;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.our-story-title {
+    margin: 0;
+
+    color: #171717;
+    font-size: clamp(36px, 5vw, 54px);
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.our-story-description {
+    margin: 20px 0 0;
+
+    color: #666666;
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.our-story-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 180px;
+    margin-top: 30px;
+    padding: 13px 22px;
+    box-sizing: border-box;
+
+    background: #171717;
+    border: 1px solid #171717;
+    border-radius: 6px;
+
+    color: #ffffff;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.our-story-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.our-story-visual {
+    width: 100%;
+}
+
+.our-story-image {
+    width: 100%;
+    min-height: 420px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #e9e3d8;
+    border-radius: 12px;
+
+    color: #8a8a8a;
+    font-size: 14px;
+}
+
+@media (max-width: 800px) {
+    .our-story {
+        padding: 70px 18px;
+    }
+
+    .our-story-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .our-story-content {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .our-story-description {
+        font-size: 15px;
+    }
+
+    .our-story-button {
+        margin-top: 26px;
+    }
+
+    .our-story-image {
+        min-height: 300px;
+    }
+}

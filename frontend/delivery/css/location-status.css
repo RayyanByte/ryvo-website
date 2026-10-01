@@ -1,0 +1,138 @@
+.delivery-location-status {
+    display: grid;
+
+    grid-template-columns: auto 1fr;
+
+    gap: 14px;
+
+    margin-top: 18px;
+    padding: 18px;
+
+    border: 1px solid #dedede;
+    border-radius: 16px;
+
+    background: #fff;
+}
+
+
+.delivery-location-status[hidden] {
+    display: none;
+}
+
+
+.delivery-status-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f1f1f1;
+
+    font-size: 20px;
+}
+
+
+.delivery-status-label {
+    margin: 0 0 4px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+
+    color: #666;
+}
+
+
+.delivery-status-title {
+    margin: 0;
+
+    font-size: 18px;
+    line-height: 1.3;
+
+    color: #111;
+}
+
+
+.delivery-status-message {
+    margin: 6px 0 0;
+
+    font-size: 14px;
+    line-height: 1.5;
+
+    color: #555;
+}
+
+
+.delivery-status-action {
+    grid-column: 1 / -1;
+
+    width: 100%;
+
+    padding: 14px 18px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background: #111;
+    color: #fff;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.delivery-location-status.is-available {
+    border-color: #b9d9bf;
+    background: #f5fbf6;
+}
+
+
+.delivery-location-status.is-available
+.delivery-status-icon {
+    background: #dff1e2;
+}
+
+
+.delivery-location-status.is-unavailable {
+    border-color: #e0c1c1;
+    background: #fff7f7;
+}
+
+
+.delivery-location-status.is-unavailable
+.delivery-status-icon {
+    background: #f4dddd;
+}
+
+
+.delivery-location-status.is-error {
+    border-color: #ddd0b0;
+    background: #fffaf0;
+}
+
+
+.delivery-location-status.is-error
+.delivery-status-icon {
+    background: #f4e8c9;
+}
+
+
+@media (max-width: 600px) {
+
+    .delivery-location-status {
+        padding: 15px;
+    }
+
+    .delivery-status-title {
+        font-size: 17px;
+    }
+
+}
