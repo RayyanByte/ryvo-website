@@ -443,5 +443,39 @@ module.exports = {
     loginUser,
     getMyProfile,
     updateMyProfile,
-    createDeliveryBoy
+    createDeliveryBoy,
+    getDeliveryBoys
+};
+
+
+const getDeliveryBoys = async (req, res) => {
+    try {
+        const deliveryBoys =
+            await User.find({
+                role: "delivery"
+            })
+                .select(
+                    "_id name email phone isActive createdAt"
+                )
+                .sort({
+                    createdAt: -1
+                });
+
+        return res.status(200).json({
+            success: true,
+            data: deliveryBoys
+        });
+
+    } catch (error) {
+        console.error(
+            "Get delivery boys error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Failed to fetch delivery boys."
+        });
+    }
 };

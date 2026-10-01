@@ -5,7 +5,8 @@ const {
     loginUser,
     getMyProfile,
     updateMyProfile,
-    createDeliveryBoy
+    createDeliveryBoy,
+    getDeliveryBoys
 } = require("../controllers/auth/auth.controller");
 
 const {
@@ -58,6 +59,13 @@ router.post(
     protect,
     authorizeRoles("admin"),
     createDeliveryBoy
+);
+
+router.get(
+    "/admin/delivery-boys",
+    protect,
+    authorizeRoles("admin"),
+    getDeliveryBoys
 );
 
 module.exports = router;
