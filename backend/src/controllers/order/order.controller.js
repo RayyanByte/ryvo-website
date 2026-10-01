@@ -510,6 +510,18 @@ const updateOrderStatus = async (req, res) => {
             });
         }
 
+        if (
+            order.status === "pending" &&
+            nextStatus === "confirmed" &&
+            !order.deliveryBoyId
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Assign a delivery boy before confirming the order."
+            });
+        }
+
         order.status = nextStatus;
 
         await order.save();
