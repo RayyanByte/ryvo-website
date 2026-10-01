@@ -1,43 +1,48 @@
+const PAYMENT_STATUS_LABELS = {
+    pending: "Payment Pending",
+    paid: "Payment Successful",
+    failed: "Payment Failed",
+    cancelled: "Payment Cancelled",
+    refunded: "Payment Refunded"
+};
+
+const getPaymentStatus = (
+    payment
+) => {
+    const status =
+        payment?.paymentStatus ||
+        payment?.status ||
+        "pending";
+
+    return Object.prototype.hasOwnProperty.call(
+        PAYMENT_STATUS_LABELS,
+        status
+    )
+        ? status
+        : "pending";
+};
+
 const renderPaymentStatus = (
     payment,
     elementId = "payment-status"
 ) => {
     const element =
-        document.getElementById(elementId);
+        document.getElementById(
+            elementId
+        );
 
     if (!element) {
         return;
     }
 
     const status =
-        payment?.paymentStatus ||
-        payment?.status ||
-        "pending";
-
-    const statusLabels = {
-        pending: "Payment Pending",
-        paid: "Payment Successful",
-        failed: "Payment Failed",
-        cancelled: "Payment Cancelled",
-        refunded: "Payment Refunded"
-    };
+        getPaymentStatus(payment);
 
     element.textContent =
-        statusLabels[status] ||
-        "Payment Pending";
+        PAYMENT_STATUS_LABELS[status];
 
     element.dataset.paymentStatus =
         status;
-};
-
-const getPaymentStatus = (
-    payment
-) => {
-    return (
-        payment?.paymentStatus ||
-        payment?.status ||
-        "pending"
-    );
 };
 
 window.renderPaymentStatus =
