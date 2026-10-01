@@ -438,16 +438,6 @@ const createDeliveryBoy = async (req, res) => {
     }
 };
 
-module.exports = {
-    registerUser,
-    loginUser,
-    getMyProfile,
-    updateMyProfile,
-    createDeliveryBoy,
-    getDeliveryBoys
-};
-
-
 const getDeliveryBoys = async (req, res) => {
     try {
         const deliveryBoys =
@@ -478,4 +468,13 @@ const getDeliveryBoys = async (req, res) => {
                 "Failed to fetch delivery boys."
         });
     }
+};
+
+module.exports = {
+    registerUser,
+    loginUser,
+    getMyProfile,
+    updateMyProfile,
+    createDeliveryBoy,
+    getDeliveryBoys
 };
