@@ -3,25 +3,15 @@ const mongoose = require("mongoose");
 const Payment = require("../../models/payment.model");
 const Order = require("../../models/order.model");
 
+const PAYMENT_METHODS = ["cod", "upi"];
 
 const createPayment = async (req, res) => {
     try {
-        const userId = req.userId;
-
+        const customerId = req.userId;
         const {
             orderId,
             paymentMethod
         } = req.body;
-
-
-        if (!orderId || !paymentMethod) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Order ID and payment method are required."
-            });
-        }
-
 
         if (
             !mongoose.Types.ObjectId.isValid(
@@ -30,14 +20,12 @@ const createPayment = async (req, res) => {
         ) {
             return res.status(400).json({
                 success: false,
-                message:
-                    "Invalid order ID."
+                message: "Invalid order ID."
             });
         }
 
-
         if (
-            !["cod", "upi"].includes(
+            !PAYMENT_METHODS.includes(
                 paymentMethod
             )
         ) {
@@ -48,33 +36,17 @@ const createPayment = async (req, res) => {
             });
         }
 
-
-        const order = await Order.findById(
-            orderId
-        );
-
+        const order = await Order.findOne({
+            _id: orderId,
+            userId: customerId
+        });
 
         if (!order) {
             return res.status(404).json({
                 success: false,
-                message:
-                    "Order not found."
+                message: "Order not found."
             });
         }
-
-
-        if (
-            !order.userId ||
-            order.userId.toString() !==
-                userId.toString()
-        ) {
-            return res.status(403).json({
-                success: false,
-                message:
-                    "You are not allowed to access this order."
-            });
-        }
-
 
         if (
             order.paymentMethod !==
@@ -87,12 +59,20 @@ const createPayment = async (req, res) => {
             });
         }
 
+        if (
+            order.status === "cancelled"
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Cancelled orders cannot be paid."
+            });
+        }
 
         const existingPayment =
             await Payment.findOne({
                 order: order._id
             });
-
 
         if (existingPayment) {
             return res.status(200).json({
@@ -103,33 +83,16 @@ const createPayment = async (req, res) => {
             });
         }
 
-
-        const amount =
-            Number(order.totalAmount);
-
-
-        if (
-            !Number.isFinite(amount) ||
-            amount < 0
-        ) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Order amount is invalid."
-            });
-        }
-
-
         const payment =
             await Payment.create({
                 order: order._id,
-                customer: userId,
-                paymentMethod:
-                    order.paymentMethod,
-                paymentStatus: "pending",
-                amount
+                customer: customerId,
+                paymentMethod,
+                paymentStatus:
+                    "pending",
+                amount:
+                    order.totalAmount
             });
-
 
         return res.status(201).json({
             success: true,
@@ -137,7 +100,6 @@ const createPayment = async (req, res) => {
                 "Payment record created successfully.",
             data: payment
         });
-
     } catch (error) {
         console.error(
             "Create payment error:",
@@ -147,17 +109,15 @@ const createPayment = async (req, res) => {
         return res.status(500).json({
             success: false,
             message:
-                "Unable to create payment record."
+                "Failed to create payment."
         });
     }
 };
 
-
 const getMyPayment = async (req, res) => {
     try {
-        const userId = req.userId;
+        const customerId = req.userId;
         const { orderId } = req.params;
-
 
         if (
             !mongoose.Types.ObjectId.isValid(
@@ -166,35 +126,33 @@ const getMyPayment = async (req, res) => {
         ) {
             return res.status(400).json({
                 success: false,
-                message:
-                    "Invalid order ID."
+                message: "Invalid order ID."
             });
         }
-
 
         const payment =
             await Payment.findOne({
                 order: orderId,
-                customer: userId
-            }).populate(
-                "order"
-            );
-
+                customer: customerId
+            })
+                .populate(
+                    "order",
+                    "status totalAmount paymentMethod paymentStatus"
+                )
+                .select("-__v");
 
         if (!payment) {
             return res.status(404).json({
                 success: false,
                 message:
-                    "Payment not found."
+                    "Payment record not found."
             });
         }
-
 
         return res.status(200).json({
             success: true,
             data: payment
         });
-
     } catch (error) {
         console.error(
             "Get payment error:",
@@ -204,13 +162,13 @@ const getMyPayment = async (req, res) => {
         return res.status(500).json({
             success: false,
             message:
-                "Unable to get payment."
+                "Failed to fetch payment."
         });
     }
 };
 
-
 module.exports = {
     createPayment,
-    getMyPayment
+    getMyPayment,
+    PAYMENT_METHODS
 };
