@@ -8,9 +8,7 @@ const SUPPORTED_PAYMENT_METHODS = [
     "upi"
 ];
 
-const savePaymentMethod = (
-    paymentMethod
-) => {
+const savePaymentMethod = (paymentMethod) => {
     try {
         sessionStorage.setItem(
             ORDER_PAYMENT_STORAGE_KEY,
