@@ -7,7 +7,7 @@ const DELIVERY_BOYS_API_URL =
 const ORDERS_API_URL =
     "http://localhost:5000/api/orders/admin";
 
-const ORDER_ASSIGN_API_URL =
+const ORDER_API_URL =
     "http://localhost:5000/api/orders";
 
 
@@ -371,6 +371,22 @@ const deliveryOptions = (
 };
 
 
+const getNextStatus = (status) => {
+    return {
+        pending: "confirmed",
+        confirmed: "preparing",
+        preparing: "out_for_delivery",
+        out_for_delivery: "delivered"
+    }[status] || "";
+};
+
+
+const formatStatus = (status) => {
+    return String(status || "")
+        .replaceAll("_", " ");
+};
+
+
 const renderOrders = (orders) => {
     const container =
         document.getElementById(
@@ -409,6 +425,11 @@ const renderOrders = (orders) => {
                         order.status
                     );
 
+                const nextStatus =
+                    getNextStatus(
+                        order.status
+                    );
+
                 return `
                     <article
                         class="order-admin-card"
@@ -442,7 +463,9 @@ const renderOrders = (orders) => {
                                 class="order-status"
                             >
                                 ${escapeHtml(
-                                    order.status
+                                    formatStatus(
+                                        order.status
+                                    )
                                 )}
                             </span>
                         </div>
@@ -514,6 +537,30 @@ const renderOrders = (orders) => {
                                     <div
                                         class="order-assignment"
                                     >
+
+                                        ${
+                                            nextStatus
+                                                ? `
+                                                    <button
+                                                        type="button"
+                                                        class="status-button"
+                                                        data-order-id="${escapeHtml(
+                                                            order._id
+                                                        )}"
+                                                        data-next-status="${escapeHtml(
+                                                            nextStatus
+                                                        )}"
+                                                    >
+                                                        ${escapeHtml(
+                                                            formatStatus(
+                                                                nextStatus
+                                                            )
+                                                        )}
+                                                    </button>
+                                                `
+                                                : ""
+                                        }
+
                                         <select
                                             class="delivery-select"
                                             data-order-id="${escapeHtml(
@@ -536,6 +583,7 @@ const renderOrders = (orders) => {
                                         >
                                             Assign
                                         </button>
+
                                     </div>
                                 `
                         }
@@ -672,6 +720,62 @@ const loadOrders = async () => {
 };
 
 
+const updateOrderStatus = async (
+    orderId,
+    nextStatus,
+    button
+) => {
+    button.disabled = true;
+
+    try {
+        const response =
+            await fetch(
+                `${ORDER_API_URL}/${orderId}/status`,
+                {
+                    method: "PATCH",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        ...getAuthHeaders()
+                    },
+
+                    body:
+                        JSON.stringify({
+                            status: nextStatus
+                        })
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message ||
+                "Unable to update order status."
+            );
+        }
+
+        setMessage(
+            "orders-message",
+            "Order status updated successfully."
+        );
+
+        await loadOrders();
+
+    } catch (error) {
+        setMessage(
+            "orders-message",
+            error.message
+        );
+
+        button.disabled = false;
+    }
+};
+
+
 const assignDeliveryBoy = async (
     orderId,
     deliveryBoyId,
@@ -691,7 +795,7 @@ const assignDeliveryBoy = async (
     try {
         const response =
             await fetch(
-                `${ORDER_ASSIGN_API_URL}/${orderId}/assign-delivery`,
+                `${ORDER_API_URL}/${orderId}/assign-delivery`,
                 {
                     method: "PATCH",
 
@@ -771,6 +875,21 @@ const initializeOrderManagement = () => {
         ?.addEventListener(
             "click",
             (event) => {
+
+                const statusButton =
+                    event.target.closest(
+                        ".status-button"
+                    );
+
+                if (statusButton) {
+                    updateOrderStatus(
+                        statusButton.dataset.orderId,
+                        statusButton.dataset.nextStatus,
+                        statusButton
+                    );
+
+                    return;
+                }
 
                 const button =
                     event.target.closest(
