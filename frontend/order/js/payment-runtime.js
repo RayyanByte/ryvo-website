@@ -1,13 +1,3 @@
-const PAYMENT_RUNTIME_SCRIPTS = [
-    "payment-api.js",
-    "payment-status.js",
-    "upi-payment.js",
-    "upi-payment-status.js",
-    "payment-result.js",
-    "payment-polling.js",
-    "payment-flow.js"
-];
-
 const isPaymentRuntimeReady = () => {
     return (
         typeof window.getMyPayment ===
@@ -24,18 +14,21 @@ const isPaymentRuntimeReady = () => {
 };
 
 const initializePaymentRuntime = () => {
-    if (
-        isPaymentRuntimeReady()
-    ) {
-        window.paymentRuntimeReady =
-            true;
+    const ready =
+        isPaymentRuntimeReady();
 
+    window.paymentRuntimeReady =
+        ready;
+
+    if (ready) {
         window.dispatchEvent(
             new CustomEvent(
                 "paymentRuntimeReady"
             )
         );
     }
+
+    return ready;
 };
 
 window.isPaymentRuntimeReady =
