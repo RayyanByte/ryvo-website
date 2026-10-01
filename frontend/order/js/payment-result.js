@@ -4,12 +4,25 @@ const handlePaymentResult = (
     const status =
         typeof window.getPaymentStatus ===
         "function"
-            ? window.getPaymentStatus(payment)
+            ? window.getPaymentStatus(
+                payment
+            )
             : (
                 payment?.paymentStatus ||
                 payment?.status ||
                 "pending"
             );
+
+    const orderId =
+        payment?.orderId ||
+        payment?.order?._id ||
+        payment?.order?.id ||
+        null;
+
+    const paymentId =
+        payment?._id ||
+        payment?.paymentId ||
+        null;
 
     if (
         typeof window.renderPaymentStatus ===
@@ -21,57 +34,37 @@ const handlePaymentResult = (
     }
 
     if (status === "paid") {
-        if (
-            typeof window.setUpiPaymentPaid ===
-            "function"
-        ) {
-            window.setUpiPaymentPaid(
-                payment?.orderId ||
-                payment?.order?._id ||
-                null,
-                payment?._id ||
-                payment?.paymentId ||
-                null
-            );
-        }
+        window.setUpiPaymentPaid?.(
+            orderId,
+            paymentId
+        );
 
         return "paid";
     }
 
     if (status === "failed") {
-        if (
-            typeof window.setUpiPaymentFailed ===
-            "function"
-        ) {
-            window.setUpiPaymentFailed(
-                payment?.orderId ||
-                payment?.order?._id ||
-                null,
-                payment?._id ||
-                payment?.paymentId ||
-                null
-            );
-        }
+        window.setUpiPaymentFailed?.(
+            orderId,
+            paymentId
+        );
 
         return "failed";
     }
 
     if (status === "cancelled") {
-        if (
-            typeof window.setUpiPaymentCancelled ===
-            "function"
-        ) {
-            window.setUpiPaymentCancelled(
-                payment?.orderId ||
-                payment?.order?._id ||
-                null,
-                payment?._id ||
-                payment?.paymentId ||
-                null
-            );
-        }
+        window.setUpiPaymentCancelled?.(
+            orderId,
+            paymentId
+        );
 
         return "cancelled";
+    }
+
+    if (status === "pending") {
+        window.setUpiPaymentPending?.(
+            orderId,
+            paymentId
+        );
     }
 
     return "pending";
