@@ -11,6 +11,7 @@ const initializePaymentFlow = () => {
             const orderId =
                 order?._id ||
                 order?.id ||
+                event.detail?.orderId ||
                 null;
 
             if (!orderId) {
@@ -22,9 +23,7 @@ const initializePaymentFlow = () => {
                 payment?.paymentMethod ||
                 window.getSelectedPaymentMethod?.();
 
-            if (
-                paymentMethod !== "upi"
-            ) {
+            if (paymentMethod !== "upi") {
                 return;
             }
 
