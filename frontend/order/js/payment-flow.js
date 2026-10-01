@@ -27,17 +27,16 @@ const initializePaymentFlow = () => {
                 return;
             }
 
-            if (
-                typeof window.setUpiPaymentPending ===
-                "function"
-            ) {
-                window.setUpiPaymentPending(
-                    orderId,
-                    payment?._id ||
-                    payment?.paymentId ||
-                    null
-                );
-            }
+            window.setUpiPaymentPending?.(
+                orderId,
+                payment?._id ||
+                payment?.paymentId ||
+                null
+            );
+
+            window.renderPaymentStatus?.(
+                payment
+            );
 
             if (
                 typeof window.startPaymentPolling ===
