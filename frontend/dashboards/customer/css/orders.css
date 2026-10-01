@@ -137,3 +137,100 @@
         align-self: flex-end;
     }
 }
+
+.order-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.order-details-button,
+.order-cancel-button {
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.order-details-button {
+    background: #1f1f1f;
+    color: #ffffff;
+}
+
+.order-cancel-button {
+    background: #eee9e1;
+    color: #1f1f1f;
+}
+
+.order-details-button:disabled,
+.order-cancel-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.order-details {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee9e1;
+}
+
+.order-details-content h3 {
+    margin: 0 0 16px;
+    font-size: 1.05rem;
+}
+
+.order-detail-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.order-detail-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px;
+    background: #f7f5f0;
+    border-radius: 8px;
+}
+
+.order-detail-grid span {
+    color: #777;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.order-detail-grid strong {
+    font-size: 0.9rem;
+}
+
+.order-address {
+    margin-top: 16px;
+    padding: 16px;
+    background: #f7f5f0;
+    border-radius: 8px;
+}
+
+.order-address h4 {
+    margin: 0 0 10px;
+}
+
+.order-address p {
+    margin: 4px 0;
+    color: #555;
+}
+
+.order-location-coordinates {
+    margin: 14px 0 0;
+    color: #777;
+    font-size: 0.82rem;
+}
+
+@media (min-width: 700px) {
+    .order-detail-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
