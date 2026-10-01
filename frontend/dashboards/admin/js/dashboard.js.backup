@@ -426,11 +426,6 @@ const renderOrders = (orders) => {
                     );
 
                 const nextStatus =
-                    getNextOrderStatus(
-                        order.status
-                    );
-
-                const nextStatus =
                     getNextStatus(
                         order.status
                     );
@@ -560,23 +555,6 @@ const renderOrders = (orders) => {
                                                             formatStatus(
                                                                 nextStatus
                                                             )
-                                                        )}
-                                                    </button>
-                                                `
-                                                : ""
-                                        }
-
-                                        ${
-                                            nextStatus
-                                                ? `
-                                                    <button
-                                                        type="button"
-                                                        class="status-button"
-                                                        data-order-id="${escapeHtml(order._id)}"
-                                                        data-next-status="${escapeHtml(nextStatus)}"
-                                                    >
-                                                        ${escapeHtml(
-                                                            formatOrderStatus(nextStatus)
                                                         )}
                                                     </button>
                                                 `
@@ -919,21 +897,6 @@ const initializeOrderManagement = () => {
                     );
 
                 if (!button) {
-                    return;
-                }
-
-                const statusButton =
-                    event.target.closest(
-                        ".status-button"
-                    );
-
-                if (statusButton) {
-                    updateOrderStatus(
-                        statusButton.dataset.orderId,
-                        statusButton.dataset.nextStatus,
-                        statusButton
-                    );
-
                     return;
                 }
 

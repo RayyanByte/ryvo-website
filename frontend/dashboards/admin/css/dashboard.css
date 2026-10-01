@@ -326,3 +326,20 @@ body {
         width: 100%;
     }
 }
+
+
+.status-button {
+    min-height: 42px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 8px;
+    background: #eeeae2;
+    color: #1f1f1f;
+    cursor: pointer;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.status-button:disabled {
+    opacity: 0.5;
+}
