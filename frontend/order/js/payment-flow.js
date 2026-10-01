@@ -1,13 +1,4 @@
 const initializePaymentFlow = () => {
-    const paymentButton =
-        document.getElementById(
-            "confirm-order-payment-button"
-        );
-
-    if (!paymentButton) {
-        return;
-    }
-
     window.addEventListener(
         "orderCreated",
         async (event) => {
@@ -31,7 +22,9 @@ const initializePaymentFlow = () => {
                 payment?.paymentMethod ||
                 window.getSelectedPaymentMethod?.();
 
-            if (paymentMethod !== "upi") {
+            if (
+                paymentMethod !== "upi"
+            ) {
                 return;
             }
 
@@ -48,20 +41,11 @@ const initializePaymentFlow = () => {
             }
 
             if (
-                typeof window.checkUpiPaymentStatus !==
+                typeof window.startPaymentPolling ===
                 "function"
             ) {
-                return;
-            }
-
-            try {
-                await window.checkUpiPaymentStatus(
+                window.startPaymentPolling(
                     orderId
-                );
-            } catch (error) {
-                console.error(
-                    "UPI payment status check error:",
-                    error
                 );
             }
         }
