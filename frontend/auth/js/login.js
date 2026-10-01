@@ -9,6 +9,18 @@ const setLoginMessage = (message) => {
     loginMessage.textContent = message;
 };
 
+const getDashboardPath = (role) => {
+    if (role === "admin") {
+        return "../../dashboards/admin/pages/dashboard.html";
+    }
+
+    if (role === "delivery") {
+        return "../../delivery/pages/dashboard.html";
+    }
+
+    return "../../dashboards/customer/pages/dashboard.html";
+};
+
 const loginCustomer = async (email, password) => {
     const response = await fetch(
         "http://localhost:5000/api/auth/login",
@@ -66,6 +78,9 @@ const handleLogin = async (event) => {
         const token =
             result?.data?.token;
 
+        const role =
+            result?.data?.user?.role;
+
         if (!token) {
             throw new Error(
                 "Login succeeded but no authentication token was received."
@@ -77,12 +92,23 @@ const handleLogin = async (event) => {
             token
         );
 
+        if (role) {
+            localStorage.setItem(
+                "userRole",
+                role
+            );
+        }
+
         setLoginMessage(
             "Login successful."
         );
+
+        window.location.href =
+            getDashboardPath(role);
+
     } catch (error) {
         console.error(
-            "Customer login error:",
+            "Login error:",
             error
         );
 
