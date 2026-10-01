@@ -33,59 +33,47 @@ const checkUpiPaymentStatus = async (
                 "pending"
             );
 
-    if (
-        typeof window.setUpiPaymentPaid ===
-        "function" &&
-        status === "paid"
-    ) {
-        window.setUpiPaymentPaid(
+    const paymentId =
+        payment?._id ||
+        payment?.paymentId ||
+        null;
+
+    if (status === "paid") {
+        window.setUpiPaymentPaid?.(
             orderId,
-            payment?._id ||
-            payment?.paymentId ||
-            null
+            paymentId
+        );
+    }
+
+    if (status === "failed") {
+        window.setUpiPaymentFailed?.(
+            orderId,
+            paymentId
+        );
+    }
+
+    if (status === "cancelled") {
+        window.setUpiPaymentCancelled?.(
+            orderId,
+            paymentId
+        );
+    }
+
+    if (status === "pending") {
+        window.setUpiPaymentPending?.(
+            orderId,
+            paymentId
         );
     }
 
     if (
-        typeof window.setUpiPaymentFailed ===
-        "function" &&
-        status === "failed"
+        typeof window.handlePaymentResult ===
+        "function"
     ) {
-        window.setUpiPaymentFailed(
-            orderId,
-            payment?._id ||
-            payment?.paymentId ||
-            null
+        window.handlePaymentResult(
+            payment
         );
-    }
-
-    if (
-        typeof window.setUpiPaymentCancelled ===
-        "function" &&
-        status === "cancelled"
-    ) {
-        window.setUpiPaymentCancelled(
-            orderId,
-            payment?._id ||
-            payment?.paymentId ||
-            null
-        );
-    }
-
-    if (
-        typeof window.setUpiPaymentPending ===
-        "function" &&
-        status === "pending"
-    ) {
-        window.setUpiPaymentPending(
-            orderId,
-            payment?._id ||
-            payment?.paymentId ||
-            null
-        );
-    }
-
-    if (
+    } else if (
         typeof window.renderPaymentStatus ===
         "function"
     ) {
