@@ -234,6 +234,107 @@ const getMyProfile = async (req, res) => {
     }
 };
 
+const updateMyProfile = async (req, res) => {
+    try {
+        const {
+            name,
+            phone
+        } = req.body;
+
+        if (
+            typeof name !== "string" ||
+            !name.trim()
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Name is required."
+            });
+        }
+
+        const trimmedName =
+            name.trim();
+
+        if (
+            trimmedName.length < 2 ||
+            trimmedName.length > 50
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Name must be between 2 and 50 characters."
+            });
+        }
+
+        if (
+            phone !== undefined &&
+            typeof phone !== "string"
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Phone must be a string."
+            });
+        }
+
+        const user =
+            await User.findById(
+                req.userId
+            );
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message:
+                    "User not found."
+            });
+        }
+
+        if (!user.isActive) {
+            return res.status(403).json({
+                success: false,
+                message:
+                    "This account is inactive."
+            });
+        }
+
+        user.name = trimmedName;
+
+        if (phone !== undefined) {
+            user.phone = phone.trim();
+        }
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message:
+                "Profile updated successfully.",
+            data: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                role: user.role,
+                isActive: user.isActive,
+                createdAt: user.createdAt
+            }
+        });
+
+    } catch (error) {
+        console.error(
+            "Update profile error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Something went wrong while updating the profile."
+        });
+    }
+};
+
 const createDeliveryBoy = async (req, res) => {
     try {
         const {
@@ -341,5 +442,6 @@ module.exports = {
     registerUser,
     loginUser,
     getMyProfile,
+    updateMyProfile,
     createDeliveryBoy
 };

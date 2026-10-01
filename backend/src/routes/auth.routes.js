@@ -4,6 +4,7 @@ const {
     registerUser,
     loginUser,
     getMyProfile,
+    updateMyProfile,
     createDeliveryBoy
 } = require("../controllers/auth/auth.controller");
 
@@ -31,6 +32,12 @@ router.get(
     "/me",
     protect,
     getMyProfile
+);
+
+router.patch(
+    "/me",
+    protect,
+    updateMyProfile
 );
 
 router.get(
