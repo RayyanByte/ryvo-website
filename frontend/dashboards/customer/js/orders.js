@@ -4,6 +4,16 @@ const ORDERS_API_URL =
 const ORDER_API_URL =
     "http://localhost:5000/api/orders/";
 
+const escapeHtml = (value) => {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+};
+
+
 const loadCustomerOrders = async () => {
     const container = document.querySelector(
         "[data-customer-orders]"
@@ -128,21 +138,21 @@ const renderCustomerOrders = (orders) => {
         return `
             <article
                 class="order-card"
-                data-order-id="${order._id}"
+                data-order-id="${escapeHtml(order._id)}"
             >
                 <div class="order-card-header">
                     <div>
                         <p class="order-number">
-                            Order #${order._id}
+                            Order #${escapeHtml(order._id)}
                         </p>
 
                         <p class="order-date">
-                            ${createdAt}
+                            ${escapeHtml(createdAt)}
                         </p>
                     </div>
 
                     <span class="order-status">
-                        ${order.status || "pending"}
+                        ${escapeHtml(order.status || "pending")}
                     </span>
                 </div>
 
@@ -152,11 +162,11 @@ const renderCustomerOrders = (orders) => {
                             <li class="order-item">
                                 <div>
                                     <p class="order-item-name">
-                                        ${item.name || "Food item"}
+                                        ${escapeHtml(item.name || "Food item")}
                                     </p>
 
                                     <p class="order-item-quantity">
-                                        Qty: ${item.quantity || 0}
+                                        Qty: ${escapeHtml(item.quantity || 0)}
                                     </p>
                                 </div>
 
@@ -176,7 +186,7 @@ const renderCustomerOrders = (orders) => {
                             Payment:
                             ${(order.paymentMethod || "").toUpperCase()}
                             ·
-                            ${order.paymentStatus || "pending"}
+                            ${escapeHtml(order.paymentStatus || "pending")}
                         </p>
 
                         <p class="order-total">
@@ -191,7 +201,7 @@ const renderCustomerOrders = (orders) => {
                         <button
                             type="button"
                             class="order-details-button"
-                            data-order-details="${order._id}"
+                            data-order-details="${escapeHtml(order._id)}"
                         >
                             View Details
                         </button>
@@ -202,7 +212,7 @@ const renderCustomerOrders = (orders) => {
                                     <button
                                         type="button"
                                         class="order-cancel-button"
-                                        data-order-cancel="${order._id}"
+                                        data-order-cancel="${escapeHtml(order._id)}"
                                     >
                                         Cancel Order
                                     </button>
@@ -214,7 +224,7 @@ const renderCustomerOrders = (orders) => {
 
                 <div
                     class="order-details"
-                    data-order-details-container="${order._id}"
+                    data-order-details-container="${escapeHtml(order._id)}"
                     hidden
                 ></div>
             </article>
@@ -361,7 +371,7 @@ const renderOrderDetails = (
                     </span>
 
                     <strong>
-                        ${order.status || "pending"}
+                        ${escapeHtml(order.status || "pending")}
                     </strong>
                 </div>
 
@@ -373,7 +383,7 @@ const renderOrderDetails = (
                     <strong>
                         ${(order.paymentMethod || "").toUpperCase()}
                         ·
-                        ${order.paymentStatus || "pending"}
+                        ${escapeHtml(order.paymentStatus || "pending")}
                     </strong>
                 </div>
 
