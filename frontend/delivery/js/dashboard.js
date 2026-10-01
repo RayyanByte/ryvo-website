@@ -10,12 +10,28 @@ const getAuthToken = () => {
 };
 
 
+const escapeHtml = (value) => {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+};
+
+
 const formatDate = (dateValue) => {
     if (!dateValue) {
         return "Date unavailable";
     }
 
-    return new Date(dateValue).toLocaleString();
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+        return "Date unavailable";
+    }
+
+    return date.toLocaleString();
 };
 
 
@@ -24,7 +40,9 @@ const formatStatus = (status) => {
         return "Pending";
     }
 
-    return status.replaceAll("_", " ");
+    return escapeHtml(
+        String(status).replaceAll("_", " ")
+    );
 };
 
 
@@ -63,10 +81,12 @@ const renderStatusAction = (order) => {
             type="button"
             class="delivery-status-button"
             data-action="update-status"
-            data-order-id="${order._id}"
-            data-next-status="${nextStatus}"
+            data-order-id="${escapeHtml(order._id)}"
+            data-next-status="${escapeHtml(nextStatus)}"
         >
-            ${getStatusButtonText(order.status)}
+            ${escapeHtml(
+                getStatusButtonText(order.status)
+            )}
         </button>
     `;
 };
@@ -107,19 +127,24 @@ const renderDeliveryOrders = (orders) => {
         const location =
             order.deliveryLocation || {};
 
+        const statusAction =
+            renderStatusAction(order);
+
         return `
             <article
                 class="delivery-order-card"
-                data-order-id="${order._id}"
+                data-order-id="${escapeHtml(order._id)}"
             >
                 <header class="delivery-order-header">
                     <div>
                         <p class="delivery-order-id">
-                            Order #${order._id}
+                            Order #${escapeHtml(order._id)}
                         </p>
 
                         <p class="delivery-order-date">
-                            ${formatDate(order.createdAt)}
+                            ${escapeHtml(
+                                formatDate(order.createdAt)
+                            )}
                         </p>
                     </div>
 
@@ -134,11 +159,19 @@ const renderDeliveryOrders = (orders) => {
                     </h2>
 
                     <p>
-                        ${customer.name || address.fullName || "Customer"}
+                        ${escapeHtml(
+                            customer.name ||
+                            address.fullName ||
+                            "Customer"
+                        )}
                     </p>
 
                     <p>
-                        ${customer.phone || address.phone || "Phone unavailable"}
+                        ${escapeHtml(
+                            customer.phone ||
+                            address.phone ||
+                            "Phone unavailable"
+                        )}
                     </p>
                 </section>
 
@@ -148,23 +181,40 @@ const renderDeliveryOrders = (orders) => {
                     </h2>
 
                     <p>
-                        ${address.fullName || ""}
+                        ${escapeHtml(
+                            address.fullName || ""
+                        )}
                     </p>
 
                     <p>
-                        ${address.addressLine || ""}
+                        ${escapeHtml(
+                            address.addressLine || ""
+                        )}
                     </p>
 
                     ${
                         address.landmark
-                            ? `<p>${address.landmark}</p>`
+                            ? `
+                                <p>
+                                    ${escapeHtml(
+                                        address.landmark
+                                    )}
+                                </p>
+                            `
                             : ""
                     }
 
                     <p>
-                        ${address.city || ""},
-                        ${address.state || ""}
-                        - ${address.pincode || ""}
+                        ${escapeHtml(
+                            address.city || ""
+                        )},
+                        ${escapeHtml(
+                            address.state || ""
+                        )}
+                        -
+                        ${escapeHtml(
+                            address.pincode || ""
+                        )}
                     </p>
                 </section>
 
@@ -179,10 +229,16 @@ const renderDeliveryOrders = (orders) => {
                                 <li class="delivery-item">
                                     <span>
                                         <span class="delivery-item-name">
-                                            ${item.name || "Food item"}
+                                            ${escapeHtml(
+                                                item.name ||
+                                                "Food item"
+                                            )}
                                         </span>
 
-                                        × ${item.quantity || 0}
+                                        ×
+                                        ${escapeHtml(
+                                            item.quantity || 0
+                                        )}
                                     </span>
 
                                     <span class="delivery-item-total">
@@ -216,20 +272,27 @@ const renderDeliveryOrders = (orders) => {
                     <div>
                         <p class="delivery-distance">
                             Payment:
-                            ${(order.paymentMethod || "").toUpperCase()}
+                            ${escapeHtml(
+                                String(
+                                    order.paymentMethod || ""
+                                ).toUpperCase()
+                            )}
                         </p>
 
                         <p class="delivery-distance">
-                            ${order.paymentStatus || "pending"}
+                            ${escapeHtml(
+                                order.paymentStatus ||
+                                "pending"
+                            )}
                         </p>
                     </div>
                 </footer>
 
                 ${
-                    renderStatusAction(order)
+                    statusAction
                         ? `
                             <div class="delivery-order-actions">
-                                ${renderStatusAction(order)}
+                                ${statusAction}
                             </div>
                         `
                         : ""
@@ -242,13 +305,19 @@ const renderDeliveryOrders = (orders) => {
 
 const updateDeliveryOrderStatus = async (
     orderId,
-    nextStatus
+    nextStatus,
+    button
 ) => {
     const token =
         getAuthToken();
 
     if (!token) {
         return;
+    }
+
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Updating...";
     }
 
     try {
@@ -295,6 +364,18 @@ const updateDeliveryOrderStatus = async (
             error.message ||
             "Unable to update order status."
         );
+
+        if (button) {
+            button.disabled = false;
+            button.textContent =
+                getStatusButtonText(
+                    nextStatus === "preparing"
+                        ? "confirmed"
+                        : nextStatus === "out_for_delivery"
+                            ? "preparing"
+                            : "out_for_delivery"
+                );
+        }
     }
 };
 
@@ -375,7 +456,7 @@ document.addEventListener(
                 '[data-action="update-status"]'
             );
 
-        if (!button) {
+        if (!button || button.disabled) {
             return;
         }
 
@@ -394,7 +475,8 @@ document.addEventListener(
 
         updateDeliveryOrderStatus(
             orderId,
-            nextStatus
+            nextStatus,
+            button
         );
     }
 );
