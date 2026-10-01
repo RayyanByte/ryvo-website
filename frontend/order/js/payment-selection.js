@@ -1,31 +1,24 @@
 const ORDER_PAYMENT_STORAGE_KEY =
     "ryvo_order_payment_method";
 
-
 let selectedPaymentMethod = null;
-
 
 const SUPPORTED_PAYMENT_METHODS = [
     "cod",
     "upi"
 ];
 
-
 const savePaymentMethod = (
     paymentMethod
 ) => {
-
     try {
-
         sessionStorage.setItem(
             ORDER_PAYMENT_STORAGE_KEY,
             paymentMethod
         );
 
         return true;
-
     } catch (error) {
-
         console.error(
             "Payment method storage error:",
             error
@@ -35,30 +28,19 @@ const savePaymentMethod = (
     }
 };
 
-
 const loadPaymentMethod = () => {
-
     try {
-
         const storedMethod =
             sessionStorage.getItem(
                 ORDER_PAYMENT_STORAGE_KEY
             );
 
-
-        if (
-            !SUPPORTED_PAYMENT_METHODS.includes(
-                storedMethod
-            )
-        ) {
-            return null;
-        }
-
-
-        return storedMethod;
-
+        return SUPPORTED_PAYMENT_METHODS.includes(
+            storedMethod
+        )
+            ? storedMethod
+            : null;
     } catch (error) {
-
         console.error(
             "Payment method storage read error:",
             error
@@ -68,77 +50,59 @@ const loadPaymentMethod = () => {
     }
 };
 
-
 const renderPaymentMessage = (
-    message
+    message,
+    type = ""
 ) => {
-
-    const messageElement =
+    const element =
         document.getElementById(
             "order-payment-message"
         );
 
-
-    if (!messageElement) {
+    if (!element) {
         return;
     }
 
-
-    messageElement.textContent =
-        message;
+    element.textContent = message;
+    element.className =
+        `order-payment-message ${type}`.trim();
 };
 
-
 const updatePaymentButtons = () => {
-
-    const buttons =
-        document.querySelectorAll(
+    document
+        .querySelectorAll(
             "[data-payment-method]"
-        );
-
-
-    buttons.forEach(
-        (button) => {
-
-            const isSelected =
+        )
+        .forEach((button) => {
+            const selected =
                 button.dataset.paymentMethod ===
                 selectedPaymentMethod;
 
-
             button.classList.toggle(
                 "selected",
-                isSelected
+                selected
             );
-
 
             button.setAttribute(
                 "aria-pressed",
-                isSelected
-                    ? "true"
-                    : "false"
+                selected ? "true" : "false"
             );
-        }
-    );
-
+        });
 
     const confirmButton =
         document.getElementById(
             "confirm-order-payment-button"
         );
 
-
     if (confirmButton) {
-
         confirmButton.disabled =
             !selectedPaymentMethod;
     }
 };
 
-
 const selectPaymentMethod = (
     paymentMethod
 ) => {
-
     if (
         !SUPPORTED_PAYMENT_METHODS.includes(
             paymentMethod
@@ -147,21 +111,21 @@ const selectPaymentMethod = (
         return false;
     }
 
-
-    selectedPaymentMethod =
-        paymentMethod;
-
-
-    const saved =
-        savePaymentMethod(
+    if (
+        !savePaymentMethod(
             paymentMethod
+        )
+    ) {
+        renderPaymentMessage(
+            "Unable to save payment selection.",
+            "error"
         );
 
-
-    if (!saved) {
         return false;
     }
 
+    selectedPaymentMethod =
+        paymentMethod;
 
     updatePaymentButtons();
 
@@ -171,26 +135,21 @@ const selectPaymentMethod = (
             : "UPI selected."
     );
 
-
     return true;
 };
 
-
 const confirmPaymentMethod = () => {
-
     if (!selectedPaymentMethod) {
-
         renderPaymentMessage(
-            "Please select a payment method first."
+            "Please select a payment method first.",
+            "error"
         );
 
         return;
     }
 
-
     window.orderPaymentMethod =
         selectedPaymentMethod;
-
 
     window.dispatchEvent(
         new CustomEvent(
@@ -204,107 +163,77 @@ const confirmPaymentMethod = () => {
         )
     );
 
-
     renderPaymentMessage(
-        "Payment method confirmed."
+        selectedPaymentMethod === "cod"
+            ? "Cash on Delivery confirmed."
+            : "UPI selected. Payment will remain pending until payment is confirmed."
     );
 };
 
-
 const initializePaymentSelection = () => {
-
-    const storedMethod =
+    selectedPaymentMethod =
         loadPaymentMethod();
-
-
-    if (storedMethod) {
-
-        selectedPaymentMethod =
-            storedMethod;
-    }
-
 
     document
         .querySelectorAll(
             "[data-payment-method]"
         )
-        .forEach(
-            (button) => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        selectPaymentMethod(
-                            button.dataset.paymentMethod
-                        );
-                    }
-                );
-            }
-        );
-
+        .forEach((button) => {
+            button.addEventListener(
+                "click",
+                () => {
+                    selectPaymentMethod(
+                        button.dataset.paymentMethod
+                    );
+                }
+            );
+        });
 
     const confirmButton =
         document.getElementById(
             "confirm-order-payment-button"
         );
 
-
     if (confirmButton) {
-
         confirmButton.addEventListener(
             "click",
             confirmPaymentMethod
         );
     }
 
-
     updatePaymentButtons();
 };
 
-
 window.getSelectedPaymentMethod = () => {
-
     return selectedPaymentMethod;
 };
 
-
 window.clearSelectedPaymentMethod = () => {
-
     selectedPaymentMethod = null;
-
     window.orderPaymentMethod = null;
 
-
     try {
-
         sessionStorage.removeItem(
             ORDER_PAYMENT_STORAGE_KEY
         );
-
     } catch (error) {
-
         console.error(
             "Payment method storage clear error:",
             error
         );
     }
 
-
     updatePaymentButtons();
 };
 
-
 if (
-    document.readyState === "loading"
+    document.readyState ===
+    "loading"
 ) {
-
     document.addEventListener(
         "DOMContentLoaded",
         initializePaymentSelection
     );
-
 } else {
-
     initializePaymentSelection();
 }
