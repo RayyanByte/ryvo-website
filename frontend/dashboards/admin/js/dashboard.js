@@ -430,10 +430,7 @@ const renderOrders = (orders) => {
                         order.status
                     );
 
-                const nextStatus =
-                    getNextStatus(
-                        order.status
-                    );
+
 
                 return `
                     <article
