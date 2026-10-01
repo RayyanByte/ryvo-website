@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const Order = require("../../models/order.model");
+const Payment = require("../../models/payment.model");
 const Address = require("../../models/address.model");
 const Food = require("../../models/food.model");
 const Shop = require("../../models/shop.model");
@@ -765,6 +766,29 @@ const updateDeliveryOrderStatus = async (
         order.status = nextStatus;
 
         await order.save();
+
+        if (nextStatus === "delivered") {
+            await Payment.findOneAndUpdate(
+                {
+                    order: order._id,
+                    paymentMethod: "cod",
+                    paymentStatus: "pending"
+                },
+                {
+                    paymentStatus: "paid",
+                    paidAt: new Date()
+                }
+            );
+
+            await Order.findByIdAndUpdate(
+                order._id,
+                {
+                    paymentStatus: "paid"
+                }
+            );
+
+            order.paymentStatus = "paid";
+        }
 
         return res.status(200).json({
             success: true,
