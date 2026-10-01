@@ -53,6 +53,16 @@ const startPaymentPolling = (
                 status === "cancelled"
             ) {
                 stopPaymentPolling();
+                return;
+            }
+
+            if (
+                typeof window.renderPaymentStatus ===
+                "function"
+            ) {
+                window.renderPaymentStatus(
+                    payment
+                );
             }
         } catch (error) {
             console.error(
