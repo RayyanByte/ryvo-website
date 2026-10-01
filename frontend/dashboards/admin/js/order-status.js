@@ -1,4 +1,4 @@
-const getNextOrderStatus = (status) => {
+const getNextStatus = (status) => {
     return {
         pending: "confirmed",
         confirmed: "preparing",
@@ -8,7 +8,7 @@ const getNextOrderStatus = (status) => {
 };
 
 
-const formatOrderStatus = (status) => {
+const formatStatus = (status) => {
     return String(status || "")
         .replaceAll("_", " ");
 };
@@ -22,28 +22,33 @@ const updateOrderStatus = async (
     button.disabled = true;
 
     try {
-        const response = await fetch(
-            `http://localhost:5000/api/orders/${orderId}/status`,
-            {
-                method: "PATCH",
+        const response =
+            await fetch(
+                `${ORDER_API_URL}/${orderId}/status`,
+                {
+                    method: "PATCH",
 
-                headers: {
-                    "Content-Type":
-                        "application/json",
+                    headers: {
+                        "Content-Type":
+                            "application/json",
 
-                    ...getAuthHeaders()
-                },
+                        ...getAuthHeaders()
+                    },
 
-                body: JSON.stringify({
-                    status: nextStatus
-                })
-            }
-        );
+                    body:
+                        JSON.stringify({
+                            status: nextStatus
+                        })
+                }
+            );
 
         const result =
             await response.json();
 
-        if (!response.ok || !result.success) {
+        if (
+            !response.ok ||
+            !result.success
+        ) {
             throw new Error(
                 result.message ||
                 "Unable to update order status."

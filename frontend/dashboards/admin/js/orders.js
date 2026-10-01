@@ -1,0 +1,557 @@
+let deliveryBoys = [];
+let currentPage = 1;
+let currentStatus = "";
+
+
+const loadDeliveryBoys = async () => {
+    const response =
+        await fetch(
+            DELIVERY_BOYS_API_URL,
+            {
+                headers:
+                    getAuthHeaders()
+            }
+        );
+
+    const result =
+        await response.json();
+
+    if (
+        !response.ok ||
+        !result.success
+    ) {
+        throw new Error(
+            result.message ||
+            "Unable to load delivery boys."
+        );
+    }
+
+    deliveryBoys =
+        Array.isArray(result.data)
+            ? result.data
+            : [];
+};
+
+
+const deliveryOptions = (
+    selectedId
+) => {
+    const options = [
+        `<option value="">Select delivery boy</option>`
+    ];
+
+    deliveryBoys
+        .filter(
+            (boy) => boy.isActive
+        )
+        .forEach(
+            (boy) => {
+                const selected =
+                    String(boy._id) ===
+                    String(selectedId)
+                        ? " selected"
+                        : "";
+
+                options.push(`
+                    <option
+                        value="${escapeHtml(
+                            boy._id
+                        )}"
+                        ${selected}
+                    >
+                        ${escapeHtml(
+                            boy.name
+                        )}
+                    </option>
+                `);
+            }
+        );
+
+    return options.join("");
+};
+
+
+const renderOrders = (orders) => {
+    const container =
+        document.getElementById(
+            "orders-list"
+        );
+
+    if (!orders.length) {
+        container.innerHTML =
+            `<div class="no-orders">No orders found.</div>`;
+
+        return;
+    }
+
+    container.innerHTML =
+        orders.map(
+            (order) => {
+                const customer =
+                    order.userId?.name ||
+                    "Unknown";
+
+                const phone =
+                    order.userId?.phone ||
+                    "-";
+
+                const total =
+                    Number(
+                        order.totalAmount || 0
+                    ).toFixed(2);
+
+                const terminal =
+                    [
+                        "delivered",
+                        "cancelled"
+                    ].includes(
+                        order.status
+                    );
+
+                const nextStatus =
+                    getNextStatus(
+                        order.status
+                    );
+
+                return `
+                    <article
+                        class="order-admin-card"
+                    >
+
+                        <div
+                            class="order-admin-header"
+                        >
+                            <div>
+                                <p
+                                    class="order-admin-id"
+                                >
+                                    Order
+                                    ${escapeHtml(
+                                        order._id
+                                    )}
+                                </p>
+
+                                <p
+                                    class="order-admin-date"
+                                >
+                                    ${escapeHtml(
+                                        new Date(
+                                            order.createdAt
+                                        ).toLocaleString()
+                                    )}
+                                </p>
+                            </div>
+
+                            <span
+                                class="order-status"
+                            >
+                                ${escapeHtml(
+                                    formatStatus(
+                                        order.status
+                                    )
+                                )}
+                            </span>
+                        </div>
+
+                        <div
+                            class="order-admin-details"
+                        >
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Customer:
+                                </strong>
+                                ${escapeHtml(
+                                    customer
+                                )}
+                            </p>
+
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Phone:
+                                </strong>
+                                ${escapeHtml(
+                                    phone
+                                )}
+                            </p>
+
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Total:
+                                </strong>
+                                ₹${escapeHtml(
+                                    total
+                                )}
+                            </p>
+
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Payment:
+                                </strong>
+                                ${escapeHtml(
+                                    order.paymentMethod
+                                )}
+                            </p>
+
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Delivery:
+                                </strong>
+                                ${escapeHtml(
+                                    order.deliveryBoyId?.name ||
+                                    "Not assigned"
+                                )}
+                            </p>
+                        </div>
+
+                        ${
+                            terminal
+                                ? ""
+                                : `
+                                    <div
+                                        class="order-assignment"
+                                    >
+
+                                        ${
+                                            nextStatus
+                                                ? `
+                                                    <button
+                                                        type="button"
+                                                        class="status-button"
+                                                        data-order-id="${escapeHtml(
+                                                            order._id
+                                                        )}"
+                                                        data-next-status="${escapeHtml(
+                                                            nextStatus
+                                                        )}"
+                                                    >
+                                                        ${escapeHtml(
+                                                            formatStatus(
+                                                                nextStatus
+                                                            )
+                                                        )}
+                                                    </button>
+                                                `
+                                                : ""
+                                        }
+
+                                        <select
+                                            class="delivery-select"
+                                            data-order-id="${escapeHtml(
+                                                order._id
+                                            )}"
+                                        >
+                                            ${deliveryOptions(
+                                                order
+                                                    .deliveryBoyId
+                                                    ?._id
+                                            )}
+                                        </select>
+
+                                        <button
+                                            type="button"
+                                            class="assign-button"
+                                            data-order-id="${escapeHtml(
+                                                order._id
+                                            )}"
+                                        >
+                                            Assign
+                                        </button>
+
+                                    </div>
+                                `
+                        }
+
+                    </article>
+                `;
+            }
+        ).join("");
+};
+
+const renderPagination = (
+    page,
+    totalPages
+) => {
+    const container =
+        document.getElementById(
+            "orders-pagination"
+        );
+
+    if (totalPages <= 1) {
+        container.innerHTML = "";
+        return;
+    }
+
+    container.innerHTML = `
+        <button
+            type="button"
+            class="pagination-button"
+            id="orders-previous"
+            ${page <= 1 ? "disabled" : ""}
+        >
+            Previous
+        </button>
+
+        <button
+            type="button"
+            class="pagination-button"
+            id="orders-next"
+            ${page >= totalPages ? "disabled" : ""}
+        >
+            Next
+        </button>
+    `;
+
+    document
+        .getElementById(
+            "orders-previous"
+        )
+        ?.addEventListener(
+            "click",
+            () => {
+                currentPage -= 1;
+                loadOrders();
+            }
+        );
+
+    document
+        .getElementById(
+            "orders-next"
+        )
+        ?.addEventListener(
+            "click",
+            () => {
+                currentPage += 1;
+                loadOrders();
+            }
+        );
+};
+
+
+const loadOrders = async () => {
+    try {
+        setMessage(
+            "orders-message",
+            "Loading orders..."
+        );
+
+        await loadDeliveryBoys();
+
+        const params =
+            new URLSearchParams({
+                page:
+                    String(currentPage),
+
+                limit: "10"
+            });
+
+        if (currentStatus) {
+            params.set(
+                "status",
+                currentStatus
+            );
+        }
+
+        const response =
+            await fetch(
+                `${ORDERS_API_URL}?${params}`,
+                {
+                    headers:
+                        getAuthHeaders()
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+            throw new Error(
+                result.message ||
+                "Unable to load orders."
+            );
+        }
+
+        renderOrders(
+            result.data || []
+        );
+
+        renderPagination(
+            result.page,
+            result.totalPages
+        );
+
+        setMessage(
+            "orders-message",
+            result.totalOrders
+                ? `Total orders: ${result.totalOrders}`
+                : ""
+        );
+
+    } catch (error) {
+        setMessage(
+            "orders-message",
+            error.message
+        );
+    }
+};
+
+
+const assignDeliveryBoy = async (
+    orderId,
+    deliveryBoyId,
+    button
+) => {
+    if (!deliveryBoyId) {
+        setMessage(
+            "orders-message",
+            "Please select a delivery boy."
+        );
+
+        return;
+    }
+
+    button.disabled = true;
+
+    try {
+        const response =
+            await fetch(
+                `${ORDER_API_URL}/${orderId}/assign-delivery`,
+                {
+                    method: "PATCH",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        ...getAuthHeaders()
+                    },
+
+                    body:
+                        JSON.stringify({
+                            deliveryBoyId
+                        })
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+            throw new Error(
+                result.message ||
+                "Unable to assign delivery boy."
+            );
+        }
+
+        setMessage(
+            "orders-message",
+            "Delivery boy assigned successfully."
+        );
+
+        await loadOrders();
+
+    } catch (error) {
+        setMessage(
+            "orders-message",
+            error.message
+        );
+
+        button.disabled = false;
+    }
+};
+
+
+const initializeOrderManagement = () => {
+    document
+        .getElementById(
+            "order-status-filter"
+        )
+        ?.addEventListener(
+            "change",
+            (event) => {
+                currentStatus =
+                    event.target.value;
+
+                currentPage = 1;
+
+                loadOrders();
+            }
+        );
+
+    document
+        .getElementById(
+            "refresh-orders-button"
+        )
+        ?.addEventListener(
+            "click",
+            loadOrders
+        );
+
+    document
+        .getElementById(
+            "orders-list"
+        )
+        ?.addEventListener(
+            "click",
+            (event) => {
+                const statusButton =
+                    event.target.closest(
+                        ".status-button"
+                    );
+
+                if (statusButton) {
+                    updateOrderStatus(
+                        statusButton.dataset.orderId,
+                        statusButton.dataset.nextStatus,
+                        statusButton
+                    );
+
+                    return;
+                }
+
+                const button =
+                    event.target.closest(
+                        ".assign-button"
+                    );
+
+                if (!button) {
+                    return;
+                }
+
+                const orderId =
+                    button.dataset.orderId;
+
+                const select =
+                    document.querySelector(
+                        `.delivery-select[data-order-id="${orderId}"]`
+                    );
+
+                if (!select) {
+                    return;
+                }
+
+                assignDeliveryBoy(
+                    orderId,
+                    select.value,
+                    button
+                );
+            }
+        );
+
+    loadOrders();
+};
