@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Admin Dashboard</title>
-
     <link
         rel="stylesheet"
         href="../css/dashboard.css"
@@ -20,16 +17,12 @@
     <main class="admin-dashboard">
 
         <header class="admin-header">
-            <p class="admin-eyebrow">
-                Administration
-            </p>
+            <p class="admin-eyebrow">Administration</p>
 
-            <h1>
-                Admin Dashboard
-            </h1>
+            <h1>Admin Dashboard</h1>
 
             <p class="admin-subtitle">
-                Manage shop settings and delivery staff.
+                Manage shop settings, delivery staff and orders.
             </p>
         </header>
 
@@ -39,15 +32,14 @@
         >
 
             <article class="admin-card">
+
                 <div class="admin-card-header">
                     <div>
                         <p class="admin-card-eyebrow">
                             Shop
                         </p>
 
-                        <h2>
-                            Shop Settings
-                        </h2>
+                        <h2>Shop Settings</h2>
                     </div>
 
                     <span
@@ -67,9 +59,7 @@
                 <form id="shop-settings-form">
 
                     <label class="admin-field">
-                        <span>
-                            Shop Status
-                        </span>
+                        <span>Shop Status</span>
 
                         <select
                             id="shop-is-open"
@@ -86,9 +76,7 @@
                     </label>
 
                     <label class="admin-field">
-                        <span>
-                            Status Message
-                        </span>
+                        <span>Status Message</span>
 
                         <input
                             type="text"
@@ -101,9 +89,7 @@
                     <div class="admin-location-grid">
 
                         <label class="admin-field">
-                            <span>
-                                Latitude
-                            </span>
+                            <span>Latitude</span>
 
                             <input
                                 type="number"
@@ -116,9 +102,7 @@
                         </label>
 
                         <label class="admin-field">
-                            <span>
-                                Longitude
-                            </span>
+                            <span>Longitude</span>
 
                             <input
                                 type="number"
@@ -133,9 +117,7 @@
                     </div>
 
                     <label class="admin-field">
-                        <span>
-                            Delivery Radius (km)
-                        </span>
+                        <span>Delivery Radius (km)</span>
 
                         <input
                             type="number"
@@ -159,15 +141,14 @@
 
 
             <article class="admin-card">
+
                 <div class="admin-card-header">
                     <div>
                         <p class="admin-card-eyebrow">
                             Staff
                         </p>
 
-                        <h2>
-                            Create Delivery Boy
-                        </h2>
+                        <h2>Create Delivery Boy</h2>
                     </div>
                 </div>
 
@@ -180,9 +161,7 @@
                 <form id="delivery-boy-form">
 
                     <label class="admin-field">
-                        <span>
-                            Name
-                        </span>
+                        <span>Name</span>
 
                         <input
                             type="text"
@@ -194,9 +173,7 @@
                     </label>
 
                     <label class="admin-field">
-                        <span>
-                            Email
-                        </span>
+                        <span>Email</span>
 
                         <input
                             type="email"
@@ -206,9 +183,7 @@
                     </label>
 
                     <label class="admin-field">
-                        <span>
-                            Phone
-                        </span>
+                        <span>Phone</span>
 
                         <input
                             type="tel"
@@ -217,9 +192,7 @@
                     </label>
 
                     <label class="admin-field">
-                        <span>
-                            Password
-                        </span>
+                        <span>Password</span>
 
                         <input
                             type="password"
@@ -237,6 +210,93 @@
                     </button>
 
                 </form>
+            </article>
+
+        </section>
+
+
+        <section class="admin-orders-section">
+
+            <article class="admin-card">
+
+                <div class="admin-card-header">
+
+                    <div>
+                        <p class="admin-card-eyebrow">
+                            Orders
+                        </p>
+
+                        <h2>Order Management</h2>
+                    </div>
+
+                    <button
+                        type="button"
+                        id="refresh-orders-button"
+                        class="admin-secondary-button"
+                    >
+                        Refresh
+                    </button>
+
+                </div>
+
+                <div class="admin-order-toolbar">
+
+                    <label class="admin-field admin-filter-field">
+
+                        <span>Status</span>
+
+                        <select id="order-status-filter">
+
+                            <option value="">
+                                All Orders
+                            </option>
+
+                            <option value="pending">
+                                Pending
+                            </option>
+
+                            <option value="confirmed">
+                                Confirmed
+                            </option>
+
+                            <option value="preparing">
+                                Preparing
+                            </option>
+
+                            <option value="out_for_delivery">
+                                Out for Delivery
+                            </option>
+
+                            <option value="delivered">
+                                Delivered
+                            </option>
+
+                            <option value="cancelled">
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                    </label>
+
+                </div>
+
+                <div
+                    id="orders-message"
+                    class="admin-message"
+                    aria-live="polite"
+                ></div>
+
+                <div
+                    id="orders-list"
+                    class="orders-list"
+                ></div>
+
+                <div
+                    id="orders-pagination"
+                    class="orders-pagination"
+                ></div>
+
             </article>
 
         </section>

@@ -4,6 +4,12 @@ const SHOP_API_URL =
 const DELIVERY_BOYS_API_URL =
     "http://localhost:5000/api/auth/admin/delivery-boys";
 
+const ORDERS_API_URL =
+    "http://localhost:5000/api/orders/admin";
+
+const ORDER_ASSIGN_API_URL =
+    "http://localhost:5000/api/orders";
+
 
 const getAuthToken = () => {
     return localStorage.getItem("authToken");
@@ -25,11 +31,9 @@ const setMessage = (
     const element =
         document.getElementById(elementId);
 
-    if (!element) {
-        return;
+    if (element) {
+        element.textContent = message;
     }
-
-    element.textContent = message;
 };
 
 
@@ -39,359 +43,770 @@ const updateShopBadge = (isOpen) => {
             "shop-status-badge"
         );
 
-    if (!badge) {
-        return;
+    if (badge) {
+        badge.textContent =
+            isOpen ? "Open" : "Closed";
     }
-
-    badge.textContent =
-        isOpen
-            ? "Open"
-            : "Closed";
 };
 
 
 const renderShopSettings = (shop) => {
-    const isOpen =
-        document.getElementById(
-            "shop-is-open"
-        );
+    document.getElementById(
+        "shop-is-open"
+    ).value = String(shop.isOpen);
 
-    const statusMessage =
-        document.getElementById(
-            "shop-status-message"
-        );
+    document.getElementById(
+        "shop-status-message"
+    ).value = shop.statusMessage || "";
 
-    const latitude =
-        document.getElementById(
-            "shop-latitude"
-        );
-
-    const longitude =
-        document.getElementById(
-            "shop-longitude"
-        );
-
-    const radius =
-        document.getElementById(
-            "shop-radius"
-        );
-
-    if (
-        !isOpen ||
-        !statusMessage ||
-        !latitude ||
-        !longitude ||
-        !radius
-    ) {
-        return;
-    }
-
-    isOpen.value =
-        String(shop.isOpen);
-
-    statusMessage.value =
-        shop.statusMessage || "";
-
-    latitude.value =
+    document.getElementById(
+        "shop-latitude"
+    ).value =
         shop.location?.latitude ?? "";
 
-    longitude.value =
+    document.getElementById(
+        "shop-longitude"
+    ).value =
         shop.location?.longitude ?? "";
 
-    radius.value =
+    document.getElementById(
+        "shop-radius"
+    ).value =
         shop.deliveryRadiusKm ?? "";
 
-    updateShopBadge(
-        shop.isOpen
-    );
+    updateShopBadge(shop.isOpen);
 };
 
 
 const loadShopSettings = async () => {
     try {
         const response =
-            await fetch(
-                SHOP_API_URL
-            );
+            await fetch(SHOP_API_URL);
 
         const result =
             await response.json();
 
-        if (
-            !response.ok ||
-            !result.success
-        ) {
+        if (!response.ok || !result.success) {
             throw new Error(
                 result.message ||
                 "Unable to load shop settings."
             );
         }
 
-        renderShopSettings(
-            result.data
-        );
-    } catch (error) {
-        console.error(
-            "Shop settings error:",
-            error
-        );
+        renderShopSettings(result.data);
 
+    } catch (error) {
         setMessage(
             "shop-message",
-            error.message ||
-            "Unable to load shop settings."
+            error.message
         );
     }
 };
 
 
 const initializeShopForm = () => {
-    const form =
-        document.getElementById(
-            "shop-settings-form"
-        );
+    document
+        .getElementById("shop-settings-form")
+        ?.addEventListener(
+            "submit",
+            async (event) => {
+                event.preventDefault();
 
-    if (!form) {
-        return;
-    }
+                const body = {
+                    isOpen:
+                        document.getElementById(
+                            "shop-is-open"
+                        ).value === "true",
 
-    form.addEventListener(
-        "submit",
-        async (event) => {
-            event.preventDefault();
+                    statusMessage:
+                        document.getElementById(
+                            "shop-status-message"
+                        ).value.trim(),
 
-            const authToken =
-                getAuthToken();
+                    location: {
+                        latitude:
+                            Number(
+                                document.getElementById(
+                                    "shop-latitude"
+                                ).value
+                            ),
 
-            if (!authToken) {
+                        longitude:
+                            Number(
+                                document.getElementById(
+                                    "shop-longitude"
+                                ).value
+                            )
+                    },
+
+                    deliveryRadiusKm:
+                        Number(
+                            document.getElementById(
+                                "shop-radius"
+                            ).value
+                        )
+                };
+
                 setMessage(
                     "shop-message",
-                    "Please sign in as admin."
+                    "Saving..."
                 );
 
-                return;
-            }
+                try {
+                    const response =
+                        await fetch(
+                            SHOP_API_URL,
+                            {
+                                method: "PATCH",
 
-            const isOpen =
-                document.getElementById(
-                    "shop-is-open"
-                ).value === "true";
+                                headers: {
+                                    "Content-Type":
+                                        "application/json",
 
-            const statusMessage =
-                document.getElementById(
-                    "shop-status-message"
-                ).value.trim();
+                                    ...getAuthHeaders()
+                                },
 
-            const latitude =
-                Number(
-                    document.getElementById(
-                        "shop-latitude"
-                    ).value
-                );
+                                body:
+                                    JSON.stringify(body)
+                            }
+                        );
 
-            const longitude =
-                Number(
-                    document.getElementById(
-                        "shop-longitude"
-                    ).value
-                );
+                    const result =
+                        await response.json();
 
-            const deliveryRadiusKm =
-                Number(
-                    document.getElementById(
-                        "shop-radius"
-                    ).value
-                );
+                    if (
+                        !response.ok ||
+                        !result.success
+                    ) {
+                        throw new Error(
+                            result.message ||
+                            "Unable to update shop."
+                        );
+                    }
 
-            setMessage(
-                "shop-message",
-                "Saving shop settings..."
-            );
-
-            try {
-                const response =
-                    await fetch(
-                        SHOP_API_URL,
-                        {
-                            method: "PATCH",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json",
-
-                                ...getAuthHeaders()
-                            },
-
-                            body:
-                                JSON.stringify({
-                                    isOpen,
-                                    statusMessage,
-                                    location: {
-                                        latitude,
-                                        longitude
-                                    },
-                                    deliveryRadiusKm
-                                })
-                        }
+                    renderShopSettings(
+                        result.data
                     );
 
-                const result =
-                    await response.json();
+                    setMessage(
+                        "shop-message",
+                        "Shop settings saved."
+                    );
 
-                if (
-                    !response.ok ||
-                    !result.success
-                ) {
-                    throw new Error(
-                        result.message ||
-                        "Unable to update shop settings."
+                } catch (error) {
+                    setMessage(
+                        "shop-message",
+                        error.message
                     );
                 }
-
-                renderShopSettings(
-                    result.data
-                );
-
-                setMessage(
-                    "shop-message",
-                    "Shop settings saved."
-                );
-            } catch (error) {
-                console.error(
-                    "Shop update error:",
-                    error
-                );
-
-                setMessage(
-                    "shop-message",
-                    error.message ||
-                    "Unable to update shop settings."
-                );
             }
-        }
-    );
+        );
 };
 
 
 const initializeDeliveryBoyForm = () => {
-    const form =
-        document.getElementById(
-            "delivery-boy-form"
+    document
+        .getElementById("delivery-boy-form")
+        ?.addEventListener(
+            "submit",
+            async (event) => {
+                event.preventDefault();
+
+                const form =
+                    event.currentTarget;
+
+                const data =
+                    new FormData(form);
+
+                try {
+                    const response =
+                        await fetch(
+                            DELIVERY_BOYS_API_URL,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json",
+
+                                    ...getAuthHeaders()
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        name:
+                                            data
+                                                .get("name")
+                                                .trim(),
+
+                                        email:
+                                            data
+                                                .get("email")
+                                                .trim()
+                                                .toLowerCase(),
+
+                                        phone:
+                                            data
+                                                .get("phone")
+                                                .trim(),
+
+                                        password:
+                                            data.get(
+                                                "password"
+                                            )
+                                    })
+                            }
+                        );
+
+                    const result =
+                        await response.json();
+
+                    if (
+                        !response.ok ||
+                        !result.success
+                    ) {
+                        throw new Error(
+                            result.message ||
+                            "Unable to create account."
+                        );
+                    }
+
+                    form.reset();
+
+                    setMessage(
+                        "delivery-boy-message",
+                        "Delivery boy account created successfully."
+                    );
+
+                    loadOrders();
+
+                } catch (error) {
+                    setMessage(
+                        "delivery-boy-message",
+                        error.message
+                    );
+                }
+            }
+        );
+};
+
+
+let deliveryBoys = [];
+let currentPage = 1;
+let currentStatus = "";
+
+
+const escapeHtml = (value) => {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+};
+
+
+const loadDeliveryBoys = async () => {
+    const response =
+        await fetch(
+            DELIVERY_BOYS_API_URL,
+            {
+                headers:
+                    getAuthHeaders()
+            }
         );
 
-    if (!form) {
+    const result =
+        await response.json();
+
+    if (!response.ok || !result.success) {
+        throw new Error(
+            result.message ||
+            "Unable to load delivery boys."
+        );
+    }
+
+    deliveryBoys =
+        Array.isArray(result.data)
+            ? result.data
+            : [];
+};
+
+
+const deliveryOptions = (
+    selectedId
+) => {
+    const options = [
+        `<option value="">Select delivery boy</option>`
+    ];
+
+    deliveryBoys
+        .filter(
+            (boy) => boy.isActive
+        )
+        .forEach(
+            (boy) => {
+                const selected =
+                    String(boy._id) ===
+                    String(selectedId)
+                        ? " selected"
+                        : "";
+
+                options.push(`
+                    <option
+                        value="${escapeHtml(
+                            boy._id
+                        )}"
+                        ${selected}
+                    >
+                        ${escapeHtml(
+                            boy.name
+                        )}
+                    </option>
+                `);
+            }
+        );
+
+    return options.join("");
+};
+
+
+const renderOrders = (orders) => {
+    const container =
+        document.getElementById(
+            "orders-list"
+        );
+
+    if (!orders.length) {
+        container.innerHTML =
+            `<div class="no-orders">No orders found.</div>`;
+
         return;
     }
 
-    form.addEventListener(
-        "submit",
-        async (event) => {
-            event.preventDefault();
+    container.innerHTML =
+        orders.map(
+            (order) => {
 
-            const authToken =
-                getAuthToken();
+                const customer =
+                    order.userId?.name ||
+                    "Unknown";
 
-            if (!authToken) {
-                setMessage(
-                    "delivery-boy-message",
-                    "Please sign in as admin."
-                );
+                const phone =
+                    order.userId?.phone ||
+                    "-";
 
-                return;
+                const total =
+                    Number(
+                        order.totalAmount || 0
+                    ).toFixed(2);
+
+                const terminal =
+                    [
+                        "delivered",
+                        "cancelled"
+                    ].includes(
+                        order.status
+                    );
+
+                return `
+                    <article
+                        class="order-admin-card"
+                    >
+
+                        <div
+                            class="order-admin-header"
+                        >
+                            <div>
+                                <p
+                                    class="order-admin-id"
+                                >
+                                    Order
+                                    ${escapeHtml(
+                                        order._id
+                                    )}
+                                </p>
+
+                                <p
+                                    class="order-admin-date"
+                                >
+                                    ${escapeHtml(
+                                        new Date(
+                                            order.createdAt
+                                        ).toLocaleString()
+                                    )}
+                                </p>
+                            </div>
+
+                            <span
+                                class="order-status"
+                            >
+                                ${escapeHtml(
+                                    order.status
+                                )}
+                            </span>
+                        </div>
+
+                        <div
+                            class="order-admin-details"
+                        >
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Customer:
+                                </strong>
+                                ${escapeHtml(
+                                    customer
+                                )}
+                            </p>
+
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Phone:
+                                </strong>
+                                ${escapeHtml(
+                                    phone
+                                )}
+                            </p>
+
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Total:
+                                </strong>
+                                ₹${escapeHtml(
+                                    total
+                                )}
+                            </p>
+
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Payment:
+                                </strong>
+                                ${escapeHtml(
+                                    order.paymentMethod
+                                )}
+                            </p>
+
+                            <p
+                                class="order-admin-detail"
+                            >
+                                <strong>
+                                    Delivery:
+                                </strong>
+                                ${escapeHtml(
+                                    order.deliveryBoyId?.name ||
+                                    "Not assigned"
+                                )}
+                            </p>
+                        </div>
+
+                        ${
+                            terminal
+                                ? ""
+                                : `
+                                    <div
+                                        class="order-assignment"
+                                    >
+                                        <select
+                                            class="delivery-select"
+                                            data-order-id="${escapeHtml(
+                                                order._id
+                                            )}"
+                                        >
+                                            ${deliveryOptions(
+                                                order
+                                                    .deliveryBoyId
+                                                    ?._id
+                                            )}
+                                        </select>
+
+                                        <button
+                                            type="button"
+                                            class="assign-button"
+                                            data-order-id="${escapeHtml(
+                                                order._id
+                                            )}"
+                                        >
+                                            Assign
+                                        </button>
+                                    </div>
+                                `
+                        }
+
+                    </article>
+                `;
             }
+        ).join("");
+};
 
-            const formData =
-                new FormData(form);
 
-            const name =
-                formData
-                    .get("name")
-                    .trim();
+const renderPagination = (
+    page,
+    totalPages
+) => {
+    const container =
+        document.getElementById(
+            "orders-pagination"
+        );
 
-            const email =
-                formData
-                    .get("email")
-                    .trim()
-                    .toLowerCase();
+    if (totalPages <= 1) {
+        container.innerHTML = "";
 
-            const phone =
-                formData
-                    .get("phone")
-                    .trim();
+        return;
+    }
 
-            const password =
-                formData.get("password");
+    container.innerHTML = `
+        <button
+            type="button"
+            class="pagination-button"
+            id="orders-previous"
+            ${page <= 1 ? "disabled" : ""}
+        >
+            Previous
+        </button>
 
-            setMessage(
-                "delivery-boy-message",
-                "Creating delivery account..."
+        <button
+            type="button"
+            class="pagination-button"
+            id="orders-next"
+            ${page >= totalPages ? "disabled" : ""}
+        >
+            Next
+        </button>
+    `;
+
+    document
+        .getElementById("orders-previous")
+        ?.addEventListener(
+            "click",
+            () => {
+                currentPage -= 1;
+                loadOrders();
+            }
+        );
+
+    document
+        .getElementById("orders-next")
+        ?.addEventListener(
+            "click",
+            () => {
+                currentPage += 1;
+                loadOrders();
+            }
+        );
+};
+
+
+const loadOrders = async () => {
+    try {
+        setMessage(
+            "orders-message",
+            "Loading orders..."
+        );
+
+        await loadDeliveryBoys();
+
+        const params =
+            new URLSearchParams({
+                page:
+                    String(currentPage),
+
+                limit: "10"
+            });
+
+        if (currentStatus) {
+            params.set(
+                "status",
+                currentStatus
+            );
+        }
+
+        const response =
+            await fetch(
+                `${ORDERS_API_URL}?${params}`,
+                {
+                    headers:
+                        getAuthHeaders()
+                }
             );
 
-            try {
-                const response =
-                    await fetch(
-                        DELIVERY_BOYS_API_URL,
-                        {
-                            method: "POST",
+        const result =
+            await response.json();
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json",
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message ||
+                "Unable to load orders."
+            );
+        }
 
-                                ...getAuthHeaders()
-                            },
+        renderOrders(
+            result.data || []
+        );
 
-                            body:
-                                JSON.stringify({
-                                    name,
-                                    email,
-                                    phone,
-                                    password
-                                })
-                        }
+        renderPagination(
+            result.page,
+            result.totalPages
+        );
+
+        setMessage(
+            "orders-message",
+            result.totalOrders
+                ? `Total orders: ${result.totalOrders}`
+                : ""
+        );
+
+    } catch (error) {
+        setMessage(
+            "orders-message",
+            error.message
+        );
+    }
+};
+
+
+const assignDeliveryBoy = async (
+    orderId,
+    deliveryBoyId,
+    button
+) => {
+    if (!deliveryBoyId) {
+        setMessage(
+            "orders-message",
+            "Please select a delivery boy."
+        );
+
+        return;
+    }
+
+    button.disabled = true;
+
+    try {
+        const response =
+            await fetch(
+                `${ORDER_ASSIGN_API_URL}/${orderId}/assign-delivery`,
+                {
+                    method: "PATCH",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        ...getAuthHeaders()
+                    },
+
+                    body:
+                        JSON.stringify({
+                            deliveryBoyId
+                        })
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message ||
+                "Unable to assign delivery boy."
+            );
+        }
+
+        setMessage(
+            "orders-message",
+            "Delivery boy assigned successfully."
+        );
+
+        await loadOrders();
+
+    } catch (error) {
+        setMessage(
+            "orders-message",
+            error.message
+        );
+
+        button.disabled = false;
+    }
+};
+
+
+const initializeOrderManagement = () => {
+
+    document
+        .getElementById(
+            "order-status-filter"
+        )
+        ?.addEventListener(
+            "change",
+            (event) => {
+                currentStatus =
+                    event.target.value;
+
+                currentPage = 1;
+
+                loadOrders();
+            }
+        );
+
+    document
+        .getElementById(
+            "refresh-orders-button"
+        )
+        ?.addEventListener(
+            "click",
+            loadOrders
+        );
+
+    document
+        .getElementById(
+            "orders-list"
+        )
+        ?.addEventListener(
+            "click",
+            (event) => {
+
+                const button =
+                    event.target.closest(
+                        ".assign-button"
                     );
 
-                const result =
-                    await response.json();
-
-                if (
-                    !response.ok ||
-                    !result.success
-                ) {
-                    throw new Error(
-                        result.message ||
-                        "Unable to create delivery account."
-                    );
+                if (!button) {
+                    return;
                 }
 
-                form.reset();
+                const orderId =
+                    button.dataset.orderId;
 
-                setMessage(
-                    "delivery-boy-message",
-                    "Delivery boy account created successfully."
-                );
-            } catch (error) {
-                console.error(
-                    "Delivery boy creation error:",
-                    error
-                );
+                const select =
+                    document.querySelector(
+                        `.delivery-select[data-order-id="${orderId}"]`
+                    );
 
-                setMessage(
-                    "delivery-boy-message",
-                    error.message ||
-                    "Unable to create delivery account."
+                if (!select) {
+                    return;
+                }
+
+                assignDeliveryBoy(
+                    orderId,
+                    select.value,
+                    button
                 );
             }
-        }
-    );
+        );
+
+    loadOrders();
 };
 
 
 const initializeAdminDashboard = () => {
-    const token =
-        getAuthToken();
-
-    if (!token) {
+    if (!getAuthToken()) {
         setMessage(
             "shop-message",
             "Please sign in as admin."
@@ -407,6 +822,7 @@ const initializeAdminDashboard = () => {
 
     initializeShopForm();
     initializeDeliveryBoyForm();
+    initializeOrderManagement();
     loadShopSettings();
 };
 

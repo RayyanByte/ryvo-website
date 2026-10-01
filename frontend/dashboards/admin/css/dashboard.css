@@ -81,7 +81,6 @@ body {
     background: #eee;
     font-size: 12px;
     font-weight: 700;
-    text-transform: capitalize;
 }
 
 .admin-message {
@@ -120,21 +119,159 @@ body {
     gap: 14px;
 }
 
-.admin-primary-button {
-    width: 100%;
+.admin-primary-button,
+.admin-secondary-button {
     min-height: 46px;
-    margin-top: 4px;
     border: 0;
     border-radius: 10px;
-    background: #1f1f1f;
-    color: #fff;
     cursor: pointer;
     font-size: 14px;
     font-weight: 700;
 }
 
-.admin-primary-button:hover {
-    opacity: 0.9;
+.admin-primary-button {
+    width: 100%;
+    background: #1f1f1f;
+    color: #fff;
+}
+
+.admin-secondary-button {
+    padding: 0 18px;
+    background: #eeeae2;
+    color: #1f1f1f;
+}
+
+.admin-orders-section {
+    margin-top: 24px;
+}
+
+.admin-order-toolbar {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 4px;
+}
+
+.admin-filter-field {
+    width: 240px;
+    margin-bottom: 0;
+}
+
+.orders-list {
+    display: grid;
+    gap: 14px;
+}
+
+.order-admin-card {
+    padding: 18px;
+    border: 1px solid #e8e3da;
+    border-radius: 12px;
+    background: #faf9f6;
+}
+
+.order-admin-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.order-admin-id,
+.order-admin-date {
+    margin: 0;
+}
+
+.order-admin-id {
+    font-size: 14px;
+    font-weight: 700;
+    word-break: break-all;
+}
+
+.order-admin-date {
+    margin-top: 5px;
+    color: #777;
+    font-size: 12px;
+}
+
+.order-status {
+    height: fit-content;
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: #eee;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.order-admin-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 18px;
+    margin-bottom: 16px;
+}
+
+.order-admin-detail {
+    margin: 0;
+    color: #555;
+    font-size: 13px;
+}
+
+.order-admin-detail strong {
+    color: #1f1f1f;
+}
+
+.order-assignment {
+    display: flex;
+    gap: 10px;
+}
+
+.order-assignment select {
+    flex: 1;
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 1px solid #dcd6cc;
+    border-radius: 8px;
+    background: #fff;
+    font: inherit;
+}
+
+.assign-button {
+    min-height: 42px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 8px;
+    background: #1f1f1f;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.assign-button:disabled {
+    opacity: 0.5;
+}
+
+.no-orders {
+    padding: 24px;
+    text-align: center;
+    color: #777;
+    border: 1px dashed #dcd6cc;
+    border-radius: 10px;
+}
+
+.orders-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination-button {
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid #dcd6cc;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
 }
 
 @media (max-width: 760px) {
@@ -145,6 +282,18 @@ body {
 
     .admin-grid {
         grid-template-columns: 1fr;
+    }
+
+    .order-admin-details {
+        grid-template-columns: 1fr;
+    }
+
+    .order-assignment {
+        flex-direction: column;
+    }
+
+    .assign-button {
+        width: 100%;
     }
 }
 
@@ -159,5 +308,9 @@ body {
 
     .admin-card-header {
         flex-direction: column;
+    }
+
+    .admin-filter-field {
+        width: 100%;
     }
 }
