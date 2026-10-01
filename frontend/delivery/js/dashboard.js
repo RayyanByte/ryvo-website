@@ -1,6 +1,9 @@
 const DELIVERY_ORDERS_API_URL =
     "http://localhost:5000/api/orders/delivery/my";
 
+const DELIVERY_STATUS_API_URL =
+    "http://localhost:5000/api/orders";
+
 
 const getAuthToken = () => {
     return localStorage.getItem("authToken");
@@ -22,6 +25,50 @@ const formatStatus = (status) => {
     }
 
     return status.replaceAll("_", " ");
+};
+
+
+const getNextStatus = (status) => {
+    const nextStatuses = {
+        confirmed: "preparing",
+        preparing: "out_for_delivery",
+        out_for_delivery: "delivered"
+    };
+
+    return nextStatuses[status] || null;
+};
+
+
+const getStatusButtonText = (status) => {
+    const buttonTexts = {
+        confirmed: "Start Preparing",
+        preparing: "Start Delivery",
+        out_for_delivery: "Mark Delivered"
+    };
+
+    return buttonTexts[status] || "";
+};
+
+
+const renderStatusAction = (order) => {
+    const nextStatus =
+        getNextStatus(order.status);
+
+    if (!nextStatus) {
+        return "";
+    }
+
+    return `
+        <button
+            type="button"
+            class="delivery-status-button"
+            data-action="update-status"
+            data-order-id="${order._id}"
+            data-next-status="${nextStatus}"
+        >
+            ${getStatusButtonText(order.status)}
+        </button>
+    `;
 };
 
 
@@ -177,9 +224,78 @@ const renderDeliveryOrders = (orders) => {
                         </p>
                     </div>
                 </footer>
+
+                ${
+                    renderStatusAction(order)
+                        ? `
+                            <div class="delivery-order-actions">
+                                ${renderStatusAction(order)}
+                            </div>
+                        `
+                        : ""
+                }
             </article>
         `;
     }).join("");
+};
+
+
+const updateDeliveryOrderStatus = async (
+    orderId,
+    nextStatus
+) => {
+    const token =
+        getAuthToken();
+
+    if (!token) {
+        return;
+    }
+
+    try {
+        const response =
+            await fetch(
+                `${DELIVERY_STATUS_API_URL}/${orderId}/delivery-status`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        Authorization:
+                            `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify({
+                        status: nextStatus
+                    })
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+            throw new Error(
+                result.message ||
+                "Unable to update order status."
+            );
+        }
+
+        await loadDeliveryOrders();
+    } catch (error) {
+        console.error(
+            "Delivery status update error:",
+            error
+        );
+
+        alert(
+            error.message ||
+            "Unable to update order status."
+        );
+    }
 };
 
 
@@ -249,6 +365,39 @@ const loadDeliveryOrders = async () => {
         `;
     }
 };
+
+
+document.addEventListener(
+    "click",
+    (event) => {
+        const button =
+            event.target.closest(
+                '[data-action="update-status"]'
+            );
+
+        if (!button) {
+            return;
+        }
+
+        const orderId =
+            button.dataset.orderId;
+
+        const nextStatus =
+            button.dataset.nextStatus;
+
+        if (
+            !orderId ||
+            !nextStatus
+        ) {
+            return;
+        }
+
+        updateDeliveryOrderStatus(
+            orderId,
+            nextStatus
+        );
+    }
+);
 
 
 loadDeliveryOrders();
