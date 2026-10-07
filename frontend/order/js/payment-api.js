@@ -1,31 +1,73 @@
 const PAYMENT_API_BASE_URL =
-    "http://localhost:5000/api/payments";
+    "/api/payments";
 
-const getPaymentAuthHeaders = () => {
-    const token =
-        localStorage.getItem("authToken");
 
-    if (!token) {
-        return null;
-    }
-
-    return {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-    };
+const getPaymentAuthToken = () => {
+    return (
+        localStorage.getItem("authToken") ||
+        localStorage.getItem("token")
+    );
 };
 
-const getMyPayment = async (orderId) => {
-    if (!orderId) {
+
+const createPayment = async ({
+    orderId,
+    paymentMethod
+}) => {
+
+    const token =
+        getPaymentAuthToken();
+
+    if (!token) {
         throw new Error(
-            "Order ID is required."
+            "Please login before making payment."
         );
     }
 
-    const headers =
-        getPaymentAuthHeaders();
+    const response =
+        await fetch(
+            PAYMENT_API_BASE_URL,
+            {
+                method: "POST",
 
-    if (!headers) {
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    Authorization:
+                        `Bearer ${token}`
+                },
+
+                body:
+                    JSON.stringify({
+                        orderId,
+                        paymentMethod
+                    })
+            }
+        );
+
+    const result =
+        await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            result?.message ||
+            "Unable to create payment."
+        );
+    }
+
+    return result?.data || result;
+};
+
+
+const getMyPayment = async (
+    orderId
+) => {
+
+    const token =
+        getPaymentAuthToken();
+
+    if (!token) {
         throw new Error(
             "Please login before checking payment."
         );
@@ -37,33 +79,29 @@ const getMyPayment = async (orderId) => {
                 orderId
             )}`,
             {
-                method: "GET",
-                headers
+                headers: {
+                    Authorization:
+                        `Bearer ${token}`
+                }
             }
         );
 
-    let result = null;
-
-    try {
-        result =
-            await response.json();
-    } catch {
-        result = null;
-    }
+    const result =
+        await response.json();
 
     if (!response.ok) {
         throw new Error(
             result?.message ||
-            "Unable to load payment details."
+            "Unable to fetch payment."
         );
     }
 
-    return (
-        result?.data ||
-        result?.payment ||
-        result
-    );
+    return result?.data || result;
 };
+
+
+window.createPayment =
+    createPayment;
 
 window.getMyPayment =
     getMyPayment;
