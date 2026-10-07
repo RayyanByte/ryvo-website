@@ -4,111 +4,64 @@
             <h2>Food Management</h2>
             <p>Manage menu items, prices, availability and categories.</p>
         </div>
-
-        <button
-            type="button"
-            id="addFoodButton"
-            class="admin-primary-button"
-        >
+        <button type="button" id="addFoodButton" class="admin-primary-button">
             Add Food
         </button>
     </div>
 
     <div id="foodDashboardMessage"></div>
 
-    <div
-        id="foodFormContainer"
-        class="admin-form-container"
-        hidden
-    >
+    <div id="foodFormContainer" class="admin-form-container" hidden>
         <form id="foodForm">
-            <input
-                type="hidden"
-                id="foodId"
-            >
+            <input type="hidden" id="foodId">
 
             <div class="admin-form-grid">
                 <div class="admin-field">
                     <label for="foodName">Name</label>
-                    <input
-                        id="foodName"
-                        type="text"
-                        required
-                    >
+                    <input id="foodName" type="text" required>
                 </div>
 
                 <div class="admin-field">
                     <label for="foodPrice">Price</label>
-                    <input
-                        id="foodPrice"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        required
-                    >
+                    <input id="foodPrice" type="number" min="0" step="0.01" required>
                 </div>
 
                 <div class="admin-field">
                     <label for="foodCategory">Category</label>
-                    <select
-                        id="foodCategory"
-                        required
-                    ></select>
+                    <select id="foodCategory" required></select>
                 </div>
 
                 <div class="admin-field">
                     <label for="foodImage">Image URL</label>
-                    <input
-                        id="foodImage"
-                        type="url"
-                    >
+                    <input id="foodImage" type="url">
                 </div>
 
                 <div class="admin-field admin-field-full">
                     <label for="foodDescription">Description</label>
-                    <textarea
-                        id="foodDescription"
-                        rows="4"
-                    ></textarea>
+                    <textarea id="foodDescription" rows="4"></textarea>
                 </div>
 
                 <div class="admin-field">
                     <label>
-                        <input
-                            id="foodAvailable"
-                            type="checkbox"
-                            checked
-                        >
+                        <input id="foodAvailable" type="checkbox" checked>
                         Available
                     </label>
                 </div>
 
                 <div class="admin-field">
                     <label>
-                        <input
-                            id="foodActive"
-                            type="checkbox"
-                            checked
-                        >
+                        <input id="foodActive" type="checkbox" checked>
                         Active
                     </label>
                 </div>
             </div>
 
             <div class="admin-form-actions">
-                <button
-                    type="submit"
-                    class="admin-primary-button"
-                    id="saveFoodButton"
-                >
+                <button type="submit" class="admin-primary-button">
                     Save Food
                 </button>
 
-                <button
-                    type="button"
-                    class="admin-secondary-button"
-                    id="cancelFoodButton"
-                >
+                <button type="button" class="admin-secondary-button" id="cancelFoodButton">
                     Cancel
                 </button>
             </div>
@@ -120,17 +73,10 @@
             <option value="">All Categories</option>
         </select>
 
-        <button
-            type="button"
-            id="refreshFoodsButton"
-            class="admin-secondary-button"
-        >
+        <button type="button" id="refreshFoodsButton" class="admin-secondary-button">
             Refresh
         </button>
     </div>
 
-    <div
-        id="foodList"
-        class="admin-card-grid"
-    ></div>
+    <div id="foodList" class="admin-card-grid"></div>
 </section>

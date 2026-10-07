@@ -1,0 +1,108 @@
+<section class="admin-section" id="categoryDashboard">
+
+    <div class="admin-section-header">
+        <div>
+            <h2>Category Management</h2>
+            <p>Manage food categories.</p>
+        </div>
+
+        <button
+            type="button"
+            id="addCategoryButton"
+            class="admin-primary-button"
+        >
+            Add Category
+        </button>
+    </div>
+
+    <div id="categoryDashboardMessage"></div>
+
+    <div
+        id="categoryFormContainer"
+        class="admin-form-container"
+        hidden
+    >
+        <form id="categoryForm">
+
+            <input
+                type="hidden"
+                id="categoryId"
+            >
+
+            <div class="admin-form-grid">
+
+                <div class="admin-field">
+                    <label for="categoryName">
+                        Name
+                    </label>
+
+                    <input
+                        id="categoryName"
+                        type="text"
+                        required
+                    >
+                </div>
+
+                <div class="admin-field">
+                    <label for="categoryImage">
+                        Image URL
+                    </label>
+
+                    <input
+                        id="categoryImage"
+                        type="url"
+                    >
+                </div>
+
+                <div class="admin-field admin-field-full">
+                    <label for="categoryDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="categoryDescription"
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <div class="admin-field">
+                    <label>
+                        <input
+                            id="categoryActive"
+                            type="checkbox"
+                            checked
+                        >
+                        Active
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="admin-form-actions">
+
+                <button
+                    type="submit"
+                    class="admin-primary-button"
+                >
+                    Save Category
+                </button>
+
+                <button
+                    type="button"
+                    id="cancelCategoryButton"
+                    class="admin-secondary-button"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+
+    <div
+        id="categoryList"
+        class="admin-card-grid"
+    ></div>
+
+</section>
