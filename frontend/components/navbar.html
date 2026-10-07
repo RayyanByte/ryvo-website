@@ -1,20 +1,36 @@
 <header class="site-header">
     <nav class="navbar">
 
-        <a href="../pages/home.html" class="navbar-logo">
+        <a href="/pages/home.html" class="navbar-logo">
             FOOD
         </a>
 
         <div class="navbar-links">
-            <a href="../pages/home.html">Home</a>
-            <a href="../pages/menu.html">Menu</a>
-            <a href="../pages/about.html">About</a>
+            <a href="/pages/home.html">Home</a>
+            <a href="/food/pages/menu.html">Menu</a>
+            <a href="/pages/home.html#our-story-container">About</a>
         </div>
 
         <div class="navbar-actions">
-            <a href="../pages/login.html" class="navbar-login">
-                Login
-            </a>
+
+            <div id="logged-out-actions">
+                <a href="/auth/pages/login.html" class="navbar-login">
+                    Login
+                </a>
+                <a href="/auth/pages/register.html" class="navbar-login">
+                    Create Account
+                </a>
+            </div>
+
+            <div id="logged-in-actions" hidden>
+                <a href="/dashboards/customer/pages/dashboard.html" class="navbar-login">
+                    Account
+                </a>
+                <a href="#" class="navbar-login" onclick="logoutUser(event)">
+                    Logout
+                </a>
+            </div>
+
         </div>
 
     </nav>

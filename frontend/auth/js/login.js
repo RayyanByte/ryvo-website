@@ -9,6 +9,8 @@ const setLoginMessage = (message) => {
     loginMessage.textContent = message;
 };
 
+if(new URLSearchParams(window.location.search).get("registered")==="1"){setLoginMessage("Account created successfully. Please sign in.");}
+
 const getDashboardPath = (role) => {
     if (role === "admin") {
         return "../../dashboards/admin/pages/dashboard.html";
@@ -18,7 +20,7 @@ const getDashboardPath = (role) => {
         return "../../delivery/pages/dashboard.html";
     }
 
-    return "../../dashboards/customer/pages/dashboard.html";
+    return "/pages/home.html";
 };
 
 const loginCustomer = async (email, password) => {

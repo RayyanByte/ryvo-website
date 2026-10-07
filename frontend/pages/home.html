@@ -67,7 +67,26 @@
                     containerId
                 ).innerHTML = html;
 
-            } catch (error) {
+            
+                if (containerId === "navbar-container") {
+                    const loggedIn =
+                        !!localStorage.getItem("authToken");
+
+                    const loggedOutActions =
+                        document.getElementById("logged-out-actions");
+
+                    const loggedInActions =
+                        document.getElementById("logged-in-actions");
+
+                    if (loggedOutActions) {
+                        loggedOutActions.hidden = loggedIn;
+                    }
+
+                    if (loggedInActions) {
+                        loggedInActions.hidden = !loggedIn;
+                    }
+                }
+} catch (error) {
                 console.error(error);
 
                 document.getElementById(
@@ -77,6 +96,16 @@
             }
         }
 
+
+
+        function logoutUser(event) {
+            event.preventDefault();
+
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userRole");
+
+            window.location.href = "/pages/home.html";
+        }
 
         loadComponent(
             "navbar-container",
@@ -123,6 +152,55 @@
             "../components/footer.html"
         );
     </script>
+
+
+<script>
+document.addEventListener("click", (event) => {
+    const button = event.target.closest(".food-card-button");
+
+    if (!button) {
+        return;
+    }
+
+    const card = button.closest(".food-card");
+
+    if (!card) {
+        return;
+    }
+
+    const name =
+        card.querySelector(".food-card-title")?.textContent.trim();
+
+    const priceText =
+        card.querySelector(".food-card-price")?.textContent.trim() || "";
+
+    const price =
+        Number(priceText.replace(/[^0-9.]/g, ""));
+
+    const orderItem = {
+        foodId: name,
+        name,
+        price
+    };
+
+    sessionStorage.setItem(
+        "ryvo_selected_order_item",
+        JSON.stringify(orderItem)
+    );
+
+    const token =
+        localStorage.getItem("authToken");
+
+    if (!token) {
+        window.location.href =
+            "/auth/pages/login.html";
+        return;
+    }
+
+    window.location.href =
+        "/delivery/pages/order-location.html";
+});
+</script>
 
 </body>
 </html>

@@ -1,0 +1,65 @@
+frontend/pages/navbar-test.html:11:    <link rel="stylesheet" href="../css/navbar.css">
+frontend/pages/home-test.html:13:    <link rel="stylesheet" href="../css/base.css">
+frontend/pages/home-test.html:14:    <link rel="stylesheet" href="../css/navbar.css">
+frontend/pages/home-test.html:15:    <link rel="stylesheet" href="../css/hero.css">
+frontend/pages/home-test.html:16:    <link rel="stylesheet" href="../css/featured-food.css">
+frontend/pages/home-test.html:17:    <link rel="stylesheet" href="../css/categories.css">
+frontend/pages/home-test.html:18:    <link rel="stylesheet" href="../css/our-story.css">
+frontend/pages/home-test.html:19:    <link rel="stylesheet" href="../css/testimonials.css">
+frontend/pages/home-test.html:20:    <link rel="stylesheet" href="../css/why-choose-us.css">
+frontend/pages/home-test.html:21:    <link rel="stylesheet" href="../css/order-cta.css">
+frontend/pages/home-test.html:22:    <link rel="stylesheet" href="../css/footer.css">
+frontend/pages/home.html:13:    <link rel="stylesheet" href="../css/base.css">
+frontend/pages/home.html:14:    <link rel="stylesheet" href="../css/navbar.css">
+frontend/pages/home.html:15:    <link rel="stylesheet" href="../css/hero.css">
+frontend/pages/home.html:16:    <link rel="stylesheet" href="../css/featured-food.css">
+frontend/pages/home.html:17:    <link rel="stylesheet" href="../css/categories.css">
+frontend/pages/home.html:18:    <link rel="stylesheet" href="../css/our-story.css">
+frontend/pages/home.html:19:    <link rel="stylesheet" href="../css/testimonials.css">
+frontend/pages/home.html:20:    <link rel="stylesheet" href="../css/why-choose-us.css">
+frontend/pages/home.html:21:    <link rel="stylesheet" href="../css/order-cta.css">
+frontend/pages/home.html:22:    <link rel="stylesheet" href="../css/footer.css">
+frontend/components/navbar.html:4:        <a href="/pages/home.html" class="navbar-logo">
+frontend/components/navbar.html:9:            <a href="/pages/home.html">Home</a>
+frontend/components/navbar.html:10:            <a href="/food/pages/menu.html">Menu</a>
+frontend/components/navbar.html:11:            <a href="/pages/home.html#our-story-container">About</a>
+frontend/components/navbar.html:15:            <a href="/auth/pages/login.html" class="navbar-login">
+frontend/components/hero.html:19:            <a href="/food/pages/menu.html" class="hero-button hero-button-primary">
+frontend/components/hero.html:23:            <a href="/pages/home.html#our-story-container" class="hero-button hero-button-secondary">
+frontend/components/footer.html:6:            <a href="/pages/home.html" class="footer-logo">
+frontend/components/footer.html:21:            <a href="/pages/home.html">
+frontend/components/footer.html:25:            <a href="/food/pages/menu.html">
+frontend/components/footer.html:29:            <a href="/pages/home.html#our-story-container">
+frontend/components/footer.html:39:            <a href="/auth/pages/login.html">
+frontend/components/order-cta.html:20:            href="/food/pages/menu.html"
+frontend/components/our-story.html:29:                href="../pages/about.html"
+frontend/dashboards/customer/pages/dashboard.html:15:        href="../css/dashboard.css"
+frontend/dashboards/customer/pages/dashboard.html:20:        href="../css/profile.css"
+frontend/dashboards/customer/pages/dashboard.html:25:        href="../css/addresses.css"
+frontend/dashboards/customer/pages/dashboard.html:30:        href="../css/address-form.css"
+frontend/dashboards/customer/pages/dashboard.html:35:        href="../css/orders.css"
+frontend/dashboards/admin/pages/dashboard.html:12:        href="../css/dashboard.css"
+frontend/auth/js/login.js:106:        window.location.href =
+frontend/auth/pages/login.html:15:        href="../css/login.css"
+frontend/food/pages/menu.html:14:        href="../css/menu.css"
+frontend/food/pages/menu.html:19:        href="../../order/css/order-button.css"
+frontend/delivery/pages/map-test.html:15:        href="../vendor/leaflet/leaflet.css"
+frontend/delivery/pages/map-test.html:20:        href="../css/location-picker.css"
+frontend/delivery/pages/map-test.html:25:        href="../css/map-test.css"
+frontend/delivery/pages/map-test.html:30:        href="../css/location-status.css"
+frontend/delivery/pages/map-test.html:35:        href="../css/location-permission.css"
+frontend/delivery/pages/map-test.html:40:        href="../css/address-fallback.css"
+frontend/delivery/pages/map-test.html:45:        href="../css/confirmed-location.css?v=3"
+frontend/delivery/pages/order-location.html:14:        href="../vendor/leaflet/leaflet.css"
+frontend/delivery/pages/order-location.html:19:        href="../css/location-picker.css"
+frontend/delivery/pages/order-location.html:24:        href="../css/map-test.css"
+frontend/delivery/pages/order-location.html:29:        href="../css/location-status.css"
+frontend/delivery/pages/order-location.html:34:        href="../css/location-permission.css"
+frontend/delivery/pages/order-location.html:39:        href="../css/address-fallback.css"
+frontend/delivery/pages/order-location.html:44:        href="../css/confirmed-location.css?v=3"
+frontend/delivery/pages/order-location.html:49:        href="../../order/css/address-selection.css"
+frontend/delivery/pages/order-location.html:54:        href="../../order/css/payment-selection.css"
+frontend/delivery/pages/order-location.html:59:        href="../../order/css/order-review.css"
+frontend/delivery/pages/dashboard.html:15:        href="../css/dashboard.css"
+frontend/order/js/order-button.js:245:    window.location.href =
+frontend/admin/index.html:7:    <link rel="stylesheet" href="/admin/css/admin.css">
