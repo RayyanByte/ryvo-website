@@ -18,14 +18,14 @@
 <div class="form-field"><label for="register-name">Name</label><input type="text" id="register-name" name="name" autocomplete="name" required></div>
 <div class="form-field"><label for="register-email">Email</label><input type="email" id="register-email" name="email" autocomplete="email" required></div>
 <div class="form-field"><label for="register-phone">Phone</label><input type="tel" id="register-phone" name="phone" autocomplete="tel"></div>
-<div class="form-field"><label for="register-password">Password</label><input type="password" id="register-password" name="password" minlength="6" autocomplete="new-password" required></div>
-<div class="form-field"><label for="register-confirm-password">Confirm Password</label><input type="password" id="register-confirm-password" name="confirmPassword" minlength="6" autocomplete="new-password" required></div>
+<div class="form-field"><label for="register-password">Password</label><div class="password-wrapper"><input type="password" id="register-password" name="password" minlength="6" autocomplete="new-password" required><button type="button" class="password-toggle" data-password-target="register-password" aria-label="Show password" aria-pressed="false">👁</button></div></div>
+<div class="form-field"><label for="register-confirm-password">Confirm Password</label><div class="password-wrapper"><input type="password" id="register-confirm-password" name="confirmPassword" minlength="6" autocomplete="new-password" required><button type="button" class="password-toggle" data-password-target="register-confirm-password" aria-label="Show password" aria-pressed="false">👁</button></div></div>
 <button type="submit" class="login-button">Create Account</button>
 <p class="login-message" id="register-message" aria-live="polite"></p>
 <p class="auth-switch">Already have an account? <a href="/auth/pages/login.html">Sign In</a></p>
 </form>
 </section>
 </main>
-<script src="../js/register.js"></script>
+<script src="../js/register.js?v=2"></script>
 </body>
 </html>

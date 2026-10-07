@@ -1,3 +1,18 @@
+document.querySelectorAll(".password-toggle").forEach(button => {
+    button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.passwordTarget);
+
+        if (!input) return;
+
+        const show = input.type === "password";
+
+        input.type = show ? "text" : "password";
+        button.textContent = show ? "🙈" : "👁";
+        button.setAttribute("aria-label", show ? "Hide password" : "Show password");
+        button.setAttribute("aria-pressed", String(show));
+    });
+});
+
 const form=document.querySelector("#register-form"),message=document.querySelector("#register-message");
 const setMessage=m=>{if(message)message.textContent=m};
 form?.addEventListener("submit",async e=>{
