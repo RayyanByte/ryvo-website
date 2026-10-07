@@ -1,83 +1,82 @@
-(() => {
+const initCustomerDashboard = async () => {
 
-    let customers = [];
+    const container =
+        document.getElementById(
+            "customer-admin-list"
+        );
 
-    const $ = (id) =>
-        document.getElementById(id);
+    const searchInput =
+        document.getElementById(
+            "customer-search"
+        );
 
-    const esc = (value) =>
-        String(value ?? "")
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
+    const searchButton =
+        document.getElementById(
+            "customer-search-btn"
+        );
 
-    const message = (
-        text,
-        type = "info"
-    ) => {
-        const element =
-            $("customerDashboardMessage");
+    if (!container) {
+        return;
+    }
 
-        element.textContent = text;
-        element.dataset.type = type;
-    };
+    const loadCustomers = async () => {
 
-    const render = () => {
+        container.innerHTML =
+            "<p>Loading customers...</p>";
 
-        const list =
-            $("customerList");
+        try {
 
-        if (!customers.length) {
-            list.innerHTML =
-                "<p>No customers found.</p>";
-            return;
-        }
+            const search =
+                searchInput?.value.trim() || "";
 
-        list.innerHTML =
-            customers.map(
-                (customer) => `
-                    <article class="admin-card">
+            const result =
+                await customerAdminApi.getCustomers(
+                    search
+                );
 
-                        <div class="admin-card-body">
+            const customers =
+                result?.data?.customers ||
+                result?.customers ||
+                result?.data ||
+                [];
+
+            if (!customers.length) {
+                container.innerHTML =
+                    "<p>No customers found.</p>";
+                return;
+            }
+
+            container.innerHTML =
+                customers.map(
+                    (customer) => `
+                        <article class="customer-card">
 
                             <h3>
-                                ${esc(customer.name)}
+                                ${customer.name || "-"}
                             </h3>
 
                             <p>
-                                ${esc(customer.email)}
+                                Email:
+                                ${customer.email || "-"}
                             </p>
 
                             <p>
-                                ${esc(
-                                    customer.phone ||
-                                    "No phone"
-                                )}
+                                Phone:
+                                ${customer.phone || "-"}
                             </p>
 
                             <p>
-                                ${
-                                    customer.isActive
-                                        ? "Active"
-                                        : "Inactive"
-                                }
+                                Status:
+                                ${customer.isActive
+                                    ? "Active"
+                                    : "Inactive"}
                             </p>
 
                             <button
                                 type="button"
-                                class="${
-                                    customer.isActive
-                                        ? "admin-danger-button"
-                                        : "admin-primary-button"
-                                }"
-                                data-customer-status="${
-                                    customer._id
-                                }"
-                                data-active="${
-                                    customer.isActive
-                                }"
+                                data-customer-id="${customer._id}"
+                                data-active="${customer.isActive}"
+                                class="customer-status-btn"
                             >
                                 ${
                                     customer.isActive
@@ -86,121 +85,64 @@
                                 }
                             </button>
 
-                        </div>
+                        </article>
+                    `
+                ).join("");
 
-                    </article>
-                `
-            ).join("");
+            container
+                .querySelectorAll(
+                    ".customer-status-btn"
+                )
+                .forEach((button) => {
+
+                    button.addEventListener(
+                        "click",
+                        async () => {
+
+                            const customerId =
+                                button.dataset.customerId;
+
+                            const isActive =
+                                button.dataset.active !== "true";
+
+                            await customerAdminApi.updateStatus(
+                                customerId,
+                                isActive
+                            );
+
+                            await loadCustomers();
+                        }
+                    );
+                });
+
+        } catch (error) {
+
+            container.innerHTML =
+                `<p>${error.message}</p>`;
+        }
     };
 
-    const load = async () => {
-
-        const search =
-            $("customerSearch")
-                .value
-                .trim();
-
-        const result =
-            await customerAdminApi
-                .getCustomers(
-                    1,
-                    search
-                );
-
-        if (!result.success) {
-            message(
-                result.message ||
-                    "Unable to load customers.",
-                "error"
-            );
-            return;
-        }
-
-        customers =
-            Array.isArray(result.data)
-                ? result.data
-                : [];
-
-        render();
-    };
-
-    const handleClick = async (
-        event
-    ) => {
-
-        const button =
-            event.target.closest(
-                "[data-customer-status]"
-            );
-
-        if (!button) {
-            return;
-        }
-
-        const customerId =
-            button.dataset
-                .customerStatus;
-
-        const current =
-            button.dataset.active ===
-            "true";
-
-        const result =
-            await customerAdminApi
-                .updateStatus(
-                    customerId,
-                    !current
-                );
-
-        if (!result.success) {
-            message(
-                result.message ||
-                    "Unable to update customer.",
-                "error"
-            );
-            return;
-        }
-
-        message(
-            result.message ||
-                "Customer updated.",
-            "success"
+    if (searchButton) {
+        searchButton.addEventListener(
+            "click",
+            loadCustomers
         );
+    }
 
-        await load();
-    };
-
-    const init = async () => {
-
-        $("searchCustomersButton")
-            .addEventListener(
-                "click",
-                load
-            );
-
-        $("customerSearch")
-            .addEventListener(
-                "keydown",
-                (event) => {
-                    if (
-                        event.key ===
-                        "Enter"
-                    ) {
-                        load();
-                    }
+    if (searchInput) {
+        searchInput.addEventListener(
+            "keydown",
+            (event) => {
+                if (event.key === "Enter") {
+                    loadCustomers();
                 }
-            );
+            }
+        );
+    }
 
-        $("customerList")
-            .addEventListener(
-                "click",
-                handleClick
-            );
+    await loadCustomers();
+};
 
-        await load();
-    };
 
-    window.initCustomerDashboard =
-        init;
-
-})();
+window.initCustomerDashboard =
+    initCustomerDashboard;
