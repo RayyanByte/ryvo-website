@@ -5,67 +5,140 @@
 body {
     margin: 0;
     padding: 20px;
-    font-family: Arial, sans-serif;
     background: #f5f5f5;
     color: #222;
+    font-family: Arial, sans-serif;
 }
 
 main {
-    max-width: 1400px;
-    margin: auto;
-}
-
-section {
-    background: #fff;
-    margin-bottom: 24px;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-}
-
-h2 {
-    margin-top: 0;
-}
-
-input,
-select,
-textarea,
-button {
-    font: inherit;
-}
-
-input,
-select,
-textarea {
     width: 100%;
-    padding: 10px;
-    margin: 6px 0 12px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.admin-section {
+    margin-bottom: 24px;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 14px;
+}
+
+.admin-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.admin-section-header h2 {
+    margin: 0 0 6px;
+}
+
+.admin-section-header p {
+    margin: 0;
+    color: #777;
+}
+
+.admin-form-container {
+    margin-bottom: 20px;
+    padding: 18px;
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 12px;
+}
+
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.admin-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-field-full {
+    grid-column: 1 / -1;
+}
+
+.admin-field label {
+    font-weight: 600;
+}
+
+.admin-field input,
+.admin-field select,
+.admin-field textarea {
+    width: 100%;
+    padding: 11px;
     border: 1px solid #ddd;
     border-radius: 8px;
+    background: #fff;
 }
 
-button {
+.admin-field label input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+.admin-form-actions,
+.admin-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.admin-primary-button,
+.admin-secondary-button {
     padding: 10px 16px;
-    border: 0;
     border-radius: 8px;
     cursor: pointer;
 }
 
-button:hover {
-    opacity: 0.9;
+.admin-primary-button {
+    background: #111;
+    color: #fff;
 }
 
-article {
-    padding: 14px;
-    margin-top: 12px;
-    border: 1px solid #eee;
-    border-radius: 10px;
+.admin-secondary-button {
+    background: #eee;
+    color: #222;
+}
+
+.admin-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.admin-card,
+.food-card,
+.category-card,
+.customer-card,
+.delivery-card {
+    padding: 16px;
     background: #fafafa;
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
 }
 
-img {
-    max-width: 100%;
-    border-radius: 8px;
+.admin-card h3,
+.food-card h3,
+.category-card h3,
+.customer-card h3,
+.delivery-card h3 {
+    margin-top: 0;
+}
+
+@media (max-width: 900px) {
+    .admin-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 600px) {
@@ -73,12 +146,44 @@ img {
         padding: 10px;
     }
 
-    section {
-        padding: 14px;
+    .admin-section {
+        padding: 16px;
     }
 
-    button {
-        width: 100%;
-        margin-top: 6px;
+    .admin-section-header {
+        align-items: flex-start;
+        flex-direction: column;
     }
+
+    .admin-form-grid,
+    .admin-card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-field-full {
+        grid-column: auto;
+    }
+
+    .admin-primary-button,
+    .admin-secondary-button {
+        width: 100%;
+    }
+}
+
+.admin-header {
+    max-width: 1400px;
+    margin: 0 auto 24px;
+    padding: 22px 24px;
+    background: #111;
+    color: #fff;
+    border-radius: 14px;
+}
+
+.admin-header h1 {
+    margin: 0 0 6px;
+}
+
+.admin-header p {
+    margin: 0;
+    color: #ccc;
 }
