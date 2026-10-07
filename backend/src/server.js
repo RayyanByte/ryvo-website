@@ -5,6 +5,8 @@ dns.setDefaultResultOrder(
 );
 
 const express = require("express");
+const userAdminRoutes = require("./routes/user.admin.routes");
+
 const cors = require("cors");
 const dotenv = require("dotenv");
 
