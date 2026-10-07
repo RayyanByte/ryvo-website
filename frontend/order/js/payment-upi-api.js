@@ -1,11 +1,20 @@
 const UPI_PAYMENT_API_BASE_URL =
     "http://localhost:5000/api/payments";
 
-const updateUpiPaymentStatus = async (
+
+const getAuthToken = () => {
+    return localStorage.getItem(
+        "authToken"
+    );
+};
+
+
+const verifyUpiPayment = async ({
     orderId,
-    paymentStatus,
-    transactionId = null
-) => {
+    razorpayOrderId,
+    razorpayPaymentId,
+    razorpaySignature
+}) => {
     if (!orderId) {
         throw new Error(
             "Order ID is required."
@@ -13,25 +22,11 @@ const updateUpiPaymentStatus = async (
     }
 
     const token =
-        localStorage.getItem(
-            "authToken"
-        );
+        getAuthToken();
 
     if (!token) {
         throw new Error(
-            "Please login before updating payment."
-        );
-    }
-
-    if (
-        ![
-            "paid",
-            "failed",
-            "cancelled"
-        ].includes(paymentStatus)
-    ) {
-        throw new Error(
-            "Invalid payment status."
+            "Please login before verifying payment."
         );
     }
 
@@ -39,9 +34,9 @@ const updateUpiPaymentStatus = async (
         await fetch(
             `${UPI_PAYMENT_API_BASE_URL}/${encodeURIComponent(
                 orderId
-            )}/status`,
+            )}/verify-upi`,
             {
-                method: "PATCH",
+                method: "POST",
 
                 headers: {
                     "Content-Type":
@@ -53,8 +48,9 @@ const updateUpiPaymentStatus = async (
 
                 body:
                     JSON.stringify({
-                        paymentStatus,
-                        transactionId
+                        razorpayOrderId,
+                        razorpayPaymentId,
+                        razorpaySignature
                     })
             }
         );
@@ -71,16 +67,16 @@ const updateUpiPaymentStatus = async (
     if (!response.ok) {
         throw new Error(
             result?.message ||
-            "Unable to update UPI payment status."
+            "Unable to verify UPI payment."
         );
     }
 
     return (
         result?.data ||
-        result?.payment ||
         result
     );
 };
 
-window.updateUpiPaymentStatus =
-    updateUpiPaymentStatus;
+
+window.verifyUpiPayment =
+    verifyUpiPayment;

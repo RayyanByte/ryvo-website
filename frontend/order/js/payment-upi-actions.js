@@ -1,68 +1,30 @@
-const markUpiPaymentPaid = async (
+const handleRazorpaySuccess = async (
     orderId,
-    transactionId
+    response
 ) => {
     if (
-        typeof window.updateUpiPaymentStatus !==
+        typeof window.verifyUpiPayment !==
         "function"
     ) {
         throw new Error(
-            "UPI payment API is not loaded."
+            "UPI verification API is not loaded."
         );
     }
 
-    return window.updateUpiPaymentStatus(
+    return window.verifyUpiPayment({
         orderId,
-        "paid",
-        transactionId
-    );
+
+        razorpayOrderId:
+            response?.razorpay_order_id,
+
+        razorpayPaymentId:
+            response?.razorpay_payment_id,
+
+        razorpaySignature:
+            response?.razorpay_signature
+    });
 };
 
-const markUpiPaymentFailed = async (
-    orderId,
-    transactionId = null
-) => {
-    if (
-        typeof window.updateUpiPaymentStatus !==
-        "function"
-    ) {
-        throw new Error(
-            "UPI payment API is not loaded."
-        );
-    }
 
-    return window.updateUpiPaymentStatus(
-        orderId,
-        "failed",
-        transactionId
-    );
-};
-
-const markUpiPaymentCancelled = async (
-    orderId,
-    transactionId = null
-) => {
-    if (
-        typeof window.updateUpiPaymentStatus !==
-        "function"
-    ) {
-        throw new Error(
-            "UPI payment API is not loaded."
-        );
-    }
-
-    return window.updateUpiPaymentStatus(
-        orderId,
-        "cancelled",
-        transactionId
-    );
-};
-
-window.markUpiPaymentPaid =
-    markUpiPaymentPaid;
-
-window.markUpiPaymentFailed =
-    markUpiPaymentFailed;
-
-window.markUpiPaymentCancelled =
-    markUpiPaymentCancelled;
+window.handleRazorpaySuccess =
+    handleRazorpaySuccess;

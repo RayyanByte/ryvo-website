@@ -1,16 +1,4 @@
 const initializeUpiPaymentFlow = () => {
-    const getOrderId = (event) => {
-        const order =
-            event.detail?.order;
-
-        return (
-            order?._id ||
-            order?.id ||
-            event.detail?.orderId ||
-            null
-        );
-    };
-
     window.addEventListener(
         "orderCreated",
         async (event) => {
@@ -32,35 +20,90 @@ const initializeUpiPaymentFlow = () => {
             }
 
             const orderId =
-                getOrderId(event);
+                order?._id ||
+                order?.id ||
+                event.detail?.orderId ||
+                null;
 
             if (!orderId) {
                 return;
             }
 
+            const gateway =
+                payment?.gateway;
+
             if (
-                typeof window.renderPaymentStatus ===
-                "function"
+                !gateway ||
+                gateway.provider !==
+                    "razorpay"
             ) {
-                window.renderPaymentStatus(
-                    payment
-                );
+                return;
             }
 
-            window.dispatchEvent(
-                new CustomEvent(
-                    "upiPaymentReady",
-                    {
-                        detail: {
-                            orderId,
-                            payment
-                        }
-                    }
-                )
+            window.setUpiPaymentPending?.(
+                orderId,
+                payment?.payment?._id ||
+                payment?._id ||
+                null
             );
+
+            window.renderPaymentStatus?.(
+                payment
+            );
+
+            try {
+                const result =
+                    await window.openRazorpayCheckout({
+                        orderId,
+                        gateway
+                    });
+
+                window.setUpiPaymentPaid?.(
+                    orderId,
+                    result?.providerPaymentId ||
+                    result?.transactionId ||
+                    null
+                );
+
+                window.dispatchEvent(
+                    new CustomEvent(
+                        "upiPaymentVerified",
+                        {
+                            detail: {
+                                orderId,
+                                payment:
+                                    result
+                            }
+                        }
+                    )
+                );
+
+            } catch (error) {
+                console.error(
+                    "UPI checkout error:",
+                    error
+                );
+
+                window.setUpiPaymentFailed?.(
+                    orderId
+                );
+
+                window.dispatchEvent(
+                    new CustomEvent(
+                        "upiPaymentFailed",
+                        {
+                            detail: {
+                                orderId,
+                                error
+                            }
+                        }
+                    )
+                );
+            }
         }
     );
 };
+
 
 if (
     document.readyState ===

@@ -3,22 +3,25 @@ const mongoose = require("mongoose");
 const Payment = require("../../models/payment.model");
 const Order = require("../../models/order.model");
 
-const PAYMENT_METHODS = ["cod", "upi"];
+const {
+    createRazorpayOrder,
+    verifyPaymentSignature
+} = require("../../services/payment/razorpay.service");
 
-const PAYMENT_STATUS_TRANSITIONS = {
-    pending: [
-        "failed",
-        "cancelled"
-    ],
-    paid: [],
-    failed: [],
-    cancelled: [],
-    refunded: []
-};
 
-const createPayment = async (req, res) => {
+const PAYMENT_METHODS = [
+    "cod",
+    "upi"
+];
+
+
+const createPayment = async (
+    req,
+    res
+) => {
     try {
-        const customerId = req.userId;
+        const customerId =
+            req.userId;
 
         const {
             orderId,
@@ -96,20 +99,65 @@ const createPayment = async (req, res) => {
             });
         }
 
+        if (
+            paymentMethod === "cod"
+        ) {
+            const payment =
+                await Payment.create({
+                    order: order._id,
+                    customer: customerId,
+                    paymentMethod: "cod",
+                    paymentStatus: "pending",
+                    amount: order.totalAmount,
+                    currency: "INR",
+                    provider: "none"
+                });
+
+            return res.status(201).json({
+                success: true,
+                message:
+                    "COD payment created successfully.",
+                data: payment
+            });
+        }
+
+        const razorpayOrder =
+            await createRazorpayOrder({
+                orderId: order._id,
+                amount: order.totalAmount
+            });
+
         const payment =
             await Payment.create({
                 order: order._id,
                 customer: customerId,
-                paymentMethod,
+                paymentMethod: "upi",
                 paymentStatus: "pending",
-                amount: order.totalAmount
+                amount: order.totalAmount,
+                currency: "INR",
+                provider: "razorpay",
+                providerOrderId:
+                    razorpayOrder.id
             });
 
         return res.status(201).json({
             success: true,
             message:
-                "Payment record created successfully.",
-            data: payment
+                "UPI payment created successfully.",
+            data: {
+                payment,
+                gateway: {
+                    provider: "razorpay",
+                    keyId:
+                        process.env.RAZORPAY_KEY_ID,
+                    orderId:
+                        razorpayOrder.id,
+                    amount:
+                        razorpayOrder.amount,
+                    currency:
+                        razorpayOrder.currency
+                }
+            }
         });
 
     } catch (error) {
@@ -121,15 +169,23 @@ const createPayment = async (req, res) => {
         return res.status(500).json({
             success: false,
             message:
+                error.message ||
                 "Failed to create payment."
         });
     }
 };
 
-const getMyPayment = async (req, res) => {
+
+const getMyPayment = async (
+    req,
+    res
+) => {
     try {
-        const customerId = req.userId;
-        const { orderId } = req.params;
+        const customerId =
+            req.userId;
+
+        const { orderId } =
+            req.params;
 
         if (
             !mongoose.Types.ObjectId.isValid(
@@ -180,17 +236,22 @@ const getMyPayment = async (req, res) => {
     }
 };
 
-const updatePaymentStatus = async (
+
+const verifyUpiPayment = async (
     req,
     res
 ) => {
     try {
-        const customerId = req.userId;
-        const { orderId } = req.params;
+        const customerId =
+            req.userId;
+
+        const { orderId } =
+            req.params;
 
         const {
-            paymentStatus,
-            transactionId
+            razorpayOrderId,
+            razorpayPaymentId,
+            razorpaySignature
         } = req.body;
 
         if (
@@ -205,33 +266,14 @@ const updatePaymentStatus = async (
         }
 
         if (
-            ![
-                "paid",
-                "failed",
-                "cancelled"
-            ].includes(paymentStatus)
+            !razorpayOrderId ||
+            !razorpayPaymentId ||
+            !razorpaySignature
         ) {
             return res.status(400).json({
                 success: false,
                 message:
-                    "Invalid payment status."
-            });
-        }
-
-        if (
-            transactionId !== undefined &&
-            transactionId !== null &&
-            (
-                typeof transactionId !==
-                "string" ||
-                transactionId.trim().length === 0 ||
-                transactionId.trim().length > 200
-            )
-        ) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Invalid transaction ID."
+                    "Razorpay verification data is required."
             });
         }
 
@@ -250,71 +292,56 @@ const updatePaymentStatus = async (
         }
 
         if (
-            payment.paymentMethod !==
-            "upi"
+            payment.paymentMethod !== "upi" ||
+            payment.provider !== "razorpay"
         ) {
             return res.status(400).json({
                 success: false,
                 message:
-                    "Only UPI payments can use this status endpoint."
-            });
-        }
-
-        const currentStatus =
-            payment.paymentStatus;
-
-        const allowedStatuses =
-            PAYMENT_STATUS_TRANSITIONS[
-                currentStatus
-            ] || [];
-
-        if (
-            !allowedStatuses.includes(
-                paymentStatus
-            )
-        ) {
-            if (
-                paymentStatus === "paid"
-            ) {
-                return res.status(403).json({
-                    success: false,
-                    message:
-                        "UPI payment cannot be marked as paid from the customer application. Payment must be verified by the payment provider."
-                });
-            }
-
-            return res.status(400).json({
-                success: false,
-                message:
-                    `Invalid payment status transition from ${currentStatus} to ${paymentStatus}.`
+                    "This payment is not a Razorpay UPI payment."
             });
         }
 
         if (
-            paymentStatus === "cancelled" &&
-            transactionId
+            payment.providerOrderId !==
+            razorpayOrderId
         ) {
             return res.status(400).json({
                 success: false,
                 message:
-                    "Cancelled payments cannot contain a transaction ID."
+                    "Razorpay order does not match."
             });
         }
+
+        const valid =
+            verifyPaymentSignature({
+                orderId:
+                    razorpayOrderId,
+                paymentId:
+                    razorpayPaymentId,
+                signature:
+                    razorpaySignature
+            });
+
+        if (!valid) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Invalid Razorpay payment signature."
+            });
+        }
+
+        payment.providerPaymentId =
+            razorpayPaymentId;
+
+        payment.transactionId =
+            razorpayPaymentId;
 
         payment.paymentStatus =
-            paymentStatus;
+            "paid";
 
-        if (transactionId) {
-            payment.transactionId =
-                transactionId.trim();
-        }
-
-        if (
-            paymentStatus === "failed" ||
-            paymentStatus === "cancelled"
-        ) {
-            payment.paidAt = null;
-        }
+        payment.paidAt =
+            new Date();
 
         await payment.save();
 
@@ -324,38 +351,35 @@ const updatePaymentStatus = async (
                 userId: customerId
             },
             {
-                paymentStatus:
-                    paymentStatus === "cancelled"
-                        ? "failed"
-                        : paymentStatus
+                paymentStatus: "paid"
             }
         );
 
         return res.status(200).json({
             success: true,
             message:
-                "Payment status updated successfully.",
+                "UPI payment verified successfully.",
             data: payment
         });
 
     } catch (error) {
         console.error(
-            "Update payment status error:",
+            "Verify UPI payment error:",
             error
         );
 
         return res.status(500).json({
             success: false,
             message:
-                "Failed to update payment status."
+                "Failed to verify UPI payment."
         });
     }
 };
 
+
 module.exports = {
     createPayment,
     getMyPayment,
-    updatePaymentStatus,
-    PAYMENT_METHODS,
-    PAYMENT_STATUS_TRANSITIONS
+    verifyUpiPayment,
+    PAYMENT_METHODS
 };

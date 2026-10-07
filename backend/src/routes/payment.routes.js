@@ -7,10 +7,14 @@ const {
 const {
     createPayment,
     getMyPayment,
-    updatePaymentStatus
-} = require("../controllers/payment/payment.controller");
+    verifyUpiPayment
+} = require(
+    "../controllers/payment/payment.controller"
+);
 
-const router = express.Router();
+const router =
+    express.Router();
+
 
 router.post(
     "/",
@@ -18,16 +22,19 @@ router.post(
     createPayment
 );
 
+
 router.get(
     "/:orderId",
     protect,
     getMyPayment
 );
 
-router.patch(
-    "/:orderId/status",
+
+router.post(
+    "/:orderId/verify-upi",
     protect,
-    updatePaymentStatus
+    verifyUpiPayment
 );
+
 
 module.exports = router;

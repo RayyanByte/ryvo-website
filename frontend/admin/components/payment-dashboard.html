@@ -1,0 +1,84 @@
+<section
+    class="admin-payment-dashboard"
+    aria-labelledby="admin-payment-title"
+>
+    <div class="admin-payment-header">
+        <p>ADMIN</p>
+
+        <h2 id="admin-payment-title">
+            Payment Management
+        </h2>
+
+        <p>
+            Manage COD and UPI payment records.
+        </p>
+    </div>
+
+    <div
+        id="payment-summary"
+        class="payment-summary"
+    ></div>
+
+    <div class="payment-filters">
+        <select
+            id="payment-status-filter"
+        >
+            <option value="">
+                All Status
+            </option>
+
+            <option value="pending">
+                Pending
+            </option>
+
+            <option value="paid">
+                Paid
+            </option>
+
+            <option value="failed">
+                Failed
+            </option>
+
+            <option value="cancelled">
+                Cancelled
+            </option>
+
+            <option value="refunded">
+                Refunded
+            </option>
+        </select>
+
+        <select
+            id="payment-method-filter"
+        >
+            <option value="">
+                All Methods
+            </option>
+
+            <option value="cod">
+                COD
+            </option>
+
+            <option value="upi">
+                UPI
+            </option>
+        </select>
+
+        <button
+            type="button"
+            id="load-payments-button"
+        >
+            Refresh
+        </button>
+    </div>
+
+    <div
+        id="payment-dashboard-message"
+        role="status"
+    ></div>
+
+    <div
+        id="payment-list"
+        class="payment-list"
+    ></div>
+</section>

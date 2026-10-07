@@ -42,6 +42,33 @@ const paymentSchema = new mongoose.Schema(
             min: 0
         },
 
+        currency: {
+            type: String,
+            default: "INR",
+            uppercase: true,
+            trim: true
+        },
+
+        provider: {
+            type: String,
+            enum: ["none", "razorpay"],
+            default: "none"
+        },
+
+        providerOrderId: {
+            type: String,
+            trim: true,
+            default: null,
+            index: true
+        },
+
+        providerPaymentId: {
+            type: String,
+            trim: true,
+            default: null,
+            index: true
+        },
+
         transactionId: {
             type: String,
             trim: true,
