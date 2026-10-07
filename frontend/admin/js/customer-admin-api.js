@@ -4,9 +4,6 @@ const customerAdminApi = {
         page = 1,
         search = ""
     ) {
-        const token =
-            localStorage.getItem("token");
-
         const params =
             new URLSearchParams({
                 page,
@@ -16,12 +13,9 @@ const customerAdminApi = {
 
         const response =
             await fetch(
-                `/api/users/admin/customers?${params}`,
+                `http://localhost:5000/api/users/admin/customers?${params}`,
                 {
-                    headers: {
-                        Authorization:
-                            `Bearer ${token}`
-                    }
+                    credentials: "include"
                 }
             );
 
@@ -32,22 +26,18 @@ const customerAdminApi = {
         customerId,
         isActive
     ) {
-        const token =
-            localStorage.getItem("token");
-
         const response =
             await fetch(
-                `/api/users/admin/customers/${customerId}/status`,
+                `http://localhost:5000/api/users/admin/customers/${customerId}/status`,
                 {
                     method: "PATCH",
 
                     headers: {
                         "Content-Type":
-                            "application/json",
-
-                        Authorization:
-                            `Bearer ${token}`
+                            "application/json"
                     },
+
+                    credentials: "include",
 
                     body:
                         JSON.stringify({
@@ -59,3 +49,4 @@ const customerAdminApi = {
         return response.json();
     }
 };
+

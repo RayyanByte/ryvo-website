@@ -1,36 +1,20 @@
 const ADMIN_DELIVERY_API =
     "http://localhost:5000/api/delivery/admin";
 
-
 const getAdminDeliveryBoys =
     async () => {
-        const token =
-            localStorage.getItem(
-                "authToken"
-            );
-
-        if (!token) {
-            throw new Error(
-                "Admin login required."
-            );
-        }
-
         const response =
             await fetch(
                 ADMIN_DELIVERY_API,
                 {
-                    headers: {
-                        Authorization:
-                            `Bearer ${token}`
-                    }
+                    credentials: "include"
                 }
             );
 
         let result = null;
 
         try {
-            result =
-                await response.json();
+            result = await response.json();
         } catch {
             result = null;
         }
@@ -44,7 +28,6 @@ const getAdminDeliveryBoys =
 
         return result;
     };
-
 
 window.getAdminDeliveryBoys =
     getAdminDeliveryBoys;

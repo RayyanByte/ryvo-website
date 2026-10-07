@@ -1,57 +1,73 @@
+const ADMIN_FOOD_API =
+    "http://localhost:5000/api/foods";
+
+const ADMIN_CATEGORY_API =
+    "http://localhost:5000/api/categories";
+
 const foodAdminApi = {
+
     async getFoods(category = "") {
         const url = category
-            ? `/api/foods?category=${encodeURIComponent(category)}`
-            : "/api/foods";
+            ? `${ADMIN_FOOD_API}?category=${encodeURIComponent(category)}`
+            : ADMIN_FOOD_API;
 
-        const response = await fetch(url);
+        const response = await fetch(
+            url,
+            { credentials: "include" }
+        );
+
         return response.json();
     },
 
     async getCategories() {
-        const response = await fetch("/api/categories");
+        const response = await fetch(
+            ADMIN_CATEGORY_API,
+            { credentials: "include" }
+        );
+
         return response.json();
     },
 
     async createFood(payload) {
-        const token = localStorage.getItem("token");
-
-        const response = await fetch("/api/foods", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify(payload)
-        });
+        const response = await fetch(
+            ADMIN_FOOD_API,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(payload)
+            }
+        );
 
         return response.json();
     },
 
     async updateFood(foodId, payload) {
-        const token = localStorage.getItem("token");
-
-        const response = await fetch(`/api/foods/${foodId}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify(payload)
-        });
+        const response = await fetch(
+            `${ADMIN_FOOD_API}/${foodId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(payload)
+            }
+        );
 
         return response.json();
     },
 
     async deleteFood(foodId) {
-        const token = localStorage.getItem("token");
-
-        const response = await fetch(`/api/foods/${foodId}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`
+        const response = await fetch(
+            `${ADMIN_FOOD_API}/${foodId}`,
+            {
+                method: "DELETE",
+                credentials: "include"
             }
-        });
+        );
 
         return response.json();
     }

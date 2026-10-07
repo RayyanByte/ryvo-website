@@ -1,32 +1,17 @@
 const jwt = require("jsonwebtoken");
 
-
-const protect = async (req, res, next) => {
+const adminProtect = async (req, res, next) => {
     try {
-        const authHeader =
-            req.headers.authorization;
-
-        const bearerToken =
-            authHeader &&
-            authHeader.startsWith("Bearer ")
-                ? authHeader.split(" ")[1]
-                : null;
-
-        const cookieToken =
+        const token =
             req.cookies &&
             req.cookies.ryvo_admin_session;
-
-        const token =
-            bearerToken || cookieToken;
 
         if (!token) {
             return res.status(401).json({
                 success: false,
-                message:
-                    "Authentication required."
+                message: "Admin authentication required."
             });
         }
-
 
         const decoded =
             jwt.verify(
@@ -34,23 +19,19 @@ const protect = async (req, res, next) => {
                 process.env.JWT_SECRET
             );
 
-
         req.userId =
             decoded.userId;
-
 
         next();
 
     } catch (error) {
         return res.status(401).json({
             success: false,
-            message:
-                "Invalid or expired token."
+            message: "Invalid or expired admin session."
         });
     }
 };
 
-
 module.exports = {
-    protect
+    adminProtect
 };

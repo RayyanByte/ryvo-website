@@ -16,6 +16,23 @@
     </div>
 </header>
 
+
+<nav class="admin-section-nav" aria-label="Admin sections">
+    <button type="button" data-admin-section="orders">Orders</button>
+    <button type="button" data-admin-section="payments">Payments</button>
+    <button type="button" data-admin-section="delivery">Delivery</button>
+    <button type="button" data-admin-section="food">Food</button>
+    <button type="button" data-admin-section="categories">Categories</button>
+    <button type="button" data-admin-section="customers">Customers</button>
+    <button type="button" data-admin-section="shop">Shop</button>
+<button type="button" class="admin-shop-status-button" id="admin-shop-status-button">
+    <span class="admin-shop-switch" id="admin-shop-toggle" role="switch" aria-checked="false">
+        <span class="admin-shop-switch-knob"></span>
+    </span>
+</button>
+        
+</nav>
+
 <main>
 
     <section id="admin-orders"></section>
@@ -34,15 +51,18 @@
 
 </main>
 
-<script src="/admin/js/order-admin-api.js"></script>
-<script src="/admin/js/delivery-admin-api.js"></script>
-<script src="/admin/js/payment-admin-api.js"></script>
+<script src="/admin/js/order-admin-api.js?v=2"></script>
+<script src="/admin/js/delivery-admin-api.js?v=2"></script>
+<script src="/admin/js/payment-admin-api.js?v=2"></script>
 
-<script src="/admin/js/food-admin-api.js"></script>
-<script src="/admin/js/category-admin-api.js"></script>
-<script src="/admin/js/customer-admin-api.js"></script>
-<script src="/admin/js/shop-admin-api.js"></script>
+<script src="/admin/js/food-admin-api.js?v=2"></script>
+<script src="/admin/js/category-admin-api.js?v=2"></script>
+<script src="/admin/js/customer-admin-api.js?v=2"></script>
+<script src="/admin/js/shop-admin-api.js?v=2"></script>
 
+<script src="/admin/js/order-dashboard.js"></script>
+<script src="/admin/js/payment-dashboard.js"></script>
+<script src="/admin/js/delivery-dashboard.js"></script>
 <script src="/admin/js/admin-components.js"></script>
 
 <script src="/admin/js/food-dashboard.js"></script>
@@ -50,5 +70,341 @@
 <script src="/admin/js/customer-dashboard.js"></script>
 <script src="/admin/js/shop-dashboard.js"></script>
 
+
+<style>
+.admin-section-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 20px 0;
+}
+
+.admin-section-nav button {
+    min-height: 42px;
+    padding: 8px;
+    border: 1px solid #222;
+    border-radius: 10px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-section-nav button.active {
+    background: #fff;
+    color: #111;
+}
+
+.admin-back-button {
+    display: block;
+    margin: 0 0 18px;
+    padding: 10px 16px;
+    border: 1px solid #222;
+    border-radius: 8px;
+    background: #fff;
+    color: #111;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.admin-section-hidden {
+    display: none !important;
+}
+
+@media (min-width: 700px) {
+    .admin-section-nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+
+.admin-shop-status-button {
+    width: 58px;
+    min-width: 58px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid #222;
+    border-radius: 10px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-shop-switch {
+    width: 38px;
+    height: 20px;
+    padding: 2px;
+    border-radius: 20px;
+    background: #777;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+
+.admin-shop-switch-knob {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s ease;
+}
+
+.admin-shop-switch.on {
+    background: #22c55e;
+}
+
+.admin-shop-switch.on .admin-shop-switch-knob {
+    transform: translateX(18px);
+}
+
+.admin-shop-toggle input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+}
+
+.admin-toggle-text {
+    min-width: 30px;
+}
+
+.admin-shop-toggle input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.admin-toggle-text {
+    min-width: 28px;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const sections = {
+        orders: "admin-orders",
+        payments: "admin-payments",
+        delivery: "admin-delivery",
+        food: "admin-food",
+        categories: "admin-categories",
+        customers: "admin-customers",
+        shop: "admin-shop"
+    };
+
+    const buttons =
+        document.querySelectorAll("[data-admin-section]");
+
+    const showSection = (name) => {
+        Object.entries(sections).forEach(
+            ([key, id]) => {
+                const section =
+                    document.getElementById(id);
+
+                if (section) {
+                    section.classList.toggle(
+                        "admin-section-hidden",
+                        key !== name
+                    );
+                }
+            }
+        );
+
+        buttons.forEach((button) => {
+            button.classList.toggle(
+                "active",
+                button.dataset.adminSection === name
+            );
+        });
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    };
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            showSection(
+                button.dataset.adminSection
+            );
+        });
+    });
+
+    Object.values(sections).forEach((id) => {
+        const section = document.getElementById(id);
+        if (section) {
+            section.classList.add("admin-section-hidden");
+
+            if (!section.querySelector(".admin-back-button")) {
+                const back = document.createElement("button");
+                back.type = "button";
+                back.className = "admin-back-button";
+                back.textContent = "← Back to Admin";
+                back.addEventListener("click", () => {
+                    Object.values(sections).forEach((sectionId) => {
+                        document.getElementById(sectionId)
+                            ?.classList.add("admin-section-hidden");
+                    });
+
+                    buttons.forEach((button) =>
+                        button.classList.remove("active")
+                    );
+
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                });
+                section.prepend(back);
+            }
+        }
+    });
+});
+</script>
+
+<script id="admin-shop-toggle-handler">
+document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("admin-shop-toggle");
+
+    if (!toggle) return;
+
+    let shopCheckbox = null;
+    let shopForm = null;
+
+    const sync = () => {
+        shopCheckbox = document.getElementById("shopOpen");
+        shopForm = document.getElementById("shopForm");
+
+        if (!shopCheckbox) return;
+
+        toggle.classList.toggle("on", shopCheckbox.checked);
+        toggle.setAttribute(
+            "aria-checked",
+            String(shopCheckbox.checked)
+        );
+    };
+
+    const observer = new MutationObserver(() => {
+        sync();
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    sync();
+
+    toggle.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        sync();
+
+        if (!shopCheckbox || !shopForm) {
+            alert("Shop settings are not loaded yet.");
+            return;
+        }
+
+        const oldState = shopCheckbox.checked;
+        const newState = !oldState;
+
+        shopCheckbox.checked = newState;
+        toggle.classList.toggle("on", newState);
+        toggle.setAttribute("aria-checked", String(newState));
+
+        const submitEvent = new Event("submit", {
+            bubbles: true,
+            cancelable: true
+        });
+
+        shopForm.dispatchEvent(submitEvent);
+
+        setTimeout(sync, 500);
+    });
+});
+</script>
+<script id="admin-location-detection">
+document.addEventListener("DOMContentLoaded", () => {
+    const addLocationButton = () => {
+        const latitude = document.getElementById("shopLatitude");
+        const longitude = document.getElementById("shopLongitude");
+
+        if (!latitude || !longitude) return;
+
+        if (document.getElementById("detect-shop-location")) return;
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.id = "detect-shop-location";
+        button.textContent = "📍 Detect Location Automatically";
+
+        button.style.cssText = `
+            display:block;
+            width:100%;
+            margin:10px 0 20px;
+            padding:12px 16px;
+            border:1px solid #222;
+            border-radius:10px;
+            background:#111;
+            color:#fff;
+            font-size:15px;
+            cursor:pointer;
+        `;
+
+        latitude.parentElement.insertAdjacentElement(
+            "afterend",
+            button
+        );
+
+        button.addEventListener("click", () => {
+            if (!navigator.geolocation) {
+                alert("Location detection is not supported by this browser.");
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "Detecting location...";
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    latitude.value =
+                        position.coords.latitude.toFixed(6);
+
+                    longitude.value =
+                        position.coords.longitude.toFixed(6);
+
+                    button.disabled = false;
+                    button.textContent =
+                        "✓ Location Detected";
+                },
+                (error) => {
+                    button.disabled = false;
+                    button.textContent =
+                        "📍 Detect Location Automatically";
+
+                    alert(
+                        error.code === 1
+                            ? "Location permission was denied."
+                            : "Unable to detect your location."
+                    );
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
+                }
+            );
+        });
+    };
+
+    const observer = new MutationObserver(addLocationButton);
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    addLocationButton();
+});
+</script>
 </body>
 </html>

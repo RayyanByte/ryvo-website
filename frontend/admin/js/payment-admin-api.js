@@ -1,41 +1,19 @@
 const ADMIN_PAYMENT_API =
     "http://localhost:5000/api/payments/admin";
 
-
-const getAdminToken = () => {
-    return localStorage.getItem(
-        "authToken"
-    );
-};
-
-
 const adminPaymentRequest = async (
     path,
     options = {}
 ) => {
-    const token =
-        getAdminToken();
-
-    if (!token) {
-        throw new Error(
-            "Admin login required."
-        );
-    }
-
     const response =
         await fetch(
             `${ADMIN_PAYMENT_API}${path}`,
             {
                 ...options,
-
+                credentials: "include",
                 headers: {
-                    "Content-Type":
-                        "application/json",
-
-                    ...(options.headers || {}),
-
-                    Authorization:
-                        `Bearer ${token}`
+                    "Content-Type": "application/json",
+                    ...(options.headers || {})
                 }
             }
         );
@@ -43,8 +21,7 @@ const adminPaymentRequest = async (
     let result = null;
 
     try {
-        result =
-            await response.json();
+        result = await response.json();
     } catch {
         result = null;
     }
@@ -59,14 +36,10 @@ const adminPaymentRequest = async (
     return result;
 };
 
-
 const getAdminPaymentSummary =
     async () => {
-        return adminPaymentRequest(
-            "/summary"
-        );
+        return adminPaymentRequest("/summary");
     };
-
 
 const getAdminPayments =
     async ({
@@ -79,34 +52,20 @@ const getAdminPayments =
             new URLSearchParams();
 
         if (status) {
-            params.set(
-                "status",
-                status
-            );
+            params.set("status", status);
         }
 
         if (method) {
-            params.set(
-                "method",
-                method
-            );
+            params.set("method", method);
         }
 
-        params.set(
-            "page",
-            page
-        );
-
-        params.set(
-            "limit",
-            limit
-        );
+        params.set("page", page);
+        params.set("limit", limit);
 
         return adminPaymentRequest(
             `/?${params.toString()}`
         );
     };
-
 
 const getAdminPayment =
     async (paymentId) => {
@@ -117,12 +76,9 @@ const getAdminPayment =
         }
 
         return adminPaymentRequest(
-            `/${encodeURIComponent(
-                paymentId
-            )}`
+            `/${encodeURIComponent(paymentId)}`
         );
     };
-
 
 const markAdminCodPaid =
     async (orderId) => {
@@ -133,15 +89,12 @@ const markAdminCodPaid =
         }
 
         return adminPaymentRequest(
-            `/order/${encodeURIComponent(
-                orderId
-            )}/cod-paid`,
+            `/order/${encodeURIComponent(orderId)}/cod-paid`,
             {
                 method: "PATCH"
             }
         );
     };
-
 
 const refundAdminPayment =
     async (paymentId) => {
@@ -152,15 +105,12 @@ const refundAdminPayment =
         }
 
         return adminPaymentRequest(
-            `/${encodeURIComponent(
-                paymentId
-            )}/refund`,
+            `/${encodeURIComponent(paymentId)}/refund`,
             {
                 method: "PATCH"
             }
         );
     };
-
 
 window.getAdminPaymentSummary =
     getAdminPaymentSummary;

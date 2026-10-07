@@ -11,9 +11,8 @@
 
     <link
         rel="stylesheet"
+        href="../vendor/leaflet/leaflet.css"
     >
-
-    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.16.0/dist/maplibre-gl.css">
 
     <link
         rel="stylesheet"
@@ -217,12 +216,11 @@
     </main>
 
 
+    <script src="../vendor/leaflet/leaflet.js"></script>
 
     <script src="../js/shop-status.js?v=1"></script>
 <script src="../js/choose-location.js?v=1"></script>
-<script src="https://unpkg.com/maplibre-gl@5.16.0/dist/maplibre-gl.js"></script>
-
-    <script src="../js/location.js"></script>
+<script src="../js/location.js"></script>
 
     <script src="../js/map-test.js"></script>
 

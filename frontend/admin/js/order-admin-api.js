@@ -1,36 +1,19 @@
 const ADMIN_ORDER_API =
     "http://localhost:5000/api/orders";
 
-
 const adminOrderRequest = async (
     path,
     options = {}
 ) => {
-    const token =
-        localStorage.getItem(
-            "authToken"
-        );
-
-    if (!token) {
-        throw new Error(
-            "Admin login required."
-        );
-    }
-
     const response =
         await fetch(
             `${ADMIN_ORDER_API}${path}`,
             {
                 ...options,
-
+                credentials: "include",
                 headers: {
-                    "Content-Type":
-                        "application/json",
-
-                    ...(options.headers || {}),
-
-                    Authorization:
-                        `Bearer ${token}`
+                    "Content-Type": "application/json",
+                    ...(options.headers || {})
                 }
             }
         );
@@ -38,8 +21,7 @@ const adminOrderRequest = async (
     let result = null;
 
     try {
-        result =
-            await response.json();
+        result = await response.json();
     } catch {
         result = null;
     }
@@ -54,7 +36,6 @@ const adminOrderRequest = async (
     return result;
 };
 
-
 const getAdminOrders =
     async ({
         status = "",
@@ -64,21 +45,11 @@ const getAdminOrders =
         const params =
             new URLSearchParams();
 
-        params.set(
-            "page",
-            page
-        );
-
-        params.set(
-            "limit",
-            limit
-        );
+        params.set("page", page);
+        params.set("limit", limit);
 
         if (status) {
-            params.set(
-                "status",
-                status
-            );
+            params.set("status", status);
         }
 
         return adminOrderRequest(
@@ -86,27 +57,19 @@ const getAdminOrders =
         );
     };
 
-
 const updateAdminOrderStatus =
     async (
         orderId,
         status
     ) => {
         return adminOrderRequest(
-            `/${encodeURIComponent(
-                orderId
-            )}/status`,
+            `/${encodeURIComponent(orderId)}/status`,
             {
                 method: "PATCH",
-
-                body:
-                    JSON.stringify({
-                        status
-                    })
+                body: JSON.stringify({ status })
             }
         );
     };
-
 
 const assignAdminDeliveryBoy =
     async (
@@ -114,20 +77,13 @@ const assignAdminDeliveryBoy =
         deliveryBoyId
     ) => {
         return adminOrderRequest(
-            `/${encodeURIComponent(
-                orderId
-            )}/assign-delivery`,
+            `/${encodeURIComponent(orderId)}/assign-delivery`,
             {
                 method: "PATCH",
-
-                body:
-                    JSON.stringify({
-                        deliveryBoyId
-                    })
+                body: JSON.stringify({ deliveryBoyId })
             }
         );
     };
-
 
 window.getAdminOrders =
     getAdminOrders;

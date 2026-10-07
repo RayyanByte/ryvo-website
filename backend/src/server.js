@@ -5,6 +5,7 @@ dns.setDefaultResultOrder(
 );
 
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const userAdminRoutes = require("./routes/user.admin.routes");
 
 const cors = require("cors");
@@ -61,7 +62,10 @@ const PORT =
 
 
 app.use(
-    cors()
+    cors({
+        origin: "http://localhost:8080",
+        credentials: true
+    })
 );
 
 
@@ -80,6 +84,8 @@ app.use(
     express.json()
 );
 
+app.use(cookieParser());
+
 
 app.get(
     "/",
@@ -92,6 +98,8 @@ app.get(
     }
 );
 
+
+app.use("/api/users/admin", userAdminRoutes);
 
 app.use(
     "/api/auth",

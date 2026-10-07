@@ -1,94 +1,124 @@
 const getCurrentLocation = () => {
     return new Promise((resolve, reject) => {
         if (!("geolocation" in navigator)) {
-            reject(
-                new Error(
-                    "Location services are not supported by this browser."
-                )
-            );
-
+            reject(new Error("Location services are not supported by this browser."));
             return;
         }
 
+        let bestPosition = null;
+        let watchId = null;
+        let finished = false;
 
-        navigator.geolocation.getCurrentPosition(
+        const finish = (error = null) => {
+            if (finished) return;
+
+            finished = true;
+
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+            }
+
+            if (error) {
+                reject(error);
+                return;
+            }
+
+            if (!bestPosition) {
+                reject(new Error("Unable to get your current location."));
+                return;
+            }
+
+            const { latitude, longitude, accuracy } = bestPosition.coords;
+
+            if (
+                !Number.isFinite(latitude) ||
+                !Number.isFinite(longitude)
+            ) {
+                reject(new Error("Invalid location data received."));
+                return;
+            }
+
+            resolve({
+                latitude,
+                longitude,
+                accuracy
+            });
+        };
+
+        const timer = setTimeout(() => {
+            if (bestPosition) {
+                finish();
+            } else {
+                finish(
+                    new Error(
+                        "Unable to get your current location. Please try again."
+                    )
+                );
+            }
+        }, 15000);
+
+        watchId = navigator.geolocation.watchPosition(
             (position) => {
-                const latitude =
-                    position.coords.latitude;
-
-                const longitude =
-                    position.coords.longitude;
+                bestPosition = position;
 
                 const accuracy =
-                    position.coords.accuracy;
-
+                    Number(position.coords.accuracy);
 
                 if (
-                    !Number.isFinite(latitude) ||
-                    !Number.isFinite(longitude)
+                    Number.isFinite(accuracy) &&
+                    accuracy <= 50
                 ) {
-                    reject(
-                        new Error(
-                            "Invalid location data received."
-                        )
-                    );
-
-                    return;
+                    clearTimeout(timer);
+                    finish();
                 }
-
-
-                resolve({
-                    latitude,
-                    longitude,
-                    accuracy
-                });
             },
 
             (error) => {
-                let message =
-                    "Unable to get your location.";
+                clearTimeout(timer);
 
-                if (
-                    error.code ===
-                    error.PERMISSION_DENIED
-                ) {
-                    message =
-                        "Location permission was denied.";
+                if (error.code === error.PERMISSION_DENIED) {
+                    finish(
+                        new Error(
+                            "Location permission was denied. Please allow location access and try again."
+                        )
+                    );
+                    return;
                 }
 
-                if (
-                    error.code ===
-                    error.POSITION_UNAVAILABLE
-                ) {
-                    message =
-                        "Your location is currently unavailable.";
+                if (error.code === error.POSITION_UNAVAILABLE) {
+                    finish(
+                        new Error(
+                            "Your current location is unavailable. Please try again."
+                        )
+                    );
+                    return;
                 }
 
-                if (
-                    error.code ===
-                    error.TIMEOUT
-                ) {
-                    message =
-                        "Location request timed out.";
+                if (error.code === error.TIMEOUT) {
+                    finish(
+                        new Error(
+                            "Location request timed out. Please try again."
+                        )
+                    );
+                    return;
                 }
 
-
-                reject(
-                    new Error(message)
+                finish(
+                    new Error(
+                        "Unable to get your current location."
+                    )
                 );
             },
 
             {
                 enableHighAccuracy: true,
-                timeout: 10000,
+                timeout: 15000,
                 maximumAge: 0
             }
         );
     });
 };
 
-
 if (typeof window !== "undefined") {
-    window.getCurrentLocation =
-        getCurrentLocation;
+    window.getCurrentLocation = getCurrentLocation;
 }

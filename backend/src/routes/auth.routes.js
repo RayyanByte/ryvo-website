@@ -1,8 +1,12 @@
 const express = require("express");
+const rateLimit = require("express-rate-limit");
 
 const {
     registerUser,
     loginUser,
+    loginAdmin,
+    logoutAdmin,
+    getAdminSession,
     getMyProfile,
     updateMyProfile,
     createDeliveryBoy,
@@ -17,7 +21,40 @@ const {
     authorizeRoles
 } = require("../middleware/role.middleware");
 
+const {
+    adminProtect
+} = require("../middleware/admin-auth.middleware");
+
+const adminLoginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 5,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: {
+        success: false,
+        message: "Too many admin login attempts. Please try again later."
+    }
+});
+
 const router = express.Router();
+
+router.post(
+    "/admin/login",
+    adminLoginLimiter,
+    loginAdmin
+);
+
+router.post(
+    "/admin/logout",
+    logoutAdmin
+);
+
+router.get(
+    "/admin/session",
+    adminProtect,
+    getAdminSession
+);
+
 
 router.post(
     "/register",
@@ -26,7 +63,8 @@ router.post(
 
 router.post(
     "/login",
-    loginUser
+    loginUser,
+    loginAdmin
 );
 
 router.get(
@@ -56,14 +94,14 @@ router.get(
 
 router.post(
     "/admin/delivery-boys",
-    protect,
+    adminProtect,
     authorizeRoles("admin"),
     createDeliveryBoy
 );
 
 router.get(
     "/admin/delivery-boys",
-    protect,
+    adminProtect,
     authorizeRoles("admin"),
     getDeliveryBoys
 );

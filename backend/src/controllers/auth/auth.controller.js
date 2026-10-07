@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 const User = require("../../models/user.model");
 
 const {
-    generateToken
+    generateToken,
+    generateAdminToken
 } = require("../../utils/jwt");
 
 const registerUser = async (req, res) => {
@@ -470,9 +471,130 @@ const getDeliveryBoys = async (req, res) => {
     }
 };
 
+
+const loginAdmin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and password are required."
+            });
+        }
+
+        const user = await User.findOne({
+            email: email.trim().toLowerCase()
+        });
+
+        if (!user || user.role !== "admin" || !user.isActive) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid admin credentials."
+            });
+        }
+
+        const passwordMatches = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!passwordMatches) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid admin credentials."
+            });
+        }
+
+        const token = generateAdminToken(user._id.toString());
+
+        res.cookie("ryvo_admin_session", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 2 * 60 * 60 * 1000
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Admin login successful.",
+            data: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+
+    } catch (error) {
+        console.error("Admin login error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong while logging in."
+        });
+    }
+};
+
+
+
+
+const getAdminSession = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select(
+            "name email role isActive"
+        );
+
+        if (
+            !user ||
+            user.role !== "admin" ||
+            !user.isActive
+        ) {
+            return res.status(403).json({
+                success: false,
+                message: "Admin access denied."
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+
+    } catch (error) {
+        console.error("Admin session error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to verify admin session."
+        });
+    }
+};
+
+const logoutAdmin = async (req, res) => {
+    res.clearCookie("ryvo_admin_session", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax"
+    });
+
+    return res.status(200).json({
+        success: true,
+        message: "Admin logout successful."
+    });
+};
+
 module.exports = {
     registerUser,
     loginUser,
+    loginAdmin,
+    logoutAdmin,
+    getAdminSession,
     getMyProfile,
     updateMyProfile,
     createDeliveryBoy,
