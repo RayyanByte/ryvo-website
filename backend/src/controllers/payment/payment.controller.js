@@ -5,9 +5,21 @@ const Order = require("../../models/order.model");
 
 const PAYMENT_METHODS = ["cod", "upi"];
 
+const PAYMENT_STATUS_TRANSITIONS = {
+    pending: [
+        "failed",
+        "cancelled"
+    ],
+    paid: [],
+    failed: [],
+    cancelled: [],
+    refunded: []
+};
+
 const createPayment = async (req, res) => {
     try {
         const customerId = req.userId;
+
         const {
             orderId,
             paymentMethod
@@ -36,10 +48,11 @@ const createPayment = async (req, res) => {
             });
         }
 
-        const order = await Order.findOne({
-            _id: orderId,
-            userId: customerId
-        });
+        const order =
+            await Order.findOne({
+                _id: orderId,
+                userId: customerId
+            });
 
         if (!order) {
             return res.status(404).json({
@@ -88,10 +101,8 @@ const createPayment = async (req, res) => {
                 order: order._id,
                 customer: customerId,
                 paymentMethod,
-                paymentStatus:
-                    "pending",
-                amount:
-                    order.totalAmount
+                paymentStatus: "pending",
+                amount: order.totalAmount
             });
 
         return res.status(201).json({
@@ -100,6 +111,7 @@ const createPayment = async (req, res) => {
                 "Payment record created successfully.",
             data: payment
         });
+
     } catch (error) {
         console.error(
             "Create payment error:",
@@ -153,6 +165,7 @@ const getMyPayment = async (req, res) => {
             success: true,
             data: payment
         });
+
     } catch (error) {
         console.error(
             "Get payment error:",
@@ -167,8 +180,182 @@ const getMyPayment = async (req, res) => {
     }
 };
 
+const updatePaymentStatus = async (
+    req,
+    res
+) => {
+    try {
+        const customerId = req.userId;
+        const { orderId } = req.params;
+
+        const {
+            paymentStatus,
+            transactionId
+        } = req.body;
+
+        if (
+            !mongoose.Types.ObjectId.isValid(
+                orderId
+            )
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid order ID."
+            });
+        }
+
+        if (
+            ![
+                "paid",
+                "failed",
+                "cancelled"
+            ].includes(paymentStatus)
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Invalid payment status."
+            });
+        }
+
+        if (
+            transactionId !== undefined &&
+            transactionId !== null &&
+            (
+                typeof transactionId !==
+                "string" ||
+                transactionId.trim().length === 0 ||
+                transactionId.trim().length > 200
+            )
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Invalid transaction ID."
+            });
+        }
+
+        const payment =
+            await Payment.findOne({
+                order: orderId,
+                customer: customerId
+            });
+
+        if (!payment) {
+            return res.status(404).json({
+                success: false,
+                message:
+                    "Payment record not found."
+            });
+        }
+
+        if (
+            payment.paymentMethod !==
+            "upi"
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Only UPI payments can use this status endpoint."
+            });
+        }
+
+        const currentStatus =
+            payment.paymentStatus;
+
+        const allowedStatuses =
+            PAYMENT_STATUS_TRANSITIONS[
+                currentStatus
+            ] || [];
+
+        if (
+            !allowedStatuses.includes(
+                paymentStatus
+            )
+        ) {
+            if (
+                paymentStatus === "paid"
+            ) {
+                return res.status(403).json({
+                    success: false,
+                    message:
+                        "UPI payment cannot be marked as paid from the customer application. Payment must be verified by the payment provider."
+                });
+            }
+
+            return res.status(400).json({
+                success: false,
+                message:
+                    `Invalid payment status transition from ${currentStatus} to ${paymentStatus}.`
+            });
+        }
+
+        if (
+            paymentStatus === "cancelled" &&
+            transactionId
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Cancelled payments cannot contain a transaction ID."
+            });
+        }
+
+        payment.paymentStatus =
+            paymentStatus;
+
+        if (transactionId) {
+            payment.transactionId =
+                transactionId.trim();
+        }
+
+        if (
+            paymentStatus === "failed" ||
+            paymentStatus === "cancelled"
+        ) {
+            payment.paidAt = null;
+        }
+
+        await payment.save();
+
+        await Order.findOneAndUpdate(
+            {
+                _id: orderId,
+                userId: customerId
+            },
+            {
+                paymentStatus:
+                    paymentStatus === "cancelled"
+                        ? "failed"
+                        : paymentStatus
+            }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message:
+                "Payment status updated successfully.",
+            data: payment
+        });
+
+    } catch (error) {
+        console.error(
+            "Update payment status error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Failed to update payment status."
+        });
+    }
+};
+
 module.exports = {
     createPayment,
     getMyPayment,
-    PAYMENT_METHODS
+    updatePaymentStatus,
+    PAYMENT_METHODS,
+    PAYMENT_STATUS_TRANSITIONS
 };
