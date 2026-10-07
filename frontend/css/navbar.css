@@ -49,6 +49,18 @@
     align-items: center;
 }
 
+#logged-out-actions,
+#logged-in-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#logged-in-actions[hidden],
+#logged-out-actions[hidden] {
+    display: none;
+}
+
 .navbar-login {
     padding: 10px 18px;
     border: 1px solid #222222;

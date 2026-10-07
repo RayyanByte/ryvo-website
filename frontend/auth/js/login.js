@@ -1,3 +1,24 @@
+
+const passwordInput = document.querySelector("#login-password");
+const passwordToggle = document.querySelector("#password-toggle");
+
+if (passwordInput && passwordToggle) {
+    passwordToggle.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+
+        passwordInput.type = isPassword ? "text" : "password";
+        passwordToggle.textContent = isPassword ? "🙈" : "👁";
+        passwordToggle.setAttribute(
+            "aria-label",
+            isPassword ? "Hide password" : "Show password"
+        );
+        passwordToggle.setAttribute(
+            "aria-pressed",
+            String(isPassword)
+        );
+    });
+}
+
 const loginForm = document.querySelector("#login-form");
 const loginMessage = document.querySelector("#login-message");
 
