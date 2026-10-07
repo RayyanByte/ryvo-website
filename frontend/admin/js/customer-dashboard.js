@@ -31,6 +31,7 @@ const initCustomerDashboard = async () => {
 
             const result =
                 await customerAdminApi.getCustomers(
+                    1,
                     search
                 );
 
