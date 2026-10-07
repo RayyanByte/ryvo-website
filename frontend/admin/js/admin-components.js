@@ -3,18 +3,14 @@ const loadAdminComponent = async (
     componentPath
 ) => {
     const target =
-        document.getElementById(
-            targetId
-        );
+        document.getElementById(targetId);
 
     if (!target) {
         return;
     }
 
     const response =
-        await fetch(
-            componentPath
-        );
+        await fetch(componentPath);
 
     if (!response.ok) {
         throw new Error(
@@ -29,6 +25,7 @@ const loadAdminComponent = async (
 
 const initializeAdminComponents =
     async () => {
+
         await loadAdminComponent(
             "admin-orders",
             "components/order-dashboard.html"
@@ -39,6 +36,31 @@ const initializeAdminComponents =
             "components/payment-dashboard.html"
         );
 
+        await loadAdminComponent(
+            "admin-delivery",
+            "components/delivery-dashboard.html"
+        );
+
+        await loadAdminComponent(
+            "admin-food",
+            "components/food-dashboard.html"
+        );
+
+        await loadAdminComponent(
+            "admin-categories",
+            "components/category-dashboard.html"
+        );
+
+        await loadAdminComponent(
+            "admin-customers",
+            "components/customer-dashboard.html"
+        );
+
+        await loadAdminComponent(
+            "admin-shop",
+            "components/shop-dashboard.html"
+        );
+
         window.dispatchEvent(
             new Event(
                 "adminComponentsLoaded"
@@ -47,12 +69,10 @@ const initializeAdminComponents =
     };
 
 
-initializeAdminComponents();
-
-
 window.addEventListener(
     "adminComponentsLoaded",
     () => {
+
         if (
             typeof window.initializeAdminOrderDashboard ===
             "function"
@@ -66,5 +86,43 @@ window.addEventListener(
         ) {
             window.initializeAdminPaymentDashboard();
         }
+
+        if (
+            typeof window.initializeAdminDeliveryDashboard ===
+            "function"
+        ) {
+            window.initializeAdminDeliveryDashboard();
+        }
+
+        if (
+            typeof window.initFoodDashboard ===
+            "function"
+        ) {
+            window.initFoodDashboard();
+        }
+
+        if (
+            typeof window.initCategoryDashboard ===
+            "function"
+        ) {
+            window.initCategoryDashboard();
+        }
+
+        if (
+            typeof window.initCustomerDashboard ===
+            "function"
+        ) {
+            window.initCustomerDashboard();
+        }
+
+        if (
+            typeof window.initShopDashboard ===
+            "function"
+        ) {
+            window.initShopDashboard();
+        }
     }
 );
+
+
+initializeAdminComponents();
