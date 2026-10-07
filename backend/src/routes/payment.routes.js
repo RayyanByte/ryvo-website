@@ -6,7 +6,8 @@ const {
 
 const {
     createPayment,
-    getMyPayment
+    getMyPayment,
+    updatePaymentStatus
 } = require("../controllers/payment/payment.controller");
 
 const router = express.Router();
@@ -21,6 +22,12 @@ router.get(
     "/:orderId",
     protect,
     getMyPayment
+);
+
+router.patch(
+    "/:orderId/status",
+    protect,
+    updatePaymentStatus
 );
 
 module.exports = router;
