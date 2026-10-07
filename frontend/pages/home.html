@@ -11,9 +11,9 @@
     <title>Food</title>
 
     <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/navbar.css?v=2">
     <link rel="stylesheet" href="../css/hero.css">
-    <link rel="stylesheet" href="../css/featured-food.css">
+    <link rel="stylesheet" href="../css/featured-food.css?v=2">
     <link rel="stylesheet" href="../css/categories.css">
     <link rel="stylesheet" href="../css/our-story.css">
     <link rel="stylesheet" href="../css/testimonials.css">
@@ -68,6 +68,12 @@
                 ).innerHTML = html;
 
             
+                if (containerId === "featured-food-container") {
+                    window.dispatchEvent(
+                        new Event("featured-food-ready")
+                    );
+                }
+
                 if (containerId === "navbar-container") {
                     const loggedIn =
                         !!localStorage.getItem("authToken");
@@ -98,6 +104,43 @@
 
 
 
+        function toggleAccountMenu(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const menu = document.getElementById("account-dropdown");
+            const button = document.getElementById("account-menu-button");
+
+            if (!menu || !button) {
+                return;
+            }
+
+            const willOpen = menu.hidden;
+
+            menu.hidden = !willOpen;
+            button.setAttribute(
+                "aria-expanded",
+                String(willOpen)
+            );
+        }
+
+        document.addEventListener("click", (event) => {
+            const menu = document.getElementById("account-dropdown");
+            const button = document.getElementById("account-menu-button");
+
+            if (!menu || !button) {
+                return;
+            }
+
+            if (
+                !menu.contains(event.target) &&
+                !button.contains(event.target)
+            ) {
+                menu.hidden = true;
+                button.setAttribute("aria-expanded", "false");
+            }
+        });
+
         function logoutUser(event) {
             event.preventDefault();
 
@@ -109,7 +152,7 @@
 
         loadComponent(
             "navbar-container",
-            "../components/navbar.html"
+            "../components/navbar.html?v=2"
         );
 
         loadComponent(
@@ -201,6 +244,8 @@ document.addEventListener("click", (event) => {
         "/delivery/pages/order-location.html";
 });
 </script>
+
+    <script src="../js/featured-food.js?v=2"></script>
 
 </body>
 </html>

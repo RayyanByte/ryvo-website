@@ -500,5 +500,9 @@ function setupOrderButtons() {
 }
 
 
-loadCategories();
-loadFoods();
+if (!localStorage.getItem("authToken")) {
+    window.location.replace("/auth/pages/login.html");
+} else {
+    loadCategories();
+    loadFoods();
+}

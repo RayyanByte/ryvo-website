@@ -58,11 +58,11 @@
             class="dashboard-content"
             aria-label="Customer dashboard"
         >
-            <div data-customer-profile></div>
+            <div id="profile-section" data-customer-profile></div>
 
-            <div data-customer-addresses></div>
+            <div id="addresses-section" data-customer-addresses></div>
 
-            <div data-customer-orders></div>
+            <div id="orders-section" data-customer-orders></div>
         </section>
     </main>
 
@@ -81,5 +81,60 @@
     <script
         src="../js/orders.js"
     ></script>
+
+    <script>
+        function showCustomerSection() {
+            const sections = {
+                profile: document.getElementById("profile-section"),
+                orders: document.getElementById("orders-section"),
+                addresses: document.getElementById("addresses-section")
+            };
+
+            const content = {
+                profile: {
+                    title: "My Profile",
+                    subtitle: "Manage your personal information."
+                },
+                orders: {
+                    title: "My Orders",
+                    subtitle: "View your orders and their current status."
+                },
+                addresses: {
+                    title: "Saved Addresses",
+                    subtitle: "Manage the addresses used for your deliveries."
+                }
+            };
+
+            const params = new URLSearchParams(window.location.search);
+
+            let section =
+                params.get("section") ||
+                window.location.hash.replace("#", "");
+
+            if (!sections[section]) {
+                section = "profile";
+            }
+
+            Object.entries(sections).forEach(([name, element]) => {
+                if (element) {
+                    element.hidden = name !== section;
+                }
+            });
+
+            const title = document.querySelector(".dashboard-header h1");
+            const subtitle = document.querySelector(".dashboard-subtitle");
+
+            if (title) {
+                title.textContent = content[section].title;
+            }
+
+            if (subtitle) {
+                subtitle.textContent = content[section].subtitle;
+            }
+        }
+
+        window.addEventListener("hashchange", showCustomerSection);
+        showCustomerSection();
+    </script>
 </body>
 </html>

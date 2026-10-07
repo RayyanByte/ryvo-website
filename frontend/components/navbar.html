@@ -23,12 +23,42 @@
             </div>
 
             <div id="logged-in-actions" hidden>
-                <a href="/dashboards/customer/pages/dashboard.html" class="navbar-login">
-                    Account
-                </a>
-                <a href="#" class="navbar-login" onclick="logoutUser(event)">
-                    Logout
-                </a>
+                <div class="account-menu">
+                    <button
+                        type="button"
+                        class="navbar-login account-menu-button"
+                        id="account-menu-button"
+                        onclick="toggleAccountMenu(event)"
+                        aria-expanded="false"
+                    >
+                        Account ▾
+                    </button>
+
+                    <div
+                        class="account-dropdown"
+                        id="account-dropdown"
+                        hidden
+                    >
+                        <a href="/dashboards/customer/pages/dashboard.html?section=profile">
+                            Profile
+                        </a>
+
+                        <a href="/dashboards/customer/pages/dashboard.html?section=orders">
+                            Orders
+                        </a>
+
+                        <a href="/dashboards/customer/pages/dashboard.html?section=addresses">
+                            Addresses
+                        </a>
+
+                        <button
+                            type="button"
+                            onclick="logoutUser(event)"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </div>
             </div>
 
         </div>

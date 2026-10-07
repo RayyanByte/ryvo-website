@@ -150,3 +150,133 @@
         min-height: 200px;
     }
 }
+
+
+.featured-food-details {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.featured-food-details[hidden] {
+    display: none;
+}
+
+.featured-food-details-card {
+    width: min(720px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.featured-food-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.featured-food-details-header h2 {
+    margin: 0;
+    color: #171717;
+    font-size: 26px;
+}
+
+.featured-food-details-close {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: #f1eee8;
+    color: #171717;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.featured-food-details-body {
+    padding: 22px;
+}
+
+.featured-food-details-media {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.featured-food-details-media img,
+.featured-food-details-media video {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #f1eee8;
+}
+
+.featured-food-details-placeholder {
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #f1eee8;
+    color: #888888;
+}
+
+.featured-food-details-category {
+    margin-bottom: 8px;
+    color: #8a6a3f;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.featured-food-details-description {
+    margin: 12px 0 18px;
+    color: #666666;
+    line-height: 1.7;
+}
+
+.featured-food-details-price {
+    margin-bottom: 20px;
+    color: #171717;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.featured-food-details-order {
+    width: 100%;
+    padding: 14px 18px;
+    border: 0;
+    border-radius: 8px;
+    background: #171717;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.featured-food-details-card {
+    animation: featuredFoodDetailsIn 0.18s ease;
+}
+
+@keyframes featuredFoodDetailsIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

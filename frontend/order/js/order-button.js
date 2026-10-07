@@ -228,6 +228,11 @@ const clearSelectedOrderItem = () => {
 
 const openOrderLocation = () => {
 
+    if (!localStorage.getItem("authToken")) {
+        window.location.href = "/auth/pages/login.html";
+        return false;
+    }
+
     const orderItem =
         getSelectedOrderItem();
 
