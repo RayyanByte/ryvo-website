@@ -1,0 +1,98 @@
+<section class="admin-section" id="shopDashboard">
+
+    <div class="admin-section-header">
+        <div>
+            <h2>Shop Management</h2>
+            <p>Control shop status, location and delivery radius.</p>
+        </div>
+    </div>
+
+    <div id="shopDashboardMessage"></div>
+
+    <form id="shopForm">
+
+        <div class="admin-form-grid">
+
+            <div class="admin-field">
+                <label>
+                    <input
+                        id="shopOpen"
+                        type="checkbox"
+                    >
+                    Shop Open
+                </label>
+            </div>
+
+            <div class="admin-field">
+                <label for="shopRadius">
+                    Delivery Radius (KM)
+                </label>
+
+                <input
+                    id="shopRadius"
+                    type="number"
+                    min="0.1"
+                    max="100"
+                    step="0.1"
+                    required
+                >
+            </div>
+
+            <div class="admin-field">
+                <label for="shopLatitude">
+                    Latitude
+                </label>
+
+                <input
+                    id="shopLatitude"
+                    type="number"
+                    min="-90"
+                    max="90"
+                    step="any"
+                    required
+                >
+            </div>
+
+            <div class="admin-field">
+                <label for="shopLongitude">
+                    Longitude
+                </label>
+
+                <input
+                    id="shopLongitude"
+                    type="number"
+                    min="-180"
+                    max="180"
+                    step="any"
+                    required
+                >
+            </div>
+
+            <div class="admin-field admin-field-full">
+                <label for="shopMessage">
+                    Shop Status Message
+                </label>
+
+                <textarea
+                    id="shopMessage"
+                    rows="4"
+                    required
+                ></textarea>
+            </div>
+
+        </div>
+
+        <div class="admin-form-actions">
+
+            <button
+                type="submit"
+                class="admin-primary-button"
+            >
+                Save Shop Settings
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
