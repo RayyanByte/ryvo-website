@@ -11,6 +11,7 @@ const addAddress = async (req, res) => {
             phone,
             addressLine,
             landmark,
+            area,
             city,
             state,
             pincode
@@ -73,6 +74,11 @@ const addAddress = async (req, res) => {
                         ? landmark.trim()
                         : "",
 
+                area:
+                    area
+                        ? area.trim()
+                        : "",
+
                 city:
                     city.trim(),
 
@@ -98,6 +104,7 @@ const addAddress = async (req, res) => {
                 phone: address.phone,
                 addressLine: address.addressLine,
                 landmark: address.landmark,
+                area: address.area,
                 city: address.city,
                 state: address.state,
                 pincode: address.pincode,
@@ -183,6 +190,7 @@ const updateAddress = async (req, res) => {
             phone,
             addressLine,
             landmark,
+            area,
             city,
             state,
             pincode
@@ -238,6 +246,11 @@ const updateAddress = async (req, res) => {
                 ? landmark.trim()
                 : "";
 
+        address.area =
+            area
+                ? area.trim()
+                : "";
+
         address.city =
             city.trim();
 
@@ -262,6 +275,7 @@ const updateAddress = async (req, res) => {
                 phone: address.phone,
                 addressLine: address.addressLine,
                 landmark: address.landmark,
+                area: address.area,
                 city: address.city,
                 state: address.state,
                 pincode: address.pincode,

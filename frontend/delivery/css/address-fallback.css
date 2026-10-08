@@ -114,3 +114,443 @@
     }
 
 }
+
+
+.delivery-address-message {
+    margin-top: 14px;
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    display: none;
+}
+
+
+.delivery-address-message.is-available {
+    display: block;
+
+    background: #e7f7ec;
+    border: 1px solid #b6e2c3;
+
+    color: #1e7a3a;
+}
+
+
+.delivery-address-message.is-unavailable {
+    display: block;
+
+    background: #fdecec;
+    border: 1px solid #f3bcbc;
+
+    color: #b3261e;
+}
+
+
+.delivery-address-card.is-selected {
+    border-color: #111;
+    background: #f7f7f7;
+}
+
+
+/* ===== Header with add button ===== */
+
+.delivery-address-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.delivery-address-header-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.delivery-address-add-button {
+    flex-shrink: 0;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #d0d0d0;
+    border-radius: 50%;
+
+    background: #fff;
+    color: #111;
+
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.delivery-address-add-button:active {
+    background: #f0f0f0;
+}
+
+.delivery-address-add-button[hidden] {
+    display: none;
+}
+
+
+/* ===== Address card with edit button ===== */
+
+.delivery-address-card {
+    position: relative;
+}
+
+.delivery-address-edit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #d0d0d0;
+    border-radius: 50%;
+
+    background: #fff;
+    color: #333;
+
+    font-size: 14px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.delivery-address-edit-button:active {
+    background: #f0f0f0;
+}
+
+.delivery-address-card-title,
+.delivery-address-card-text {
+    padding-right: 40px;
+}
+
+
+/* ===== Popup overlay ===== */
+
+.delivery-address-popup-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 16px;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    z-index: 9999;
+
+    overflow-y: auto;
+}
+
+.delivery-address-popup-overlay[hidden] {
+    display: none;
+}
+
+
+.delivery-address-popup {
+    width: 100%;
+    max-width: 420px;
+
+    max-height: 90vh;
+
+    background: #fff;
+    border-radius: 16px;
+
+    padding: 18px 18px 20px;
+
+    overflow-y: auto;
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+
+.delivery-address-popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+}
+
+
+.delivery-address-popup-header h3 {
+    margin: 0;
+
+    font-size: 18px;
+    color: #111;
+}
+
+
+.delivery-address-popup-close {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #f0f0f0;
+    color: #333;
+
+    font-size: 22px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+
+.delivery-address-popup-form {
+    display: grid;
+    gap: 12px;
+}
+
+
+.delivery-address-popup-form label {
+    display: block;
+}
+
+
+.delivery-address-popup-form label span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #333;
+}
+
+
+.delivery-address-popup-form input {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+
+    background: #fff;
+    color: #111;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+}
+
+
+.delivery-address-popup-form input:focus {
+    outline: none;
+
+    border-color: #111;
+}
+
+
+.delivery-address-popup-message {
+    margin: 0;
+
+    min-height: 0;
+
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    color: #b3261e;
+
+    display: none;
+}
+
+.delivery-address-popup-message.is-visible {
+    display: block;
+}
+
+
+.delivery-address-popup-actions {
+    display: flex;
+    gap: 10px;
+
+    margin-top: 6px;
+}
+
+
+.delivery-address-popup-actions button {
+    flex: 1;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.delivery-address-popup-cancel {
+    border: 1px solid #d0d0d0;
+
+    background: #fff;
+    color: #333;
+}
+
+
+.delivery-address-popup-save {
+    border: 1px solid #111;
+
+    background: #111;
+    color: #fff;
+}
+
+
+.delivery-address-popup-save:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* ===== Fix: card as div + Edit text button ===== */
+
+.delivery-address-card {
+    display: block;
+    width: 100%;
+    position: relative;
+
+    padding: 14px;
+
+    border: 1px solid #d8d8d8;
+    border-radius: 12px;
+
+    background: #fff;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    font-family: inherit;
+}
+
+.delivery-address-edit-text-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    padding: 5px 12px;
+
+    border: 1px solid #111;
+    border-radius: 20px;
+
+    background: #111;
+    color: #fff;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+}
+
+.delivery-address-edit-text-button:active {
+    background: #333;
+    border-color: #333;
+}
+
+
+/* ===== Pincode status ===== */
+
+.delivery-pincode-status {
+    margin: -6px 0 0;
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    color: #666;
+
+    display: none;
+}
+
+.delivery-pincode-status.is-loading,
+.delivery-pincode-status.is-success,
+.delivery-pincode-status.is-error {
+    display: block;
+}
+
+.delivery-pincode-status.is-loading {
+    color: #666;
+}
+
+.delivery-pincode-status.is-success {
+    color: #1e7a3a;
+}
+
+.delivery-pincode-status.is-error {
+    color: #b3261e;
+}
+
+
+/* ===== Select dropdown ===== */
+
+.delivery-address-popup-form select {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+
+    background: #fff;
+    color: #111;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+
+    font-family: inherit;
+}
+
+.delivery-address-popup-form select:focus {
+    outline: none;
+
+    border-color: #111;
+}
+
+.delivery-address-popup-form select:disabled {
+    background: #f5f5f5;
+    color: #999;
+}
+
+
+/* ===== Readonly inputs ===== */
+
+.delivery-address-popup-form input[readonly] {
+    background: #f5f5f5;
+    color: #555;
+}

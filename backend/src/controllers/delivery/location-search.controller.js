@@ -329,7 +329,7 @@ const geocodeAddress = async (req, res) => {
         return res.status(200).json({
             success: true,
             message:
-                "Approximate area location found. Please adjust the exact delivery point on the map.",
+                "Location found.",
             data: {
                 latitude:
                     fallbackLatitude,

@@ -6,18 +6,32 @@
 
     <div class="delivery-address-header">
 
-        <p class="delivery-address-eyebrow">
-            Last Option
-        </p>
+        <div class="delivery-address-header-text">
 
-        <h2 id="delivery-address-fallback-title">
-            Use a saved address
-        </h2>
+            <p class="delivery-address-eyebrow">
+                Last Option
+            </p>
 
-        <p>
-            If current location and map selection are not available,
-            choose one of your saved delivery addresses.
-        </p>
+            <h2 id="delivery-address-fallback-title">
+                Use a saved address
+            </h2>
+
+            <p>
+                If current location and map selection are not available,
+                choose one of your saved delivery addresses.
+            </p>
+
+        </div>
+
+        <button
+            type="button"
+            id="delivery-add-address-button"
+            class="delivery-address-add-button"
+            aria-label="Add new address"
+            title="Add new address"
+        >
+            +
+        </button>
 
     </div>
 
@@ -37,5 +51,177 @@
         class="delivery-address-message"
         role="status"
     ></p>
+
+
+    <div
+        id="delivery-address-popup-overlay"
+        class="delivery-address-popup-overlay"
+        hidden
+    >
+
+        <div
+            class="delivery-address-popup"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delivery-address-popup-title"
+        >
+
+            <div class="delivery-address-popup-header">
+
+                <h3 id="delivery-address-popup-title">
+                    Add new address
+                </h3>
+
+                <button
+                    type="button"
+                    id="delivery-address-popup-close"
+                    class="delivery-address-popup-close"
+                    aria-label="Close"
+                    title="Close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                id="delivery-address-popup-form"
+                class="delivery-address-popup-form"
+                novalidate
+            >
+
+                <label>
+                    <span>Pincode</span>
+                    <input
+                        type="text"
+                        name="pincode"
+                        required
+                        minlength="6"
+                        maxlength="6"
+                        inputmode="numeric"
+                        autocomplete="postal-code"
+                        placeholder="6 digit pincode"
+                    />
+                </label>
+
+                <p
+                    id="delivery-pincode-status"
+                    class="delivery-pincode-status"
+                ></p>
+
+                <label>
+                    <span>State</span>
+                    <input
+                        type="text"
+                        name="state"
+                        required
+                        readonly
+                        placeholder="Auto-filled from pincode"
+                    />
+                </label>
+
+                <label>
+                    <span>District / City</span>
+                    <input
+                        type="text"
+                        name="city"
+                        required
+                        readonly
+                        placeholder="Auto-filled from pincode"
+                    />
+                </label>
+
+                <label>
+                    <span>Area / Locality</span>
+                    <select
+                        name="area"
+                        required
+                        disabled
+                    >
+                        <option value="">Enter pincode first</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Full Name</span>
+                    <input
+                        type="text"
+                        name="fullName"
+                        required
+                        minlength="2"
+                        maxlength="80"
+                        autocomplete="name"
+                    />
+                </label>
+
+                <label>
+                    <span>Phone</span>
+                    <input
+                        type="tel"
+                        name="phone"
+                        required
+                        minlength="10"
+                        maxlength="15"
+                        inputmode="numeric"
+                        autocomplete="tel"
+                    />
+                </label>
+
+                <label>
+                    <span>Address Line</span>
+                    <input
+                        type="text"
+                        name="addressLine"
+                        required
+                        minlength="5"
+                        maxlength="200"
+                        autocomplete="street-address"
+                        placeholder="House no, street, building"
+                    />
+                </label>
+
+                <label>
+                    <span>Landmark</span>
+                    <input
+                        type="text"
+                        name="landmark"
+                        required
+                        maxlength="100"
+                        placeholder="Nearby famous place"
+                    />
+                </label>
+
+                <p
+                    id="delivery-address-popup-message"
+                    class="delivery-address-popup-message"
+                    role="alert"
+                ></p>
+
+                <div class="delivery-address-popup-actions">
+
+                    <button
+                        type="button"
+                        id="delivery-address-popup-cancel"
+                        class="delivery-address-popup-cancel"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="delivery-address-popup-save"
+                        class="delivery-address-popup-save"
+                    >
+                        Save
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
 
 </section>

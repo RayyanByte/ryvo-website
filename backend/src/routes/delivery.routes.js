@@ -10,6 +10,10 @@ const {
     geocodeAddress
 } = require("../controllers/delivery/location-search.controller");
 
+const {
+    checkSavedAddress
+} = require("../controllers/delivery/saved-address.controller");
+
 const router = express.Router();
 
 
@@ -34,6 +38,12 @@ router.get(
 router.post(
     "/geocode-address",
     geocodeAddress
+);
+
+
+router.post(
+    "/check-saved-address",
+    checkSavedAddress
 );
 
 

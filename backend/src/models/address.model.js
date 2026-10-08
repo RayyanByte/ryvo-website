@@ -51,6 +51,13 @@ const addressSchema = new mongoose.Schema(
             default: ""
         },
 
+        area: {
+            type: String,
+            trim: true,
+            maxlength: 100,
+            default: ""
+        },
+
         city: {
             type: String,
             required: true,
