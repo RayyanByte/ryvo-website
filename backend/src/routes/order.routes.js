@@ -3,6 +3,7 @@ const express = require("express");
 const {
     createOrder,
     getMyOrders,
+    getMyLatestOrder,
     getOrderById,
     cancelOrder,
     updateOrderStatus,
@@ -32,6 +33,12 @@ router.get(
     "/my",
     protect,
     getMyOrders
+);
+
+router.get(
+    "/my/latest",
+    protect,
+    getMyLatestOrder
 );
 
 router.get(

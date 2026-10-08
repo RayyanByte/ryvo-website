@@ -207,18 +207,48 @@
 }
 
 .featured-food-details-media {
-    display: grid;
-    gap: 12px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
     margin-bottom: 22px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: x mandatory;
+
+    -webkit-overflow-scrolling: touch;
+
+    padding-bottom: 6px;
+}
+
+.featured-food-details-media::-webkit-scrollbar {
+    height: 4px;
+}
+
+.featured-food-details-media::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
 }
 
 .featured-food-details-media img,
 .featured-food-details-media video {
+    flex: 0 0 100%;
+
     width: 100%;
-    max-height: 360px;
+    height: 280px;
+    max-height: 280px;
+
     object-fit: cover;
+
+    border: 1px solid #e2e2e2;
     border-radius: 10px;
-    background: #f1eee8;
+
+    background: #ffffff;
+
+    box-sizing: border-box;
+
+    scroll-snap-align: center;
 }
 
 .featured-food-details-placeholder {

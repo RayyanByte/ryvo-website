@@ -7,6 +7,10 @@ const {
     getRoadDistanceKm
 } = require("../../utils/road-distance");
 
+const {
+    getEstimatedDeliveryTime
+} = require("../../utils/delivery-time");
+
 
 const checkSavedAddress = async (req, res) => {
     try {
@@ -182,6 +186,11 @@ const checkSavedAddress = async (req, res) => {
             });
         }
 
+        const estimatedTime = getEstimatedDeliveryTime(
+            distanceKm,
+            shop.deliveryTimeRanges
+        );
+
         return res.status(200).json({
             success: true,
             data: {
@@ -191,7 +200,8 @@ const checkSavedAddress = async (req, res) => {
                 deliveryRadiusKm: Number(deliveryRadiusKm.toFixed(2)),
                 latitude: addressLatitude,
                 longitude: addressLongitude,
-                roadDistance: usedRoadDistance
+                roadDistance: usedRoadDistance,
+                estimatedTime: estimatedTime
             }
         });
 

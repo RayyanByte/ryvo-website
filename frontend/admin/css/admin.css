@@ -177,13 +177,109 @@ main {
     background: #111;
     color: #fff;
     border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
 .admin-header h1 {
     margin: 0 0 6px;
+    font-size: 26px;
+    letter-spacing: 0.5px;
 }
 
 .admin-header p {
     margin: 0;
-    color: #ccc;
+    color: #999;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+}
+
+.admin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.admin-header-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 10px 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+
+    text-decoration: none;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    white-space: nowrap;
+
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.admin-header-button:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.admin-header-button:active {
+    transform: scale(0.97);
+}
+
+.admin-header-view-site {
+    background: #fff;
+    color: #111;
+    border-color: #fff;
+}
+
+.admin-header-view-site:hover {
+    background: #f0f0f0;
+    border-color: #f0f0f0;
+}
+
+.admin-header-logout {
+    background: transparent;
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.35);
+}
+
+.admin-header-logout:hover {
+    background: rgba(255, 107, 107, 0.12);
+    border-color: #ff6b6b;
+}
+
+@media (max-width: 480px) {
+    .admin-header {
+        padding: 18px 16px;
+    }
+
+    .admin-header h1 {
+        font-size: 22px;
+    }
+
+    .admin-header-actions {
+        width: 100%;
+    }
+
+    .admin-header-button {
+        flex: 1;
+    }
 }

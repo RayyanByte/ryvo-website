@@ -79,6 +79,17 @@ const orderItemSchema = new mongoose.Schema(
 
 const orderSchema = new mongoose.Schema(
     {
+        orderNumber: {
+            type: String,
+            required: true,
+            unique: true,
+            index: true,
+            trim: true,
+            uppercase: true,
+            minlength: 5,
+            maxlength: 5
+        },
+
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

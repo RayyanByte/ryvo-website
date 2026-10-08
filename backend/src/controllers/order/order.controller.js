@@ -7,6 +7,7 @@ const Food = require("../../models/food.model");
 const Shop = require("../../models/shop.model");
 const User = require("../../models/user.model");
 const { checkDeliveryRadius } = require("../../utils/distance");
+const { generateUniqueOrderNumber } = require("../../utils/order-number");
 
 const ORDER_STATUS_TRANSITIONS = {
     pending: ["confirmed", "cancelled"],
@@ -282,7 +283,10 @@ const createOrder = async (req, res) => {
         const totalAmount =
             subtotal + deliveryFee;
 
+        const orderNumber = await generateUniqueOrderNumber();
+
         const order = await Order.create({
+            orderNumber,
             userId,
             addressId,
             deliveryLocation: {
@@ -920,8 +924,50 @@ const getAllOrders = async (req, res) => {
     }
 };
 
+const getMyLatestOrder = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const order = await Order.findOne({
+            userId,
+            status: {
+                $nin: ["delivered", "cancelled"]
+            }
+        })
+            .populate(
+                "addressId",
+                "label fullName phone addressLine landmark city state pincode area"
+            )
+            .sort({
+                createdAt: -1
+            })
+            .select("-__v");
+
+        if (!order) {
+            return res.status(200).json({
+                success: true,
+                data: null
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: order
+        });
+
+    } catch (error) {
+        console.error("Get latest order error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch latest order."
+        });
+    }
+};
+
+
 module.exports = {
     createOrder,
+    getMyLatestOrder,
     getMyOrders,
     getOrderById,
     cancelOrder,

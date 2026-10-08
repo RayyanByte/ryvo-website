@@ -364,12 +364,22 @@ const loadSavedAddresses = async () => {
 
                     if (data.available === true) {
 
+                        const estimatedTime = data.estimatedTime;
+
+                        const timeText = estimatedTime && estimatedTime.displayText
+                            ? ` · Estimated delivery: ${estimatedTime.displayText}`
+                            : "";
+
                         if (addressMessage) {
                             addressMessage.textContent =
-                                "✅ Delivery available at this address.";
+                                `✅ Delivery available at this address${timeText}.`;
                             addressMessage.className =
                                 "delivery-address-message is-available";
                         }
+
+                        const confirmedAddress = { ...address };
+
+                        window.orderDeliveryAddress = confirmedAddress;
 
                         window.dispatchEvent(
                             new CustomEvent("deliveryAreaConfirmed", {
@@ -380,6 +390,12 @@ const loadSavedAddresses = async () => {
                                     isApproximate: false,
                                     distanceKm: Number(data.distanceKm) || null
                                 }
+                            })
+                        );
+
+                        window.dispatchEvent(
+                            new CustomEvent("orderAddressConfirmed", {
+                                detail: confirmedAddress
                             })
                         );
 

@@ -2,7 +2,7 @@ const ORDER_ADDRESS_COMPONENT_URL =
     "../../order/components/address-selection.html";
 
 const ORDER_ADDRESS_SCRIPT_URL =
-    "../../order/js/address-selection.js";
+    "../../order/js/address-selection.js?v=6";
 
 const ORDER_PAYMENT_COMPONENT_URL =
     "../../order/components/payment-selection.html";
@@ -214,6 +214,13 @@ const loadOrderAddressSelection =
                 () => {
                     orderAddressComponentLoaded =
                         true;
+
+                    if (
+                        typeof window.initializeOrderAddressSelection ===
+                        "function"
+                    ) {
+                        window.initializeOrderAddressSelection();
+                    }
                 }
             );
         } catch (error) {
@@ -303,7 +310,11 @@ const loadOrderPaymentSelection =
 
 window.addEventListener(
     "deliveryAreaConfirmed",
-    () => {
+    (event) => {
+        if (event.detail?.source === "address") {
+            return;
+        }
+
         loadOrderAddressSelection();
     }
 );

@@ -466,6 +466,8 @@ const confirmOrderAddress = () => {
 
 
 const initializeOrderAddressSelection = () => {
+    console.log("✅ address-selection.js loaded and running");
+    window.__addressSelectionLoaded = true;
 
     const confirmButton =
         document.getElementById(

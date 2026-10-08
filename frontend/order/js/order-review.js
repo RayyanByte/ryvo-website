@@ -56,11 +56,17 @@ const getOrderData = () => {
             ? window.getOrderDeliveryLocation()
             : null;
 
-    const deliveryAddress =
+    const selectedAddress =
         typeof window.getSelectedOrderAddress ===
         "function"
             ? window.getSelectedOrderAddress()
             : null;
+
+    const deliveryAddress =
+        selectedAddress ||
+        (window.orderDeliveryAddress
+            ? { ...window.orderDeliveryAddress }
+            : null);
 
     const paymentMethod =
         typeof window.getSelectedPaymentMethod ===

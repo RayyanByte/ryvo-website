@@ -83,7 +83,7 @@ const loadAdminOrderDashboard =
                                     data-order-id="${order._id}"
                                 >
                                     <h3>
-                                        Order #${order._id}
+                                        Order #${order.orderNumber || order._id}
                                     </h3>
 
                                     <p>

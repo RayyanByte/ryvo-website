@@ -36,6 +36,40 @@ const shopSchema = new mongoose.Schema(
             min: 0.1,
             max: 100,
             default: 2
+        },
+
+        deliveryTimeRanges: {
+            type: [
+                {
+                    _id: false,
+                    minKm: {
+                        type: Number,
+                        required: true,
+                        min: 0
+                    },
+                    maxKm: {
+                        type: Number,
+                        required: true,
+                        min: 0
+                    },
+                    minMinutes: {
+                        type: Number,
+                        required: true,
+                        min: 1
+                    },
+                    maxMinutes: {
+                        type: Number,
+                        required: true,
+                        min: 1
+                    }
+                }
+            ],
+            default: [
+                { minKm: 0, maxKm: 2, minMinutes: 20, maxMinutes: 25 },
+                { minKm: 2, maxKm: 5, minMinutes: 25, maxMinutes: 35 },
+                { minKm: 5, maxKm: 10, minMinutes: 35, maxMinutes: 50 },
+                { minKm: 10, maxKm: 15, minMinutes: 50, maxMinutes: 70 }
+            ]
         }
     },
     {
