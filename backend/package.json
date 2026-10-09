@@ -9,5 +9,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.3",
     "razorpay": "^2.9.8"
+  },
+  "scripts": {
+    "start": "node src/server.js"
   }
 }
